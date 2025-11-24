@@ -11,6 +11,8 @@ import AchievementUnlocked from '../../components/AchievementUnlocked';
 import { useGameProgress } from '../../hooks/useGameProgress';
 import { useAchievements } from '../../hooks/useAchievements';
 import { useBugAnimation } from '../../hooks/useBugAnimation';
+import { useDevTools } from '../../context/DevToolsContext';
+import BugReportModal from '../../components/BugReportModal';
 import { celebrateCompletion } from '../../utils/confetti';
 import { practiceSpecs } from '../../data/practiceSpecs';
 
@@ -18,6 +20,7 @@ export default function Registration() {
     const { foundBugs, addBug, resetProgress, getBugDifficulty, xp, getBugPoints, deductXP } = useGameProgress();
     const { newAchievement, checkAchievements } = useAchievements();
     const { showAnimation, animationData, triggerBugAnimation } = useBugAnimation();
+    const { addLog, addRequest } = useDevTools();
     const [flagInput, setFlagInput] = useState('');
     const [toast, setToast] = useState({ show: false, message: '' });
     const [showSpec, setShowSpec] = useState(false);
@@ -31,32 +34,35 @@ export default function Registration() {
     }, []);
 
     // 24 Simulated bugs
-    const bugs = [
-        { id: 'title_typo', description: 'Başlıqda hərf səhvi: "Qeydiyyat" əvəzinə "Qeydiyat"' },
-        { id: 'logo_pixel', description: 'Loqo çox keyfiyyətsizdir (piksel-piksel)' },
-        { id: 'nav_broken', description: '"Ana Səhifə" linki işləmir (kliklənmir)' },
-        { id: 'username_label', description: 'Label səhvi: "İstifadəçi adı" əvəzinə "İstifadəçi ad"' },
-        { id: 'username_bg', description: 'İnput rəngi fərqlidir (boz əvəzinə sarımtıl)' },
-        { id: 'email_placeholder', description: 'Email sahəsində placeholder yoxdur' },
-        { id: 'email_validation', description: 'Səhv validasiya mesajı: "@" əvəzinə "$"' },
-        { id: 'password_type', description: 'Şifrə sahəsi gizli deyil (text type)' },
-        { id: 'password_len', description: 'Maksimum uzunluq 5 simvoldur (çox qısa)' },
-        { id: 'phone_type', description: 'Telefon sahəsi hərfləri qəbul edir' },
-        { id: 'dob_future', description: 'Doğum tarixi gələcəyi göstərir (2050)' },
-        { id: 'gender_radio', description: 'Hər iki cinsiyyəti seçmək olur (radio qrup səhvi)' },
-        { id: 'avatar_broken', description: 'Profil şəkli yüklənməyib (sınıq şəkil)' },
-        { id: 'terms_typo', description: 'Şərtlərdə səhv: "Qaydalar" əvəzinə "Qaydar"' },
-        { id: 'btn_contrast', description: 'Düymə kontrastı çox zəifdir' },
-        { id: 'btn_align', description: 'Düymə mətni mərkəzdə deyil' },
-        { id: 'btn_cursor', description: 'Düymədə kursor "text" formasındadır' },
-        { id: 'cancel_color', description: '"Ləğv et" düyməsi yaşıl rəngdədir (çaşdırıcı)' },
-        { id: 'footer_year', description: 'Müəllif hüquqları ili köhnədir (1999)' },
-        { id: 'footer_typo', description: '"Məxfilik" sözündə hərf səhvi' },
-        { id: 'dev_console', description: 'Konsol xətası (Console Tab)', isDevTool: true },
-        { id: 'dev_hidden', description: 'Gizli input sahəsi (Elements Tab)', isDevTool: true },
-        { id: 'dev_data', description: 'Gizli data atributu (Elements Tab)', isDevTool: true },
-        { id: 'dev_storage', description: 'Local Storage dəyəri (Application Tab)', isDevTool: true },
-    ];
+    const [bugs] = useState([
+        { id: 'title_typo', description: 'Başlıqda hərf səhvi: "Qeydiyyat" əvəzinə "Qeydiyat"', severity: 'Minor', priority: 'Low' },
+        { id: 'logo_pixel', description: 'Loqo çox keyfiyyətsizdir (piksel-piksel)', severity: 'Minor', priority: 'Low' },
+        { id: 'nav_broken', description: '"Ana Səhifə" linki işləmir (kliklənmir)', severity: 'Major', priority: 'Medium' },
+        { id: 'username_bg', description: 'İnput rəngi fərqlidir (boz əvəzinə sarımtıl)', severity: 'Minor', priority: 'Low' },
+        { id: 'email_placeholder', description: 'Email sahəsində placeholder yoxdur', severity: 'Minor', priority: 'Low' },
+        { id: 'email_validation', description: 'Email formatı yoxlanılmır (yanlış email qəbul edilir)', severity: 'Critical', priority: 'High' },
+        { id: 'password_visibility', description: 'Şifrəni göstər düyməsi işləmir', severity: 'Major', priority: 'Medium' },
+        { id: 'dob_validation', description: 'Gələcək tarix seçilə bilir (Doğum tarixi)', severity: 'Major', priority: 'Medium' },
+        { id: 'phone_input', description: 'Telefon nömrəsinə hərflər daxil edilə bilir', severity: 'Minor', priority: 'Low' },
+        { id: 'terms_checkbox', description: 'Qaydalar qəbul edilmədən qeydiyyat mümkündür', severity: 'Critical', priority: 'High' },
+        { id: 'password_type', description: 'Şifrə sahəsi gizli deyil (text type)', severity: 'Critical', priority: 'High' },
+        { id: 'password_len', description: 'Maksimum uzunluq 5 simvoldur (çox qısa)', severity: 'Major', priority: 'Medium' },
+        { id: 'phone_type', description: 'Telefon sahəsi hərfləri qəbul edir', severity: 'Major', priority: 'Medium' },
+        { id: 'dob_future', description: 'Doğum tarixi gələcəyi göstərir (2050)', severity: 'Major', priority: 'Medium' },
+        { id: 'gender_radio', description: 'Hər iki cinsiyyəti seçmək olur (radio qrup səhvi)', severity: 'Major', priority: 'Medium' },
+        { id: 'avatar_broken', description: 'Profil şəkli yüklənməyib (sınıq şəkil)', severity: 'Minor', priority: 'Low' },
+        { id: 'terms_typo', description: 'Şərtlərdə səhv: "Qaydalar" əvəzinə "Qaydar"', severity: 'Minor', priority: 'Low' },
+        { id: 'btn_contrast', description: 'Düymə kontrastı çox zəifdir', severity: 'Minor', priority: 'Low' },
+        { id: 'btn_align', description: 'Düymə mətni mərkəzdə deyil', severity: 'Minor', priority: 'Low' },
+        { id: 'btn_cursor', description: 'Düymədə kursor "text" formasındadır', severity: 'Minor', priority: 'Low' },
+        { id: 'cancel_color', description: '"Ləğv et" düyməsi yaşıl rəngdədir (çaşdırıcı)', severity: 'Major', priority: 'Medium' },
+        { id: 'footer_year', description: 'Müəllif hüquqları ili köhnədir (1999)', severity: 'Minor', priority: 'Low' },
+        { id: 'footer_typo', description: '"Məxfilik" sözündə hərf səhvi', severity: 'Minor', priority: 'Low' },
+        { id: 'dev_console', description: 'Konsol xətası (Console Tab)', isDevTool: true, severity: 'Major', priority: 'Medium' },
+        { id: 'dev_hidden', description: 'Gizli input sahəsi (Elements Tab)', isDevTool: true, severity: 'Major', priority: 'Medium' },
+        { id: 'dev_data', description: 'Gizli data atributu (Elements Tab)', isDevTool: true, severity: 'Minor', priority: 'Low' },
+        { id: 'dev_storage', description: 'Local Storage dəyəri (Application Tab)', isDevTool: true, severity: 'Minor', priority: 'Low' }
+    ]);
 
     const devToolFlags = {
         'BUG_CONSOLE_LOG': 'dev_console',
@@ -66,25 +72,36 @@ export default function Registration() {
     };
 
     const handleBugClick = (bugId) => {
-        const result = addBug(bugId);
-        if (result.isNew) {
-            const bug = bugs.find(b => b.id === bugId);
-            setToast({ show: true, message: bug.description });
+        if (foundBugs.includes(bugId)) return;
+        setSelectedBugId(bugId);
+        setReportModalOpen(true);
+    };
 
-            // Trigger animation
-            triggerBugAnimation({
-                ...result,
-                bugName: bug.description
-            });
+    const handleReportSubmit = ({ severity, priority }) => {
+        const bug = bugs.find(b => b.id === selectedBugId);
+        let bonus = 0;
+        if (severity === bug.severity) bonus += 5;
+        if (priority === bug.priority) bonus += 5;
 
-            // Check achievements
-            checkAchievements({
-                foundBugs,
-                totalBugs: bugs.length,
-                moduleBugs: { registration: bugs },
-                getBugDifficulty
-            });
+        const basePoints = getBugPoints(getBugDifficulty(selectedBugId));
+        const totalPoints = basePoints + bonus;
+
+        addBug(selectedBugId);
+        triggerBugAnimation(totalPoints);
+        setReportModalOpen(false);
+        setSelectedBugId(null);
+
+        if (bonus > 0) {
+            setToast({ show: true, message: `Əla! Düzgün qiymətləndirmə üçün +${bonus} XP bonus! 🎯` });
         }
+
+        // Check achievements after bug is added
+        checkAchievements({
+            foundBugs: [...foundBugs, selectedBugId], // Pass updated foundBugs
+            totalBugs: bugs.length,
+            moduleBugs: { registration: bugs },
+            getBugDifficulty
+        });
     };
 
     const handleFlagSubmit = (e) => {
@@ -488,14 +505,23 @@ export default function Registration() {
             )}
 
             <BugList
-                bugs={pageBugs}
-                foundBugs={foundPageBugs}
+                bugs={bugs} // Use local bugs array which has descriptions
+                foundBugs={foundBugs}
                 onReset={resetProgress}
                 xp={xp}
                 getBugPoints={getBugPoints}
                 getBugDifficulty={getBugDifficulty}
                 deductXP={deductXP}
             />
+
+            <BugReportModal
+                isOpen={reportModalOpen}
+                onClose={() => setReportModalOpen(false)}
+                onSubmit={handleReportSubmit}
+                bug={bugs.find(b => b.id === selectedBugId)}
+            />
         </PageTransition>
     );
 }
+
+import BugReportModal from '../../components/BugReportModal';

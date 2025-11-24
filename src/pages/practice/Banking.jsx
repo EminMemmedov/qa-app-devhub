@@ -11,6 +11,8 @@ import AchievementUnlocked from '../../components/AchievementUnlocked';
 import { useGameProgress } from '../../hooks/useGameProgress';
 import { useAchievements } from '../../hooks/useAchievements';
 import { useBugAnimation } from '../../hooks/useBugAnimation';
+import { useDevTools } from '../../context/DevToolsContext';
+import BugReportModal from '../../components/BugReportModal';
 import { celebrateCompletion } from '../../utils/confetti';
 import { practiceSpecs } from '../../data/practiceSpecs';
 
@@ -18,6 +20,7 @@ export default function Banking() {
     const { foundBugs, addBug, resetProgress, getBugDifficulty, xp, getBugPoints, deductXP } = useGameProgress();
     const { newAchievement, checkAchievements } = useAchievements();
     const { showAnimation, animationData, triggerBugAnimation } = useBugAnimation();
+    const { addLog, addRequest } = useDevTools();
     const [amount, setAmount] = useState('');
     const [description, setDescription] = useState('');
     const [recipient, setRecipient] = useState('other');
@@ -34,28 +37,63 @@ export default function Banking() {
         { id: 2, amount: 100, recipient: 'Başqa şəxs', date: '2024-01-19', status: 'completed' }
     ]);
 
-    const bugs = [
-        { id: 'neg_amount', description: 'Mənfi məbləğ göndərmək mümkündür' },
-        { id: 'zero_amount', description: '0 AZN göndərmək mümkündür' },
-        { id: 'self_transfer', description: 'Öz kartına pul köçürmək olur' },
-        { id: 'currency_mix', description: 'AZN hesabdan USD köçürmə (konvertasiyasız)' },
-        { id: 'balance_limit', description: 'Balansdan çox pul göndərmək olur' },
-        { id: 'success_msg', description: 'Uğursuz əməliyyatda "Uğurlu" mesajı çıxır' },
-        { id: 'decimal_places', description: 'Məbləğ 10+ onluq yerə qəbul edir (0.0000000001)' },
-        { id: 'desc_xss', description: 'Təsvir sahəsinə <script> tag yazmaq olur' },
-        { id: 'no_confirmation', description: 'Köçürmə təsdiq dialoqusuz icra olunur' },
-        { id: 'balance_static', description: 'Balans köçürmədən sonra yenilənmir' },
-        { id: 'card_format', description: 'Kart nömrəsi formatı yoxlanılmır' },
-        { id: 'amount_label', description: 'Məbləğ labelində hərf səhvi: "Məbləğ" əvəzinə "Mebleg"' },
-        { id: 'btn_alignment', description: 'Köçürmə düyməsi sola yönəlib (mərkəzdə olmalı)' },
-        { id: 'border_inconsistent', description: 'Input border qalınlığı fərqlidir' },
-        { id: 'balance_color', description: 'Balans rəngi oxunması çətindir (ağ fonda ağ)' },
-        { id: 'icon_missing', description: 'Valyuta seçimində ikon yoxdur' },
-        { id: 'placeholder_typo', description: 'Placeholder səhvi: "0.00" əvəzinə "0,00"' },
-        { id: 'focus_color', description: 'Focus border rəngi qırmızıdır (yaşıl olmalı)' },
-        { id: 'history_missing', description: 'Köçürmə tarixçəsi göstərilmir' },
-        { id: 'loading_indicator', description: 'Yükləmə göstəricisi yoxdur' }
-    ];
+    const [bugs] = useState([
+        { id: 'neg_amount', description: 'Mənfi məbləğ göndərmək mümkündür', severity: 'Critical', priority: 'High' },
+        { id: 'zero_amount', description: '0 AZN göndərmək mümkündür', severity: 'Major', priority: 'Medium' },
+        { id: 'self_transfer', description: 'Öz kartına pul köçürmək olur', severity: 'Major', priority: 'Medium' },
+        { id: 'currency_mix', description: 'AZN hesabdan USD köçürmə (konvertasiyasız)', severity: 'Major', priority: 'Medium' },
+        { id: 'balance_limit', description: 'Balansdan çox pul göndərmək olur', severity: 'Critical', priority: 'High' },
+        { id: 'success_msg', description: 'Uğursuz əməliyyatda "Uğurlu" mesajı çıxır', severity: 'Major', priority: 'Medium' },
+        { id: 'decimal_places', description: 'Məbləğ 10+ onluq yerə qəbul edir (0.0000000001)', severity: 'Minor', priority: 'Low' },
+        { id: 'desc_xss', description: 'Təsvir sahəsinə <script> tag yazmaq olur', severity: 'Critical', priority: 'High' },
+        { id: 'no_confirmation', description: 'Köçürmə təsdiq dialoqusuz icra olunur', severity: 'Major', priority: 'Medium' },
+        { id: 'balance_static', description: 'Balans köçürmədən sonra yenilənmir', severity: 'Critical', priority: 'High' },
+        { id: 'card_format', description: 'Kart nömrəsi formatı yoxlanılmır', severity: 'Major', priority: 'Medium' },
+        { id: 'amount_label', description: 'Məbləğ labelində hərf səhvi: "Məbləğ" əvəzinə "Mebleg"', severity: 'Minor', priority: 'Low' },
+        { id: 'btn_alignment', description: 'Köçürmə düyməsi sola yönəlib (mərkəzdə olmalı)', severity: 'Minor', priority: 'Low' },
+        { id: 'border_inconsistent', description: 'Input border qalınlığı fərqlidir', severity: 'Minor', priority: 'Low' },
+        { id: 'balance_color', description: 'Balans rəngi oxunması çətindir (ağ fonda ağ)', severity: 'Minor', priority: 'Low' },
+        { id: 'icon_missing', description: 'Valyuta seçimində ikon yoxdur', severity: 'Minor', priority: 'Low' },
+        { id: 'placeholder_typo', description: 'Placeholder səhvi: "0.00" əvəzinə "0,00"', severity: 'Minor', priority: 'Low' },
+        { id: 'focus_color', description: 'Focus border rəngi qırmızıdır (yaşıl olmalı)', severity: 'Minor', priority: 'Low' },
+        { id: 'history_missing', description: 'Köçürmə tarixçəsi göstərilmir', severity: 'Major', priority: 'Medium' },
+        { id: 'loading_indicator', description: 'Yükləmə göstəricisi yoxdur', severity: 'Major', priority: 'Medium' }
+    ]);
+
+    const [reportModalOpen, setReportModalOpen] = useState(false);
+    const [selectedBugId, setSelectedBugId] = useState(null);
+
+    const handleBugClick = (bugId) => {
+        if (foundBugs.includes(bugId)) return;
+        setSelectedBugId(bugId);
+        setReportModalOpen(true);
+    };
+
+    const handleReportSubmit = ({ severity, priority }) => {
+        const bug = bugs.find(b => b.id === selectedBugId);
+        let bonus = 0;
+        if (severity === bug.severity) bonus += 5;
+        if (priority === bug.priority) bonus += 5;
+
+        const basePoints = getBugPoints(getBugDifficulty(selectedBugId));
+        const totalPoints = basePoints + bonus;
+
+        addBug(selectedBugId);
+        triggerBugAnimation(totalPoints);
+        setReportModalOpen(false);
+        setSelectedBugId(null);
+
+        if (bonus > 0) {
+            setToast({ show: true, message: `Əla! Düzgün qiymətləndirmə üçün +${bonus} XP bonus! 🎯` });
+        }
+
+        checkAchievements({
+            foundBugs: [...foundBugs, selectedBugId],
+            totalBugs: bugs.length,
+            moduleBugs: { banking: bugs },
+            getBugDifficulty
+        });
+    };
 
     const validateTransfer = () => {
         const newErrors = {};
@@ -176,24 +214,7 @@ export default function Banking() {
         setTouched({ ...touched, [field]: true });
     };
 
-    const handleBugClick = (bugId, message) => {
-        const result = addBug(bugId);
-        if (result.isNew) {
-            setToast({ show: true, message });
 
-            triggerBugAnimation({
-                ...result,
-                bugName: message
-            });
-
-            checkAchievements({
-                foundBugs,
-                totalBugs: bugs.length,
-                moduleBugs: { banking: bugs },
-                getBugDifficulty
-            });
-        }
-    };
 
     // Filter bugs for this page
     const pageBugs = bugs;
@@ -305,7 +326,10 @@ export default function Banking() {
 
                 <div
                     className="bg-slate-900 text-white p-6 rounded-2xl mb-8 relative overflow-hidden cursor-pointer"
-                    onClick={() => handleBugClick('balance_color', 'Balans rəngi oxunması çətindir (ağ fonda ağ)')}
+                    onClick={() => {
+                        handleBugClick('balance_color', 'Balans rəngi oxunması çətindir (ağ fonda ağ)');
+                        addLog('error', 'Uncaught ReferenceError: WalletConfig is not defined', { component: 'BalanceCard', line: 42 });
+                    }}
                 >
                     <div className="relative z-10">
                         <p className="text-slate-400 text-sm mb-1">Cari Balans</p>

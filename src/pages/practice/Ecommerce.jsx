@@ -11,6 +11,8 @@ import AchievementUnlocked from '../../components/AchievementUnlocked';
 import { useGameProgress } from '../../hooks/useGameProgress';
 import { useAchievements } from '../../hooks/useAchievements';
 import { useBugAnimation } from '../../hooks/useBugAnimation';
+import { useDevTools } from '../../context/DevToolsContext';
+import BugReportModal from '../../components/BugReportModal';
 import { celebrateCompletion } from '../../utils/confetti';
 import { practiceSpecs } from '../../data/practiceSpecs';
 
@@ -18,6 +20,7 @@ export default function Ecommerce() {
     const { foundBugs, addBug, resetProgress, getBugDifficulty, xp, getBugPoints, deductXP } = useGameProgress();
     const { newAchievement, checkAchievements } = useAchievements();
     const { showAnimation, animationData, triggerBugAnimation } = useBugAnimation();
+    const { addLog, addRequest } = useDevTools();
     const [count, setCount] = useState(1);
     const [couponCode, setCouponCode] = useState('');
     const [appliedCoupon, setAppliedCoupon] = useState(null);
@@ -28,28 +31,63 @@ export default function Ecommerce() {
     const [errors, setErrors] = useState({});
     const [touched, setTouched] = useState({});
 
-    const bugs = [
-        { id: 'neg_qty', description: 'Məhsul sayı mənfi ola bilir (-1)' },
-        { id: 'zero_qty', description: 'Məhsul sayı 0 ola bilir' },
-        { id: 'float_qty', description: 'Məhsul sayı kəsr ola bilir (1.5)' },
-        { id: 'price_calc', description: 'Endirim hesablanarkən qiymət artır' },
-        { id: 'img_broken', description: 'Məhsul şəkli yüklənməyib' },
-        { id: 'del_btn', description: 'Silmə düyməsi işləmir' },
-        { id: 'stock_limit', description: 'Stokda olandan çox məhsul seçmək olur' },
-        { id: 'product_typo', description: 'Məhsul adında səhv: "iPhone" əvəzinə "iPone"' },
-        { id: 'currency_symbol', description: 'Valyuta simvolu yanlışdır ($ əvəzinə ₼)' },
-        { id: 'coupon_100', description: 'Kupon kodu "FREE100" 100% endirim verir' },
-        { id: 'no_size', description: 'Ölçü seçimi yoxdur' },
-        { id: 'no_color', description: 'Rəng seçimi yoxdur' },
-        { id: 'img_no_alt', description: 'Şəkildə alt atributu yoxdur (accessibility)' },
-        { id: 'price_alignment', description: 'Qiymət sağa deyil, sola yönəlib' },
-        { id: 'btn_typo', description: 'Düymədə səhv: "rəsmiləşdir" əvəzinə "rəsmiləşdır"' },
-        { id: 'total_font', description: 'Yekun məbləğ şrifti çox kiçikdir' },
-        { id: 'qty_btn_size', description: 'Miqdar düymələri fərqli ölçüdədir' },
-        { id: 'discount_color', description: 'Endirim mənfi olduğu halda yaşıl rəngdədir' },
-        { id: 'checkout_disabled', description: 'Checkout düyməsi heç vaxt disabled olmur' },
-        { id: 'stock_info', description: 'Stok məlumatı göstərilmir' }
-    ];
+    const [bugs] = useState([
+        { id: 'neg_qty', description: 'Məhsul sayı mənfi ola bilir (-1)', severity: 'Critical', priority: 'High' },
+        { id: 'zero_qty', description: 'Məhsul sayı 0 ola bilir', severity: 'Major', priority: 'Medium' },
+        { id: 'float_qty', description: 'Məhsul sayı kəsr ola bilir (1.5)', severity: 'Major', priority: 'Medium' },
+        { id: 'price_calc', description: 'Endirim hesablanarkən qiymət artır', severity: 'Critical', priority: 'High' },
+        { id: 'img_broken', description: 'Məhsul şəkli yüklənməyib', severity: 'Minor', priority: 'Low' },
+        { id: 'del_btn', description: 'Silmə düyməsi işləmir', severity: 'Major', priority: 'Medium' },
+        { id: 'stock_limit', description: 'Stokda olandan çox məhsul seçmək olur', severity: 'Major', priority: 'Medium' },
+        { id: 'product_typo', description: 'Məhsul adında səhv: "iPhone" əvəzinə "iPone"', severity: 'Minor', priority: 'Low' },
+        { id: 'currency_symbol', description: 'Valyuta simvolu yanlışdır ($ əvəzinə ₼)', severity: 'Minor', priority: 'Low' },
+        { id: 'coupon_100', description: 'Kupon kodu "FREE100" 100% endirim verir', severity: 'Minor', priority: 'Low' },
+        { id: 'no_size', description: 'Ölçü seçimi yoxdur', severity: 'Minor', priority: 'Low' },
+        { id: 'no_color', description: 'Rəng seçimi yoxdur', severity: 'Minor', priority: 'Low' },
+        { id: 'img_no_alt', description: 'Şəkildə alt atributu yoxdur (accessibility)', severity: 'Minor', priority: 'Low' },
+        { id: 'price_alignment', description: 'Qiymət sağa deyil, sola yönəlib', severity: 'Minor', priority: 'Low' },
+        { id: 'btn_typo', description: 'Düymədə səhv: "rəsmiləşdir" əvəzinə "rəsmiləşdır"', severity: 'Minor', priority: 'Low' },
+        { id: 'total_font', description: 'Yekun məbləğ şrifti çox kiçikdir', severity: 'Minor', priority: 'Low' },
+        { id: 'qty_btn_size', description: 'Miqdar düymələri fərqli ölçüdədir', severity: 'Minor', priority: 'Low' },
+        { id: 'discount_color', description: 'Endirim mənfi olduğu halda yaşıl rəngdədir', severity: 'Minor', priority: 'Low' },
+        { id: 'checkout_disabled', description: 'Checkout düyməsi heç vaxt disabled olmur', severity: 'Major', priority: 'Medium' },
+        { id: 'stock_info', description: 'Stok məlumatı göstərilmir', severity: 'Major', priority: 'Medium' }
+    ]);
+
+    const [reportModalOpen, setReportModalOpen] = useState(false);
+    const [selectedBugId, setSelectedBugId] = useState(null);
+
+    const handleBugClick = (bugId) => {
+        if (foundBugs.includes(bugId)) return;
+        setSelectedBugId(bugId);
+        setReportModalOpen(true);
+    };
+
+    const handleReportSubmit = ({ severity, priority }) => {
+        const bug = bugs.find(b => b.id === selectedBugId);
+        let bonus = 0;
+        if (severity === bug.severity) bonus += 5;
+        if (priority === bug.priority) bonus += 5;
+
+        const basePoints = getBugPoints(getBugDifficulty(selectedBugId));
+        const totalPoints = basePoints + bonus;
+
+        addBug(selectedBugId);
+        triggerBugAnimation(totalPoints);
+        setReportModalOpen(false);
+        setSelectedBugId(null);
+
+        if (bonus > 0) {
+            setToast({ show: true, message: `Əla! Düzgün qiymətləndirmə üçün +${bonus} XP bonus! 🎯` });
+        }
+
+        checkAchievements({
+            foundBugs: [...foundBugs, selectedBugId],
+            totalBugs: bugs.length,
+            moduleBugs: { ecommerce: bugs },
+            getBugDifficulty
+        });
+    };
 
     const validateCart = () => {
         const newErrors = {};
@@ -117,11 +155,14 @@ export default function Ecommerce() {
     };
 
     const handleCouponApply = () => {
+        addLog('info', `Attempting to apply coupon: ${couponCode}`);
         if (couponCode.toUpperCase() === 'FREE100') {
             handleBugClick('coupon_100', 'Kupon kodu "FREE100" 100% endirim verir');
             setAppliedCoupon({ code: 'FREE100', discount: 100 });
+            addLog('success', 'Coupon applied successfully', { code: 'FREE100', discount: 100 });
         } else if (couponCode) {
             setToast({ show: true, message: 'Yanlış kupon kodu' });
+            addLog('warn', 'Invalid coupon code', { code: couponCode });
         }
     };
 
@@ -143,15 +184,21 @@ export default function Ecommerce() {
             if (!foundNew) {
                 setToast({ show: true, message: firstError });
             }
+            addLog('warn', 'Checkout validation failed', errors);
             return;
         }
 
         setIsProcessing(true);
+        addLog('info', 'Starting checkout process...', { items: count, total });
 
         // Simulate checkout process
         await new Promise(resolve => setTimeout(resolve, 1500));
 
         setIsProcessing(false);
+
+        // Simulate API call
+        addRequest('POST', 'https://api.shop.com/v1/checkout', 200, 1500, { success: true, orderId: 'ORD-998877' });
+        addLog('info', 'Checkout completed successfully');
 
         // Bug: Stock doesn't decrease
         const oldStock = stock;
@@ -168,24 +215,7 @@ export default function Ecommerce() {
     const discount = appliedCoupon ? (appliedCoupon.discount / 100) * basePrice * count : -50; // Bug: negative discount adds to price
     const total = basePrice * count + discount;
 
-    const handleBugClick = (bugId, message) => {
-        const result = addBug(bugId);
-        if (result.isNew) {
-            setToast({ show: true, message });
 
-            triggerBugAnimation({
-                ...result,
-                bugName: message
-            });
-
-            checkAchievements({
-                foundBugs,
-                totalBugs: bugs.length,
-                moduleBugs: { ecommerce: bugs },
-                getBugDifficulty
-            });
-        }
-    };
 
     // Filter bugs for this page
     const pageBugs = bugs;
@@ -434,13 +464,20 @@ export default function Ecommerce() {
             </div>
 
             <BugList
-                bugs={pageBugs}
-                foundBugs={foundPageBugs}
+                bugs={bugs}
+                foundBugs={foundBugs}
                 onReset={resetProgress}
                 xp={xp}
                 getBugPoints={getBugPoints}
                 getBugDifficulty={getBugDifficulty}
                 deductXP={deductXP}
+            />
+
+            <BugReportModal
+                isOpen={reportModalOpen}
+                onClose={() => setReportModalOpen(false)}
+                onSubmit={handleReportSubmit}
+                bug={bugs.find(b => b.id === selectedBugId)}
             />
         </PageTransition>
     );

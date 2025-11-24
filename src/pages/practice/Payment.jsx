@@ -11,6 +11,8 @@ import AchievementUnlocked from '../../components/AchievementUnlocked';
 import { useGameProgress } from '../../hooks/useGameProgress';
 import { useAchievements } from '../../hooks/useAchievements';
 import { useBugAnimation } from '../../hooks/useBugAnimation';
+import { useDevTools } from '../../context/DevToolsContext';
+import BugReportModal from '../../components/BugReportModal';
 import { celebrateCompletion } from '../../utils/confetti';
 import { practiceSpecs } from '../../data/practiceSpecs';
 
@@ -18,6 +20,7 @@ export default function Payment() {
     const { foundBugs, addBug, resetProgress, getBugDifficulty, xp, getBugPoints, deductXP } = useGameProgress();
     const { newAchievement, checkAchievements } = useAchievements();
     const { showAnimation, animationData, triggerBugAnimation } = useBugAnimation();
+    const { addLog, addRequest } = useDevTools();
     const [cardNumber, setCardNumber] = useState('');
     const [cardName, setCardName] = useState('');
     const [expiry, setExpiry] = useState('');
@@ -28,28 +31,63 @@ export default function Payment() {
     const [errors, setErrors] = useState({});
     const [touched, setTouched] = useState({});
 
-    const bugs = [
-        { id: 'card_len', description: 'Kart nömrəsi 16 rəqəmdən çox qəbul edir' },
-        { id: 'card_char', description: 'Kart nömrəsinə hərf yazmaq olur' },
-        { id: 'card_special', description: 'Kart nömrəsinə xüsusi simvollar daxil olur' },
-        { id: 'name_numbers', description: 'Ad sahəsinə rəqəm yazmaq olur' },
-        { id: 'name_short', description: 'Ad sahəsi 2 simvoldan az qəbul edir' },
-        { id: 'name_label', description: 'Ad sahəsində label səhvi: "Kart sahibi" əvəzinə "Kart sahbi"' },
-        { id: 'expiry_past', description: 'Keçmiş tarix seçmək mümkündür' },
-        { id: 'expiry_current', description: 'Cari ay seçilə bilir (artıq bitib)' },
-        { id: 'cvv_visible', description: 'CVV kodu gizli deyil (görünür)' },
-        { id: 'cvv_len', description: 'CVV 3 rəqəmdən çox qəbul edir' },
-        { id: 'cvv_letters', description: 'CVV sahəsinə hərf yazmaq olur' },
-        { id: 'btn_typo', description: 'Düymədə hərf səhvi: "Ödəniş" əvəzinə "Ödəni"' },
-        { id: 'btn_double', description: 'Düyməyə 2 dəfə klik ödənişi təkrarlayır' },
-        { id: 'total_wrong', description: 'Yekun məbləğ səhv hesablanıb (100 + 5 = 1005)' },
-        { id: 'amount_label', description: 'Məbləğ yazısında rəng kontrastı zəifdir' },
-        { id: 'form_spacing', description: 'Form elementləri arasında boşluq qeyri-bərabərdir' },
-        { id: 'card_icon', description: 'Kart ikonası yanlış rəngdədir (qırmızı əvəzinə yaşıl)' },
-        { id: 'border_color', description: 'Focus zamanı border rəngi səhvdir' },
-        { id: 'loading_state', description: 'Ödəniş zamanı yükləmə göstəricisi yoxdur' },
-        { id: 'success_msg', description: 'Uğurlu ödəniş mesajı göstərilmir' }
-    ];
+    const [bugs] = useState([
+        { id: 'card_len', description: 'Kart nömrəsi 16 rəqəmdən çox qəbul edir', severity: 'Major', priority: 'Medium' },
+        { id: 'card_char', description: 'Kart nömrəsinə hərf yazmaq olur', severity: 'Major', priority: 'Medium' },
+        { id: 'card_special', description: 'Kart nömrəsinə xüsusi simvollar daxil olur', severity: 'Minor', priority: 'Low' },
+        { id: 'name_numbers', description: 'Ad sahəsinə rəqəm yazmaq olur', severity: 'Minor', priority: 'Low' },
+        { id: 'name_short', description: 'Ad sahəsi 2 simvoldan az qəbul edir', severity: 'Minor', priority: 'Low' },
+        { id: 'name_label', description: 'Ad sahəsində label səhvi: "Kart sahibi" əvəzinə "Kart sahbi"', severity: 'Minor', priority: 'Low' },
+        { id: 'expiry_past', description: 'Keçmiş tarix seçmək mümkündür', severity: 'Critical', priority: 'High' },
+        { id: 'expiry_current', description: 'Cari ay seçilə bilir (artıq bitib)', severity: 'Major', priority: 'Medium' },
+        { id: 'cvv_visible', description: 'CVV kodu gizli deyil (görünür)', severity: 'Critical', priority: 'High' },
+        { id: 'cvv_len', description: 'CVV 3 rəqəmdən çox qəbul edir', severity: 'Major', priority: 'Medium' },
+        { id: 'cvv_letters', description: 'CVV sahəsinə hərf yazmaq olur', severity: 'Major', priority: 'Medium' },
+        { id: 'btn_typo', description: 'Düymədə hərf səhvi: "Ödəniş" əvəzinə "Ödəni"', severity: 'Minor', priority: 'Low' },
+        { id: 'btn_double', description: 'Düyməyə 2 dəfə klik ödənişi təkrarlayır', severity: 'Critical', priority: 'High' },
+        { id: 'total_wrong', description: 'Yekun məbləğ səhv hesablanıb (100 + 5 = 1005)', severity: 'Critical', priority: 'High' },
+        { id: 'amount_label', description: 'Məbləğ yazısında rəng kontrastı zəifdir', severity: 'Minor', priority: 'Low' },
+        { id: 'form_spacing', description: 'Form elementləri arasında boşluq qeyri-bərabərdir', severity: 'Minor', priority: 'Low' },
+        { id: 'card_icon', description: 'Kart ikonası yanlış rəngdədir (qırmızı əvəzinə yaşıl)', severity: 'Minor', priority: 'Low' },
+        { id: 'border_color', description: 'Focus zamanı border rəngi səhvdir', severity: 'Minor', priority: 'Low' },
+        { id: 'loading_state', description: 'Ödəniş zamanı yükləmə göstəricisi yoxdur', severity: 'Major', priority: 'Medium' },
+        { id: 'success_msg', description: 'Uğurlu ödəniş mesajı göstərilmir', severity: 'Major', priority: 'Medium' }
+    ]);
+
+    const [reportModalOpen, setReportModalOpen] = useState(false);
+    const [selectedBugId, setSelectedBugId] = useState(null);
+
+    const handleBugClick = (bugId) => {
+        if (foundBugs.includes(bugId)) return;
+        setSelectedBugId(bugId);
+        setReportModalOpen(true);
+    };
+
+    const handleReportSubmit = ({ severity, priority }) => {
+        const bug = bugs.find(b => b.id === selectedBugId);
+        let bonus = 0;
+        if (severity === bug.severity) bonus += 5;
+        if (priority === bug.priority) bonus += 5;
+
+        const basePoints = getBugPoints(getBugDifficulty(selectedBugId));
+        const totalPoints = basePoints + bonus;
+
+        addBug(selectedBugId);
+        triggerBugAnimation(totalPoints);
+        setReportModalOpen(false);
+        setSelectedBugId(null);
+
+        if (bonus > 0) {
+            setToast({ show: true, message: `Əla! Düzgün qiymətləndirmə üçün +${bonus} XP bonus! 🎯` });
+        }
+
+        checkAchievements({
+            foundBugs: [...foundBugs, selectedBugId],
+            totalBugs: bugs.length,
+            moduleBugs: { payment: bugs },
+            getBugDifficulty
+        });
+    };
 
     const validateForm = () => {
         const newErrors = {};
@@ -170,11 +208,16 @@ export default function Payment() {
 
         // Simulate processing (Bug: no loading state shown)
         setIsProcessing(true);
+        addLog('info', 'Starting payment processing...', { amount: 100, currency: 'AZN' });
 
         // Simulate network delay
         await new Promise(resolve => setTimeout(resolve, 1500));
 
         setIsProcessing(false);
+
+        // Fake 500 Error for educational purposes
+        addRequest('POST', 'https://api.bank.com/v1/payments', 500, 1500, { error: 'Internal Server Error' });
+        addLog('error', 'Payment failed: Server responded with status 500');
 
         // Bug: No success message shown
         if (!foundNew) {
@@ -187,26 +230,7 @@ export default function Payment() {
         setTouched({ ...touched, [field]: true });
     };
 
-    const handleBugClick = (bugId, message) => {
-        const result = addBug(bugId);
-        if (result.isNew) {
-            setToast({ show: true, message });
 
-            // Trigger animation
-            triggerBugAnimation({
-                ...result,
-                bugName: message
-            });
-
-            // Check achievements
-            checkAchievements({
-                foundBugs,
-                totalBugs: bugs.length,
-                moduleBugs: { payment: bugs },
-                getBugDifficulty
-            });
-        }
-    };
 
     // Filter bugs for this page
     const pageBugs = bugs;
@@ -436,13 +460,20 @@ export default function Payment() {
             </div>
 
             <BugList
-                bugs={pageBugs}
-                foundBugs={foundPageBugs}
+                bugs={bugs}
+                foundBugs={foundBugs}
                 onReset={resetProgress}
                 xp={xp}
                 getBugPoints={getBugPoints}
                 getBugDifficulty={getBugDifficulty}
                 deductXP={deductXP}
+            />
+
+            <BugReportModal
+                isOpen={reportModalOpen}
+                onClose={() => setReportModalOpen(false)}
+                onSubmit={handleReportSubmit}
+                bug={bugs.find(b => b.id === selectedBugId)}
             />
         </PageTransition>
     );
