@@ -434,7 +434,7 @@ export default function Ecommerce() {
                         <div className="relative group">
                             <Info size={16} className="text-slate-400 cursor-pointer" />
                             <div className="absolute left-0 mt-1 w-48 p-2 bg-gray-800 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                                Введите код купона (например FREE100)
+                                Kupon kodunu daxil edin (məsələn FREE100)
                             </div>
                         </div>
                         <button
