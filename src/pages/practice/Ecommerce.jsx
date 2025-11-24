@@ -423,17 +423,17 @@ export default function Ecommerce() {
                         <Tag size={16} />
                         Kupon Kodu
                     </label>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-wrap">
                         <input
                             type="text"
                             placeholder="Kupon kodunu daxil edin (FREE100)"
-                            className="flex-1 p-3 border-2 border-slate-200 rounded-xl outline-none focus:border-orange-500 transition-colors"
+                            className="flex-1 min-w-[180px] p-3 border-2 border-slate-200 rounded-xl outline-none focus:border-orange-500 transition-colors"
                             value={couponCode}
                             onChange={(e) => setCouponCode(e.target.value)}
                         />
                         <button
                             onClick={handleCouponApply}
-                            className="px-6 py-3 bg-orange-100 text-orange-600 rounded-xl font-bold hover:bg-orange-200 transition-colors"
+                            className="px-4 py-2 bg-orange-100 text-orange-600 rounded-xl font-bold hover:bg-orange-200 transition-colors mt-2 sm:mt-0"
                         >
                             Tətbiq et
                         </button>
