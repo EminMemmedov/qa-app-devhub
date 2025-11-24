@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ShoppingCart, Minus, Plus, Trash2, ArrowLeft, Search, FileText, Tag, Package, AlertCircle, Loader2, CheckCircle2 } from 'lucide-react';
+import { ShoppingCart, Minus, Plus, Trash2, ArrowLeft, Search, FileText, Tag, Package, AlertCircle, Loader2, CheckCircle2, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import PageTransition from '../../components/PageTransition';
@@ -423,15 +423,20 @@ export default function Ecommerce() {
                         <Tag size={16} />
                         Kupon Kodu
                     </label>
-                    <div className="flex flex-col sm:flex-row gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-center">
                         <input
                             type="text"
                             placeholder="Kupon kodu"
-                            title="Введите код купона (например FREE100)"
                             className="flex-1 w-full p-3 border-2 border-slate-200 rounded-xl outline-none focus:border-orange-500 transition-colors"
                             value={couponCode}
                             onChange={(e) => setCouponCode(e.target.value)}
                         />
+                        <div className="relative group">
+                            <Info size={16} className="text-slate-400 cursor-pointer" />
+                            <div className="absolute left-0 mt-1 w-48 p-2 bg-gray-800 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                Введите код купона (например FREE100)
+                            </div>
+                        </div>
                         <button
                             onClick={handleCouponApply}
                             className="w-full sm:w-auto px-4 py-2 bg-orange-100 text-orange-600 rounded-xl font-bold hover:bg-orange-200 transition-colors mt-2 sm:mt-0"
