@@ -427,6 +427,7 @@ export default function Ecommerce() {
                         <input
                             type="text"
                             placeholder="Kupon kodu"
+                            title="Введите код купона (например FREE100)"
                             className="flex-1 w-full p-3 border-2 border-slate-200 rounded-xl outline-none focus:border-orange-500 transition-colors"
                             value={couponCode}
                             onChange={(e) => setCouponCode(e.target.value)}
