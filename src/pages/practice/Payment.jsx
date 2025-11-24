@@ -92,6 +92,7 @@ export default function Payment() {
 
         addBug(selectedBugId);
         triggerBugAnimation({
+            isNew: true,
             points: totalPoints,
             bugName: bug.description
         });

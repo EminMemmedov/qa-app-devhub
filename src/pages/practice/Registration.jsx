@@ -108,6 +108,7 @@ export default function Registration() {
 
         addBug(selectedBugId);
         triggerBugAnimation({
+            isNew: true,
             points: totalPoints,
             bugName: bug.description
         });

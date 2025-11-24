@@ -98,6 +98,7 @@ export default function Banking() {
 
         addBug(selectedBugId);
         triggerBugAnimation({
+            isNew: true,
             points: totalPoints,
             bugName: bug.description
         });
