@@ -1,8 +1,10 @@
+
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import PageTransition from '../components/PageTransition';
-import { Sparkles, Trophy, Quote, BookOpen, Bug, BrainCircuit, ArrowRight, Star, Zap } from 'lucide-react';
+import { Sparkles, Trophy, Quote, BookOpen, Bug, ArrowRight, Star, Zap, Medal, Target } from 'lucide-react';
 import { useGameProgress } from '../hooks/useGameProgress';
+import { useAchievements } from '../hooks/useAchievements';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -21,10 +23,13 @@ const itemVariants = {
 
 export default function Home() {
   const { xp, foundBugs } = useGameProgress();
+  const { achievements } = useAchievements();
+
   // Level calculation: 1 level per 500 XP
   const level = Math.floor(xp / 500) + 1;
   const progress = (xp % 500) / 500 * 100;
   const nextLevelXp = 500 - (xp % 500);
+  const unlockedAchievements = achievements.filter(a => a.unlocked).length;
 
   return (
     <PageTransition className="p-6 pb-24 min-h-screen bg-slate-50/50">
@@ -60,48 +65,53 @@ export default function Home() {
           </motion.div>
         </motion.header>
 
-        {/* Main Stats Card */}
+        {/* Main Stats Card - Redesigned for Clarity */}
         <motion.div
           variants={itemVariants}
           whileHover={{ scale: 1.02 }}
-          className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-indigo-800 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-blue-300/50"
+          className="relative overflow-hidden bg-slate-900 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-slate-400/20"
         >
           {/* Decorative Background Elements */}
-          <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 bg-blue-400/20 rounded-full blur-3xl"></div>
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl -ml-16 -mb-16"></div>
 
           <div className="relative z-10">
-            <div className="flex justify-between items-start mb-8">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold uppercase tracking-wider">
-                    Səviyyə {level}
-                  </span>
-                  <span className="px-3 py-1 bg-yellow-400/20 backdrop-blur-md rounded-full text-xs font-bold text-yellow-200 flex items-center gap-1">
-                    <Zap size={12} fill="currentColor" />
-                    Master
-                  </span>
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-blue-500/20 rounded-2xl backdrop-blur-md border border-blue-500/30">
+                  <Trophy size={24} className="text-blue-400" />
                 </div>
-                <h3 className="text-5xl font-black tracking-tight mb-1">{xp} <span className="text-2xl font-bold text-blue-200">XP</span></h3>
-                <p className="text-blue-100 text-sm font-medium opacity-80">Növbəti səviyyəyə {nextLevelXp} XP qaldı</p>
+                <div>
+                  <div className="text-sm text-slate-400 font-medium uppercase tracking-wider">Cari Səviyyə</div>
+                  <div className="text-3xl font-black text-white">Level {level}</div>
+                </div>
               </div>
-              <div className="p-4 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-2xl shadow-lg shadow-yellow-500/30 transform rotate-3">
-                <Trophy size={32} className="text-white" />
+              <div className="text-right">
+                <div className="text-sm text-slate-400 font-medium uppercase tracking-wider">Ümumi XP</div>
+                <div className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
+                  {xp}
+                </div>
               </div>
             </div>
 
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm font-bold text-blue-100">
-                <span>Progress</span>
-                <span>{Math.round(progress)}%</span>
+            <div className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50 backdrop-blur-sm">
+              <div className="flex justify-between text-sm mb-2">
+                <span className="text-slate-300 font-medium">Növbəti səviyyəyə doğru</span>
+                <span className="text-blue-400 font-bold">{Math.round(progress)}%</span>
               </div>
-              <div className="w-full bg-black/20 rounded-full h-4 backdrop-blur-sm overflow-hidden p-1">
+
+              <div className="w-full bg-slate-700 rounded-full h-3 overflow-hidden mb-2">
                 <motion.div
                   initial={{ width: 0 }}
-                  animate={{ width: `${progress}%` }}
+                  animate={{ width: `${progress}% ` }}
                   transition={{ duration: 1.5, ease: "easeOut", delay: 0.5 }}
-                  className="bg-gradient-to-r from-white to-blue-200 h-full rounded-full shadow-lg"
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 h-full rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]"
                 ></motion.div>
+              </div>
+
+              <div className="flex items-center gap-2 text-xs text-slate-400">
+                <Target size={12} />
+                <span>Daha <strong>{nextLevelXp} XP</strong> lazımdır</span>
               </div>
             </div>
           </div>
@@ -147,24 +157,24 @@ export default function Home() {
         {/* Daily Challenge / Quote Section */}
         <motion.div
           variants={itemVariants}
-          className="bg-gradient-to-r from-slate-900 to-slate-800 rounded-3xl p-8 text-white shadow-xl shadow-slate-400/20 relative overflow-hidden"
+          className="bg-gradient-to-r from-indigo-600 to-blue-600 rounded-3xl p-8 text-white shadow-xl shadow-blue-400/20 relative overflow-hidden"
         >
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-2xl -mr-10 -mt-10"></div>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
 
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-white/10 rounded-xl backdrop-blur-md">
-                <Sparkles size={20} className="text-amber-400" />
+              <div className="p-2 bg-white/20 rounded-xl backdrop-blur-md">
+                <Sparkles size={20} className="text-yellow-300" />
               </div>
               <h3 className="font-bold text-lg">Günün Sitatı</h3>
             </div>
 
             <figure>
-              <blockquote className="text-lg font-medium leading-relaxed text-slate-200 italic mb-4">
+              <blockquote className="text-lg font-medium leading-relaxed text-blue-50 italic mb-4">
                 "Testləşdirmə səhvlərin olmadığını deyil, onların varlığını sübut edir."
               </blockquote>
-              <figcaption className="flex items-center gap-2 text-sm text-slate-400 font-medium">
-                <div className="w-6 h-0.5 bg-slate-600 rounded-full"></div>
+              <figcaption className="flex items-center gap-2 text-sm text-blue-200 font-medium">
+                <div className="w-6 h-0.5 bg-blue-300/50 rounded-full"></div>
                 Edsger W. Dijkstra
               </figcaption>
             </figure>
@@ -183,12 +193,12 @@ export default function Home() {
             </div>
           </div>
           <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
-            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
-              <BrainCircuit size={20} />
+            <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600">
+              <Medal size={20} />
             </div>
             <div>
-              <div className="text-2xl font-black text-slate-900">0</div>
-              <div className="text-xs text-slate-500 font-bold uppercase">Quiz Xalı</div>
+              <div className="text-2xl font-black text-slate-900">{unlockedAchievements}</div>
+              <div className="text-xs text-slate-500 font-bold uppercase">Nailiyyətlər</div>
             </div>
           </div>
         </motion.div>
@@ -197,3 +207,4 @@ export default function Home() {
     </PageTransition>
   );
 }
+
