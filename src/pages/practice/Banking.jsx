@@ -97,7 +97,10 @@ export default function Banking() {
         const totalPoints = basePoints + bonus;
 
         addBug(selectedBugId);
-        triggerBugAnimation(totalPoints);
+        triggerBugAnimation({
+            points: totalPoints,
+            bugName: bug.description
+        });
         setReportModalOpen(false);
         setSelectedBugId(null);
 

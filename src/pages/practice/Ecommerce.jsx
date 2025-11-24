@@ -90,7 +90,11 @@ export default function Ecommerce() {
         const basePoints = getBugPoints(getBugDifficulty(selectedBugId));
         const totalPoints = basePoints + bonus;
 
-        triggerBugAnimation(totalPoints);
+        addBug(selectedBugId);
+        triggerBugAnimation({
+            points: totalPoints,
+            bugName: bug.description
+        });
         setReportModalOpen(false);
         setSelectedBugId(null);
 

@@ -107,7 +107,10 @@ export default function Registration() {
         const totalPoints = basePoints + bonus;
 
         addBug(selectedBugId);
-        triggerBugAnimation(totalPoints);
+        triggerBugAnimation({
+            points: totalPoints,
+            bugName: bug.description
+        });
         setReportModalOpen(false);
         setSelectedBugId(null);
 
