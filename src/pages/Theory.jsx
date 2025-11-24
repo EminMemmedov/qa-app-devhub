@@ -12,6 +12,14 @@ const moduleIcons = {
     'test-planning': Sparkles
 };
 
+// Image mapping for each theory module
+const moduleImages = {
+    'qa-basics': '/theory-qa-basics.png',
+    'test-types': '/theory-test-types.png',
+    'bug-reporting': '/theory-bug-reporting.png',
+    'test-planning': '/theory-test-planning.png'
+};
+
 // Simple Markdown renderer
 const SimpleMarkdown = ({ content }) => {
     return (
@@ -159,6 +167,16 @@ export default function Theory() {
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
                                     <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mb-12"></div>
                                     <div className="relative z-10">
+                                        {/* Module illustration */}
+                                        {moduleImages[selectedModule.id] && (
+                                            <div className="mb-6 flex justify-center">
+                                                <img
+                                                    src={moduleImages[selectedModule.id]}
+                                                    alt={selectedModule.title}
+                                                    className="w-48 h-48 object-contain rounded-2xl bg-white/10 p-4 backdrop-blur-sm"
+                                                />
+                                            </div>
+                                        )}
                                         <div className={`inline-flex items-center justify-center w-16 h-16 ${selectedModule.color} bg-white/20 backdrop-blur-sm rounded-2xl mb-4`}>
                                             {(() => {
                                                 const Icon = moduleIcons[selectedModule.id] || BookOpen;
