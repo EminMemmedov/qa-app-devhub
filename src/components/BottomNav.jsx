@@ -1,5 +1,3 @@
-
-```
 import { Home, BookOpen, Bug } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -61,4 +59,3 @@ export default function BottomNav() {
         </nav>
     );
 }
-```
