@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import BottomNav from './BottomNav';
 import ThemeToggle from './ThemeToggle';
 import FAB from './FAB';
@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 
 export default function Layout() {
     const navigate = useNavigate();
+    const location = useLocation();
     const controls = useAnimation();
 
     // Swipe gestures for main sections (Home, Theory, Practice)
@@ -15,19 +16,19 @@ export default function Layout() {
         const threshold = 100; // px
         if (info.offset.x > threshold) {
             // swipe right -> previous section
-            if (window.location.pathname === '/theory') navigate('/');
-            else if (window.location.pathname.startsWith('/practice')) navigate('/theory');
+            if (location.pathname === '/theory') navigate('/');
+            else if (location.pathname.startsWith('/practice')) navigate('/theory');
         } else if (info.offset.x < -threshold) {
             // swipe left -> next section
-            if (window.location.pathname === '/') navigate('/theory');
-            else if (window.location.pathname === '/theory') navigate('/practice');
+            if (location.pathname === '/') navigate('/theory');
+            else if (location.pathname === '/theory') navigate('/practice');
         }
     };
 
     // Ensure animation resets on route change
     useEffect(() => {
         controls.start({ x: 0 });
-    }, [window.location.pathname, controls]);
+    }, [location.pathname, controls]);
 
     return (
         <motion.div

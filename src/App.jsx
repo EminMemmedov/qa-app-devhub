@@ -14,6 +14,7 @@ const Payment = lazy(() => import('./pages/practice/Payment'));
 const Banking = lazy(() => import('./pages/practice/Banking'));
 const Ecommerce = lazy(() => import('./pages/practice/Ecommerce'));
 const Exam = lazy(() => import('./pages/practice/Exam'));
+const ExamResults = lazy(() => import('./pages/practice/ExamResults'));
 const API = lazy(() => import('./pages/practice/API'));
 const Achievements = lazy(() => import('./pages/Achievements'));
 const Mobile = lazy(() => import('./pages/practice/Mobile'));
@@ -49,6 +50,7 @@ function App() {
               <Route path="practice/payment" element={<Payment />} />
               <Route path="practice/banking" element={<Banking />} />
               <Route path="practice/exam" element={<Exam />} />
+              <Route path="practice/exam-results" element={<ExamResults />} />
               <Route path="practice/api" element={<API />} />
               <Route path="practice/mobile" element={<Mobile />} />
               <Route path="practice/security" element={<Security />} />
