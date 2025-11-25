@@ -1,33 +1,21 @@
-import { useRef, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { Search, User, Calendar, Phone, Image as ImageIcon, Home, Settings, Terminal, Key, ArrowLeft, CheckCircle, FileText } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import PageTransition from '../../components/PageTransition';
+import Toast from '../../components/Toast';
+import BugList from '../../components/BugList';
+import SpecModal from '../../components/SpecModal';
+import BugDiscoveryAnimation from '../../components/BugDiscoveryAnimation';
+import AchievementUnlocked from '../../components/AchievementUnlocked';
+import { useGameProgress } from '../../hooks/useGameProgress';
+import { useAchievements } from '../../hooks/useAchievements';
+import { useBugAnimation } from '../../hooks/useBugAnimation';
+import { useDevTools } from '../../context/DevToolsContext';
+import BugReportModal from '../../components/BugReportModal';
+import { celebrateCompletion } from '../../utils/confetti';
+import { practiceSpecs } from '../../data/practiceSpecs';
 import { useScrollToActiveInput } from '../../hooks/useScrollToActiveInput';
-
-const usernameRef = useRef(null);
-useScrollToActiveInput();
-useEffect(() => {
-    if (usernameRef.current) usernameRef.current.focus();
-}, []);
-
-  // ... inside the username input element replace with:
-  <input
-    ref={usernameRef}
-    type="text"
-    className="w-full pl-10 p-3 bg-yellow-50/50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 cursor-pointer"
-    onClick={() => handleBugClick('username_bg')}
-    defaultValue="test_user"
-  />
-
-  // ... inside the phone input element add pattern attribute:
-  <input
-    type="text"
-    placeholder="ABC-DEF-GHI"
-    pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-    className="w-full pl-10 p-3 border border-slate-200 rounded-xl outline-none focus:border-blue-500"
-    onChange={(e) => {
-      if (/[a-zA-Z]/.test(e.target.value)) {
-        handleBugDetected('phone_type');
-      }
-    }}
-  />
 
 export default function Registration() {
     const { foundBugs, addBug, resetProgress, getBugDifficulty, xp, getBugPoints, deductXP } = useGameProgress();
@@ -41,11 +29,19 @@ export default function Registration() {
     const [reportModalOpen, setReportModalOpen] = useState(false);
     const [selectedBugId, setSelectedBugId] = useState(null);
 
+    const usernameRef = useRef(null);
+    useScrollToActiveInput();
+
     // Initialize DevTools bugs
     useEffect(() => {
         console.error("CRITICAL_ERROR: API Connection Failed! Error Code: BUG_CONSOLE_LOG");
         localStorage.setItem('user_session', 'BUG_LOCAL_STORE');
         return () => localStorage.removeItem('user_session');
+    }, []);
+
+    // Auto-focus username field
+    useEffect(() => {
+        if (usernameRef.current) usernameRef.current.focus();
     }, []);
 
     // 24 Simulated bugs
@@ -310,6 +306,7 @@ export default function Registration() {
                             <div className="relative">
                                 <User className="absolute left-3 top-3.5 text-slate-400" size={18} />
                                 <input
+                                    ref={usernameRef}
                                     type="text"
                                     className="w-full pl-10 p-3 bg-yellow-50/50 border border-slate-200 rounded-xl outline-none focus:border-blue-500 cursor-pointer"
                                     onClick={() => handleBugClick('username_bg')}
