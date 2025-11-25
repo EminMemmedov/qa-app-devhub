@@ -118,6 +118,50 @@ export default function Home() {
           </div>
         </motion.div>
 
+        {/* Exam Card - Prominent Feature */}
+        <Link to="/practice/exam">
+          <motion.div
+            variants={itemVariants}
+            whileHover={{ scale: 1.02, y: -4 }}
+            whileTap={{ scale: 0.98 }}
+            className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-purple-400/30 cursor-pointer group"
+          >
+            {/* Decorative Elements */}
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-500"></div>
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -ml-8 -mb-8 group-hover:scale-150 transition-transform duration-500"></div>
+
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-md">
+                    <Trophy size={32} className="text-yellow-300" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-black">QA İmtahanı</h2>
+                    <p className="text-blue-100 text-sm">Biliklərini yoxla!</p>
+                  </div>
+                </div>
+                <ArrowRight size={28} className="text-white/60 group-hover:translate-x-2 transition-transform" />
+              </div>
+
+              <div className="grid grid-cols-3 gap-3 mt-6">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 text-center">
+                  <div className="text-2xl font-black">30</div>
+                  <div className="text-xs text-blue-100">Sual</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 text-center">
+                  <div className="text-2xl font-black">10</div>
+                  <div className="text-xs text-blue-100">Dəqiqə</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 text-center">
+                  <div className="text-2xl font-black">70%</div>
+                  <div className="text-xs text-blue-100">Keçid</div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </Link>
+
         {/* Quick Actions Grid */}
         <div className="grid grid-cols-2 gap-4">
           <Link to="/theory" className="block" rel="prefetch">
