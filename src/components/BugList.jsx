@@ -52,62 +52,62 @@ export default function BugList({ bugs, foundBugs, onReset, xp, getBugPoints, ge
 
     return (
         <div className="mt-8">
-            {/* Header with better layout */}
-            <div className="bg-gradient-to-r from-slate-50 to-slate-100 rounded-2xl p-4 mb-4 border border-slate-200">
-                <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
-                            <Bug size={20} className="text-slate-600" />
-                        </div>
-                        <div>
-                            <h3 className="font-bold text-slate-900 text-sm">Tapılan Baqlar</h3>
-                            <div className="flex items-center gap-2 mt-0.5">
-                                <span className="text-xs font-bold text-slate-600">
-                                    {foundBugs.length}/{bugs.length}
-                                </span>
-                                <span className="text-slate-300">•</span>
-                                <div className="flex items-center gap-1">
-                                    <Coins size={12} className="text-indigo-500" />
-                                    <span className="text-xs font-bold text-indigo-600">{xp} XP</span>
-                                </div>
+            {/* Mobile-optimized Header */}
+            <div className="bg-gradient-to-r from-slate-50 to-slate-100 rounded-2xl p-4 sm:p-6 mb-4 border border-slate-200">
+                {/* Title and Icon Row */}
+                <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
+                        <Bug size={24} className="text-slate-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <h3 className="font-bold text-slate-900 text-base sm:text-lg">Tapılan Baqlar</h3>
+                        <div className="flex items-center gap-2 mt-1 flex-wrap">
+                            <span className="text-sm font-bold text-slate-600">
+                                {foundBugs.length}/{bugs.length}
+                            </span>
+                            <span className="text-slate-300">•</span>
+                            <div className="flex items-center gap-1.5">
+                                <Coins size={14} className="text-indigo-500" />
+                                <span className="text-sm font-bold text-indigo-600">{xp} XP</span>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div className="flex gap-2">
-                        <button
-                            onClick={handleGetHint}
-                            className="flex items-center gap-1 px-2 py-1 rounded-lg font-bold text-xs transition-all bg-yellow-400 text-yellow-900 hover:bg-yellow-500 shadow-sm"
-                        >
-                            <Lightbulb size={12} />
-                            <span>İpucu</span>
-                            <span className="opacity-60 text-[10px]">-20 XP</span>
-                        </button>
-                        <button
-                            onClick={() => {
-                                if (confirm('Bütün tərəqqini sıfırlamaq istədiyinizə əminsiniz?')) {
-                                    onReset();
-                                }
-                            }}
-                            className="px-3 py-2 text-xs text-red-500 font-bold hover:bg-red-50 rounded-xl transition-colors"
-                        >
-                            Sıfırla
-                        </button>
-                    </div>
+                {/* Action Buttons - Stacked on mobile */}
+                <div className="grid grid-cols-2 gap-2 mb-4">
+                    <button
+                        onClick={handleGetHint}
+                        className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm transition-all bg-yellow-400 text-yellow-900 hover:bg-yellow-500 shadow-sm active:scale-95 min-h-[44px]"
+                    >
+                        <Lightbulb size={16} />
+                        <span>İpucu</span>
+                        <span className="opacity-70 text-xs">-20 XP</span>
+                    </button>
+                    <button
+                        onClick={() => {
+                            if (confirm('Bütün tərəqqini sıfırlamaq istədiyinizə əminsiniz?')) {
+                                onReset();
+                            }
+                        }}
+                        className="px-4 py-3 text-sm text-red-600 font-bold hover:bg-red-50 active:bg-red-100 rounded-xl transition-colors border-2 border-red-200 min-h-[44px]"
+                    >
+                        Sıfırla
+                    </button>
                 </div>
 
                 {/* Progress Bar */}
-                <div className="bg-white rounded-xl p-3 shadow-sm">
-                    <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-bold text-slate-600">Proqres</span>
-                        <span className="text-xs font-bold text-emerald-600">{Math.round(progress)}%</span>
+                <div className="bg-white rounded-xl p-4 shadow-sm">
+                    <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm font-bold text-slate-600">Proqres</span>
+                        <span className="text-sm font-bold text-emerald-600">{Math.round(progress)}%</span>
                     </div>
-                    <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                    <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
                         <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${progress}%` }}
                             transition={{ duration: 0.5 }}
-                            className="h-full bg-gradient-to-r from-green-500 to-emerald-500"
+                            className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"
                         />
                     </div>
                 </div>
