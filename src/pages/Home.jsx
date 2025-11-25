@@ -120,7 +120,7 @@ export default function Home() {
 
         {/* Quick Actions Grid */}
         <div className="grid grid-cols-2 gap-4">
-          <Link to="/theory" className="block">
+          <Link to="/theory" className="block" rel="prefetch">
             <motion.div
               variants={itemVariants}
               whileHover={{ y: -5, shadow: "0 20px 25px -5px rgb(0 0 0 / 0.1)" }}
@@ -137,7 +137,7 @@ export default function Home() {
             </motion.div>
           </Link>
 
-          <Link to="/practice" className="block">
+          <Link to="/practice" className="block" rel="prefetch">
             <motion.div
               variants={itemVariants}
               whileHover={{ y: -5, shadow: "0 20px 25px -5px rgb(0 0 0 / 0.1)" }}
