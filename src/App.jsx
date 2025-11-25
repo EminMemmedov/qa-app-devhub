@@ -14,6 +14,7 @@ const Payment = lazy(() => import('./pages/practice/Payment'));
 const Banking = lazy(() => import('./pages/practice/Banking'));
 const Ecommerce = lazy(() => import('./pages/practice/Ecommerce'));
 const Exam = lazy(() => import('./pages/practice/Exam'));
+const API = lazy(() => import('./pages/practice/API'));
 const Achievements = lazy(() => import('./pages/Achievements'));
 const Mobile = lazy(() => import('./pages/practice/Mobile'));
 const Security = lazy(() => import('./pages/practice/Security'));
