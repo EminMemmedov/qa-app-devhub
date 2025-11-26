@@ -81,7 +81,39 @@ Proqram səhvsiz işləyir, amma istifadəçi tələblərini ödəmir.
 **E-commerce modulunda:**
 - Məhsul sayını test et (prinsip 2)
 - Kupon kodunu yoxla (prinsip 5)
-- Endirim hesablamasını yoxla (prinsip 1)`
+- Endirim hesablamasını yoxla (prinsip 1)`,
+    quiz: [
+      {
+        question: "QA-nın əsas məqsədi nədir?",
+        options: [
+          "Kodu yazmaq",
+          "Məhsulun keyfiyyətini təmin etmək",
+          "Dizayn etmək",
+          "Layihəni idarə etmək"
+        ],
+        correct: 1
+      },
+      {
+        question: "Erkən testləmənin faydası nədir?",
+        options: [
+          "Daha çox vaxt aparır",
+          "Daha bahalıdır",
+          "Səhvlərin düzəldilməsi daha ucuz başa gəlir",
+          "Heç bir faydası yoxdur"
+        ],
+        correct: 2
+      },
+      {
+        question: "Pareto prinsipinə görə səhvlərin 80%-i harada olur?",
+        options: [
+          "Kodun 20%-ində",
+          "Bütün kodda bərabər paylanır",
+          "Dizaynda",
+          "Database-də"
+        ],
+        correct: 0
+      }
+    ]
   },
   {
     id: 'test-types',
@@ -220,7 +252,39 @@ Düzəliş işləyirmi?
 - Funksional: Səbət düzgün hesablayır?
 - Performance: 1000 məhsul yükləmə sürəti?
 - Security: XSS mümkündürmü?
-- Usability: Checkout prosesi asandırmı?`
+- Usability: Checkout prosesi asandırmı?`,
+    quiz: [
+      {
+        question: "Unit Test nəyi yoxlayır?",
+        options: [
+          "Bütün sistemi",
+          "Kodun ən kiçik hissəsini",
+          "İstifadəçi təcrübəsini",
+          "Təhlükəsizliyi"
+        ],
+        correct: 1
+      },
+      {
+        question: "Regression Testing nə vaxt aparılır?",
+        options: [
+          "Layihənin əvvəlində",
+          "Yalnız sonda",
+          "Yeni dəyişiklikdən sonra köhnə funksiyaları yoxlamaq üçün",
+          "Heç vaxt"
+        ],
+        correct: 2
+      },
+      {
+        question: "Hansı test növü proqramın sürətini yoxlayır?",
+        options: [
+          "Security Testing",
+          "Usability Testing",
+          "Performance Testing",
+          "Functional Testing"
+        ],
+        correct: 2
+      }
+    ]
   },
   {
     id: 'bug-reporting',
@@ -422,7 +486,39 @@ Mühit:
 **E-commerce modulunda:**
 - Məhsul sayı mənfi ola bilir → Major, High
 - Endirim yanlış hesablanır → Critical, High
-- Şəkil yüklənmir → Minor, Medium`
+- Şəkil yüklənmir → Minor, Medium`,
+    quiz: [
+      {
+        question: "Baq reportunun ən vacib hissəsi nədir?",
+        options: [
+          "Yalnız başlıq",
+          "Təkrarlana bilən addımlar",
+          "Müəllifin adı",
+          "Tarix"
+        ],
+        correct: 1
+      },
+      {
+        question: "Severity nəyi göstərir?",
+        options: [
+          "Baqın nə qədər tez düzəldilməli olduğunu",
+          "Baqın sistemə təsir dərəcəsini (ciddiliyini)",
+          "Developerin adını",
+          "Testin növünü"
+        ],
+        correct: 1
+      },
+      {
+        question: "Əgər proqram çökürsə, bu hansı Severity-dir?",
+        options: [
+          "Minor",
+          "Trivial",
+          "Critical",
+          "Major"
+        ],
+        correct: 2
+      }
+    ]
   },
   {
     id: 'test-planning',
@@ -673,6 +769,38 @@ Sərhəd dəyərlərini test edir.
 **5. Regression Test Et**
 - Düzəlişdən sonra
 - Bütün test keysləri yenidən
-- Yeni baq tapılmadığından əmin ol`
+- Yeni baq tapılmadığından əmin ol`,
+    quiz: [
+      {
+        question: "Test Planı nədir?",
+        options: [
+          "Baq reportu",
+          "Testləşdirmə prosesinin yol xəritəsi",
+          "Kodun bir hissəsi",
+          "Dizayn sənədi"
+        ],
+        correct: 1
+      },
+      {
+        question: "Test Scope nəyi müəyyən edir?",
+        options: [
+          "Nəyin test ediləcəyini və edilməyəcəyini",
+          "Testin qiymətini",
+          "Developerlərin adlarını",
+          "Layihənin bitmə tarixini"
+        ],
+        correct: 0
+      },
+      {
+        question: "Boundary Testing nəyi yoxlayır?",
+        options: [
+          "Rəngləri",
+          "Sərhəd dəyərlərini (min/max)",
+          "Sürəti",
+          "Təhlükəsizliyi"
+        ],
+        correct: 1
+      }
+    ]
   }
 ];

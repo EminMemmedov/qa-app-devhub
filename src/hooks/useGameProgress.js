@@ -2,13 +2,22 @@ import { useState, useEffect } from 'react';
 
 export function useGameProgress() {
     const [foundBugs, setFoundBugs] = useState(() => {
-        const saved = localStorage.getItem('qa_game_progress');
-        return saved ? JSON.parse(saved) : [];
+        try {
+            const saved = localStorage.getItem('qa_game_progress');
+            return saved ? JSON.parse(saved) : [];
+        } catch (e) {
+            console.error('Error parsing game progress:', e);
+            return [];
+        }
     });
 
     const [xp, setXp] = useState(() => {
-        const saved = localStorage.getItem('qa_game_xp');
-        return saved ? parseInt(saved) : 0;
+        try {
+            const saved = localStorage.getItem('qa_game_xp');
+            return saved ? parseInt(saved) : 0;
+        } catch (e) {
+            return 0;
+        }
     });
 
     // Bug difficulty points mapping

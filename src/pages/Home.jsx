@@ -274,19 +274,24 @@ export default function Home() {
               <div className="text-xs text-slate-500 font-bold uppercase">{t('home.stats.foundBugs')}</div>
             </div>
           </div>
-          <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
-            <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600">
-              <Medal size={20} />
-            </div>
-            <div>
-              <div className="text-2xl font-black text-slate-900">{unlockedCount}</div>
-              <div className="text-xs text-slate-500 font-bold uppercase">{t('home.stats.achievements')}</div>
-            </div>
-          </div>
+          <Link to="/achievements">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4 cursor-pointer hover:border-yellow-300 hover:shadow-lg transition-all"
+            >
+              <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600">
+                <Medal size={20} />
+              </div>
+              <div>
+                <div className="text-2xl font-black text-slate-900">{unlockedCount}</div>
+                <div className="text-xs text-slate-500 font-bold uppercase">{t('home.stats.achievements')}</div>
+              </div>
+            </motion.div>
+          </Link>
         </motion.div>
 
       </motion.div>
     </PageTransition>
   );
 }
-

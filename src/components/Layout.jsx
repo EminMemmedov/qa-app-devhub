@@ -2,7 +2,9 @@ import { Outlet, useLocation } from 'react-router-dom';
 import BottomNav from './BottomNav';
 import ThemeToggle from './ThemeToggle';
 import LanguageSelector from './LanguageSelector';
+import AchievementUnlocked from './AchievementUnlocked';
 import { useOfflineSync } from '../hooks/useOfflineSync';
+import { useAchievements } from '../hooks/useAchievements';
 import { motion, useAnimation } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -13,6 +15,7 @@ export default function Layout() {
     const location = useLocation();
     const controls = useAnimation();
     const { isOnline } = useOfflineSync();
+    const { newAchievement } = useAchievements();
 
     // Swipe gestures for main sections (Home, Theory, Practice)
     const handleDragEnd = (event, info) => {
@@ -62,6 +65,9 @@ export default function Layout() {
                         <span>İnternet bağlantısı yoxdur. Oflayn rejim aktivdir.</span>
                     </div>
                 )}
+
+                {/* Achievement Notification */}
+                <AchievementUnlocked achievement={newAchievement} onClose={() => { }} />
 
                 <Outlet />
                 <BottomNav />

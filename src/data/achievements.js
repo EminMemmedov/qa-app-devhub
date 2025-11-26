@@ -62,5 +62,85 @@ export const achievements = [
         icon: '🔥',
         requirement: { type: 'difficulty', difficulty: 'hard', count: 5 },
         reward: 120
+    },
+    {
+        id: 'database_beginner',
+        title: 'SQL Başlanğıcı',
+        description: 'Database modulunda ilk səviyyəni tamamlayın',
+        icon: '🗄️',
+        requirement: { type: 'practice_level', module: 'database', level: 1 },
+        reward: 50
+    },
+    {
+        id: 'database_master',
+        title: 'SQL Ustası',
+        description: 'Database modulunda bütün 5 səviyyəni tamamlayın',
+        icon: '💾',
+        requirement: { type: 'practice_complete', module: 'database' },
+        reward: 200
+    },
+    {
+        id: 'automation_beginner',
+        title: 'Avtomatlaşdırma Başlanğıcı',
+        description: 'Automation modulunda ilk səviyyəni tamamlayın',
+        icon: '🤖',
+        requirement: { type: 'practice_level', module: 'automation', level: 1 },
+        reward: 50
+    },
+    {
+        id: 'automation_master',
+        title: 'Test Avtomatlaşdırma Ustası',
+        description: 'Automation modulunda bütün 5 səviyyəni tamamlayın',
+        icon: '⚙️',
+        requirement: { type: 'practice_complete', module: 'automation' },
+        reward: 200
+    },
+    {
+        id: 'interview_ready',
+        title: 'Müsahibəyə Hazır',
+        description: 'Interview simulyatorunu tamamlayın',
+        icon: '🎤',
+        requirement: { type: 'interview_complete' },
+        reward: 150
+    },
+    {
+        id: 'exam_passed',
+        title: 'İmtahan Keçdi',
+        description: 'İmtahandan 80%+ bal toplayın',
+        icon: '📜',
+        requirement: { type: 'exam_score', score: 80 },
+        reward: 250
+    },
+    {
+        id: 'xp_collector',
+        title: 'XP Toplayıcı',
+        description: '1000 XP toplayın',
+        icon: '⭐',
+        requirement: { type: 'xp_earned', amount: 1000 },
+        reward: 100
+    },
+    {
+        id: 'xp_master',
+        title: 'XP Ustası',
+        description: '5000 XP toplayın',
+        icon: '🌟',
+        requirement: { type: 'xp_earned', amount: 5000 },
+        reward: 500
+    },
+    {
+        id: 'practice_champion',
+        title: 'Praktika Çempionu',
+        description: 'Database və Automation modullarını tamamlayın',
+        icon: '🏆',
+        requirement: { type: 'both_practice_complete' },
+        reward: 300
+    },
+    {
+        id: 'all_rounder',
+        title: 'Hamısında Peşəkar',
+        description: 'Interview, Exam və Practice modullarını tamamlayın',
+        icon: '👨‍🎓',
+        requirement: { type: 'all_modules_complete' },
+        reward: 1000
     }
 ];

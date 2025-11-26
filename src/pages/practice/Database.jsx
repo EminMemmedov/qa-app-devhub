@@ -4,12 +4,14 @@ import { Database as DbIcon, Play, CheckCircle, AlertCircle, Bug, Table, Search,
 import { Link } from 'react-router-dom';
 import PageTransition from '../../components/PageTransition';
 import { useGameProgress } from '../../hooks/useGameProgress';
+import { useAchievements } from '../../hooks/useAchievements';
 import { useTranslation } from 'react-i18next';
 import confetti from 'canvas-confetti';
 
 export default function Database() {
     const { t } = useTranslation();
-    const { addXP } = useGameProgress();
+    const { addXP, xp } = useGameProgress();
+    const { checkAchievements } = useAchievements();
 
     const [level, setLevel] = useState(1);
     const [userAnswers, setUserAnswers] = useState(() => {
@@ -154,8 +156,24 @@ const register = async (username, password) => {
             });
 
             if (!completedLevels.includes(level)) {
-                setCompletedLevels([...completedLevels, level]);
+                const newCompletedLevels = [...completedLevels, level];
+                setCompletedLevels(newCompletedLevels);
                 addXP(200);
+
+                // Check achievements
+                const savedAutoLevels = JSON.parse(localStorage.getItem('qa_automation_completed') || '[]');
+
+                checkAchievements({
+                    xp: xp + 200,
+                    completedLevels: {
+                        database: newCompletedLevels,
+                        automation: savedAutoLevels
+                    },
+                    addXP,
+                    foundBugs: [],
+                    moduleBugs: {},
+                    getBugDifficulty: () => 'easy'
+                });
             }
         } else {
             setFeedback({ type: 'error', message: t('database.incorrect') });

@@ -4,12 +4,14 @@ import { Code, Play, CheckCircle, AlertCircle, Bug, Terminal, ChevronLeft, Lock,
 import { Link } from 'react-router-dom';
 import PageTransition from '../../components/PageTransition';
 import { useGameProgress } from '../../hooks/useGameProgress';
+import { useAchievements } from '../../hooks/useAchievements';
 import { useTranslation } from 'react-i18next';
 import confetti from 'canvas-confetti';
 
 export default function Automation() {
     const { t } = useTranslation();
-    const { addXP } = useGameProgress();
+    const { addXP, xp } = useGameProgress();
+    const { checkAchievements } = useAchievements();
 
     const [level, setLevel] = useState(1);
     const [userAnswers, setUserAnswers] = useState(() => {
@@ -159,8 +161,24 @@ public void testAlert() {
             });
 
             if (!completedLevels.includes(level)) {
-                setCompletedLevels([...completedLevels, level]);
+                const newCompletedLevels = [...completedLevels, level];
+                setCompletedLevels(newCompletedLevels);
                 addXP(200);
+
+                // Check achievements
+                const savedDbLevels = JSON.parse(localStorage.getItem('qa_database_completed') || '[]');
+
+                checkAchievements({
+                    xp: xp + 200,
+                    completedLevels: {
+                        database: savedDbLevels,
+                        automation: newCompletedLevels
+                    },
+                    addXP,
+                    foundBugs: [],
+                    moduleBugs: {},
+                    getBugDifficulty: () => 'easy'
+                });
             }
         } else {
             setFeedback({ type: 'error', message: t('automation.incorrect') });

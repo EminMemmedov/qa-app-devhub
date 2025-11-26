@@ -3,14 +3,23 @@ import { achievements } from '../data/achievements';
 
 export function useAchievements() {
     const [unlockedAchievements, setUnlockedAchievements] = useState(() => {
-        const saved = localStorage.getItem('qa_achievements');
-        return saved ? JSON.parse(saved) : [];
+        try {
+            const saved = localStorage.getItem('qa_achievements');
+            return saved ? JSON.parse(saved) : [];
+        } catch (e) {
+            console.error('Error parsing achievements:', e);
+            return [];
+        }
     });
 
     const [newAchievement, setNewAchievement] = useState(null);
     const [hintsUsed, setHintsUsed] = useState(() => {
-        const saved = localStorage.getItem('qa_hints_used');
-        return saved ? parseInt(saved) : 0;
+        try {
+            const saved = localStorage.getItem('qa_hints_used');
+            return saved ? parseInt(saved) : 0;
+        } catch (e) {
+            return 0;
+        }
     });
 
     useEffect(() => {
@@ -22,7 +31,7 @@ export function useAchievements() {
     }, [hintsUsed]);
 
     const checkAchievements = (stats) => {
-        const { foundBugs, totalBugs, moduleBugs, getBugDifficulty } = stats;
+        const { foundBugs, totalBugs, moduleBugs, getBugDifficulty, xp, completedLevels, examScore, interviewComplete, addXP } = stats;
         const newUnlocks = [];
 
         achievements.forEach(achievement => {
@@ -72,6 +81,42 @@ export function useAchievements() {
                     shouldUnlock = difficultyBugs.length >= achievement.requirement.count;
                     break;
 
+                case 'practice_level':
+                    const moduleLevels = completedLevels?.[achievement.requirement.module] || [];
+                    shouldUnlock = moduleLevels.includes(achievement.requirement.level);
+                    break;
+
+                case 'practice_complete':
+                    const allLevels = completedLevels?.[achievement.requirement.module] || [];
+                    shouldUnlock = allLevels.length >= 5;
+                    break;
+
+                case 'interview_complete':
+                    shouldUnlock = interviewComplete === true;
+                    break;
+
+                case 'exam_score':
+                    shouldUnlock = examScore >= achievement.requirement.score;
+                    break;
+
+                case 'xp_earned':
+                    shouldUnlock = xp >= achievement.requirement.amount;
+                    break;
+
+                case 'both_practice_complete':
+                    const dbComplete = (completedLevels?.database || []).length >= 5;
+                    const autoComplete = (completedLevels?.automation || []).length >= 5;
+                    shouldUnlock = dbComplete && autoComplete;
+                    break;
+
+                case 'all_modules_complete':
+                    const allDb = (completedLevels?.database || []).length >= 5;
+                    const allAuto = (completedLevels?.automation || []).length >= 5;
+                    const hasInterview = interviewComplete === true;
+                    const hasExam = examScore >= 80;
+                    shouldUnlock = allDb && allAuto && hasInterview && hasExam;
+                    break;
+
                 default:
                     break;
             }
@@ -83,6 +128,14 @@ export function useAchievements() {
 
         if (newUnlocks.length > 0) {
             setUnlockedAchievements(prev => [...prev, ...newUnlocks.map(a => a.id)]);
+
+            // Award XP for each achievement
+            if (addXP) {
+                newUnlocks.forEach(achievement => {
+                    addXP(achievement.reward);
+                });
+            }
+
             // Show first new achievement
             setNewAchievement(newUnlocks[0]);
             setTimeout(() => setNewAchievement(null), 5000);
