@@ -12,9 +12,24 @@ export default function Database() {
     const { addXP } = useGameProgress();
 
     const [level, setLevel] = useState(1);
-    const [userAnswers, setUserAnswers] = useState({}); // { 1: "code", 2: "code" }
+    const [userAnswers, setUserAnswers] = useState(() => {
+        const saved = localStorage.getItem('qa_database_answers');
+        return saved ? JSON.parse(saved) : {};
+    });
     const [feedback, setFeedback] = useState(null);
-    const [completedLevels, setCompletedLevels] = useState([]);
+    const [completedLevels, setCompletedLevels] = useState(() => {
+        const saved = localStorage.getItem('qa_database_completed');
+        return saved ? JSON.parse(saved) : [];
+    });
+
+    // Persist to localStorage
+    useEffect(() => {
+        localStorage.setItem('qa_database_answers', JSON.stringify(userAnswers));
+    }, [userAnswers]);
+
+    useEffect(() => {
+        localStorage.setItem('qa_database_completed', JSON.stringify(completedLevels));
+    }, [completedLevels]);
 
     // Level Data
     const levels = {
