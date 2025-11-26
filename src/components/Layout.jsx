@@ -1,7 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import BottomNav from './BottomNav';
 import ThemeToggle from './ThemeToggle';
-import FAB from './FAB';
 import { motion, useAnimation } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -47,8 +46,6 @@ export default function Layout() {
                 <div className="fixed top-4 right-4 z-50">
                     <ThemeToggle />
                 </div>
-                {/* Floating Action Button for quick access */}
-                <FAB />
                 <Outlet />
                 <BottomNav />
             </div>
