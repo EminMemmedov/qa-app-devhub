@@ -3,7 +3,6 @@ import { Search, User, Calendar, Phone, Image as ImageIcon, Home, Settings, Term
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import PageTransition from '../../components/PageTransition';
-import Toast from '../../components/Toast';
 import BugList from '../../components/BugList';
 import SpecModal from '../../components/SpecModal';
 import BugDiscoveryAnimation from '../../components/BugDiscoveryAnimation';
@@ -180,11 +179,7 @@ export default function Registration() {
 
     return (
         <PageTransition className="p-6 pt-12 pb-24 min-h-screen">
-            <Toast
-                isVisible={toast.show}
-                message={toast.message}
-                onClose={() => setToast({ ...toast, show: false })}
-            />
+
 
             <SpecModal
                 isOpen={showSpec}

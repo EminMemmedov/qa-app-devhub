@@ -3,7 +3,6 @@ import { DollarSign, TrendingUp, ArrowLeft, Search, FileText, AlertCircle, Check
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import PageTransition from '../../components/PageTransition';
-import Toast from '../../components/Toast';
 import BugList from '../../components/BugList';
 import SpecModal from '../../components/SpecModal';
 import BugDiscoveryAnimation from '../../components/BugDiscoveryAnimation';
@@ -249,11 +248,7 @@ export default function Banking() {
 
     return (
         <PageTransition className="p-6 pt-12 pb-24 min-h-screen">
-            <Toast
-                show={toast.show}
-                message={toast.message}
-                onClose={() => setToast({ show: false, message: '' })}
-            />
+
 
             <SpecModal
                 isOpen={showSpec}
