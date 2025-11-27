@@ -229,15 +229,15 @@ public void testAlert() {
                     })}
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[600px]">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Left: Buggy Code (Read-only) */}
-                    <div className="bg-slate-800 rounded-2xl overflow-hidden shadow-xl border border-slate-700 flex flex-col">
+                    <div className="bg-slate-800 rounded-2xl overflow-hidden shadow-xl border border-slate-700 flex flex-col min-h-[300px] lg:h-[600px]">
                         <div className="px-4 py-3 bg-slate-950 border-b border-slate-700 flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <Bug size={18} className="text-red-400" />
                                 <span className="font-mono text-sm font-bold text-slate-200">Buggy Code</span>
                             </div>
-                            <span className="text-xs text-slate-400 italic ml-4 text-right">
+                            <span className="text-xs text-slate-400 italic ml-4 text-right hidden sm:block">
                                 {currentLevelData.description}
                             </span>
                         </div>
@@ -247,7 +247,7 @@ public void testAlert() {
                     </div>
 
                     {/* Right: Solution Editor */}
-                    <div className="bg-slate-800 rounded-2xl overflow-hidden shadow-xl border border-slate-700 flex flex-col">
+                    <div className="bg-slate-800 rounded-2xl overflow-hidden shadow-xl border border-slate-700 flex flex-col min-h-[300px] lg:h-[600px]">
                         <div className="px-4 py-3 bg-slate-950 border-b border-slate-700 flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <CheckCircle size={18} className="text-green-400" />

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Trophy, Lock } from 'lucide-react';
+import { Trophy, Lock, CheckCircle } from 'lucide-react';
 import { achievements } from '../data/achievements';
 import { useAchievements } from '../hooks/useAchievements';
 import { useGameProgress } from '../hooks/useGameProgress';
@@ -82,17 +82,6 @@ export default function AchievementsPage() {
                             </p>
                         </div>
                     </div>
-
-                    {/* XP Summary Badge */}
-                    <div className="bg-white dark:bg-slate-800 px-5 py-3 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-yellow-600 dark:text-yellow-400">
-                            <Trophy size={20} />
-                        </div>
-                        <div>
-                            <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total XP</div>
-                            <div className="text-xl font-black text-slate-900 dark:text-white">{xp}</div>
-                        </div>
-                    </div>
                 </div>
 
                 {/* Achievements Grid */}
@@ -118,8 +107,8 @@ export default function AchievementsPage() {
                                     }`}>
 
                                     {/* Card Header: Icon & XP */}
-                                    <div className="flex justify-between items-start mb-5 gap-4">
-                                        <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-4xl shadow-sm flex-shrink-0 ${isUnlocked
+                                    <div className="flex justify-between items-start mb-4 sm:mb-5 gap-4">
+                                        <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl shadow-sm flex-shrink-0 ${isUnlocked
                                             ? 'bg-orange-50 dark:bg-orange-900/20 text-orange-500'
                                             : 'bg-slate-200 dark:bg-slate-700 text-slate-400 grayscale'
                                             }`}>
@@ -134,20 +123,20 @@ export default function AchievementsPage() {
                                     </div>
 
                                     {/* Card Content */}
-                                    <div className="mb-6 flex-grow">
-                                        <h3 className={`text-xl font-black mb-2 leading-tight break-words hyphens-auto ${isUnlocked ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'}`}>
+                                    <div className="mb-4 sm:mb-6 flex-grow">
+                                        <h3 className={`text-lg sm:text-xl font-black mb-2 leading-tight break-words hyphens-auto ${isUnlocked ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'}`}>
                                             {achievement.title}
                                         </h3>
-                                        <p className={`text-sm font-medium leading-relaxed break-words ${isUnlocked ? 'text-slate-600 dark:text-slate-400' : 'text-slate-400 dark:text-slate-500'}`}>
+                                        <p className={`text-base sm:text-sm font-medium leading-relaxed break-words ${isUnlocked ? 'text-slate-600 dark:text-slate-400' : 'text-slate-400 dark:text-slate-500'}`}>
                                             {achievement.description}
                                         </p>
                                     </div>
 
                                     {/* Card Footer: Progress/Status */}
-                                    <div className="mt-auto pt-5 border-t border-slate-100 dark:border-slate-800">
+                                    <div className="mt-auto pt-4 sm:pt-5 border-t border-slate-100 dark:border-slate-800">
                                         {!isUnlocked && progress > 0 ? (
                                             <div className="space-y-2">
-                                                <div className="flex justify-between text-xs font-bold text-slate-500">
+                                                <div className="flex justify-between text-xs sm:text-xs font-bold text-slate-500">
                                                     <span>Proqress</span>
                                                     <span>{Math.round(progress * 100)}%</span>
                                                 </div>
@@ -160,17 +149,20 @@ export default function AchievementsPage() {
                                                 </div>
                                             </div>
                                         ) : (
-                                            <div className={`flex items-center gap-2 text-sm font-bold ${isUnlocked ? 'text-green-600 dark:text-green-400' : 'text-slate-400'}`}>
+                                            <div className={`flex items-center gap-2 text-xs sm:text-sm font-bold ${isUnlocked
+                                                ? 'text-green-600 dark:text-green-400'
+                                                : 'text-slate-400 dark:text-slate-500'
+                                                }`}>
                                                 {isUnlocked ? (
-                                                    <div className="flex items-center gap-2 bg-green-50 dark:bg-green-900/20 px-3 py-1.5 rounded-lg border border-green-100 dark:border-green-800/50">
-                                                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                                                        {t('achievements.unlocked')}
-                                                    </div>
+                                                    <>
+                                                        <CheckCircle size={16} />
+                                                        <span>{t('achievements.unlocked')}</span>
+                                                    </>
                                                 ) : (
-                                                    <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg">
-                                                        <Lock size={14} />
-                                                        {t('achievements.locked')}
-                                                    </div>
+                                                    <>
+                                                        <Lock size={16} />
+                                                        <span>{t('achievements.locked')}</span>
+                                                    </>
                                                 )}
                                             </div>
                                         )}
