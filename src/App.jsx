@@ -24,6 +24,7 @@ const Interview = lazy(() => import('./pages/Interview'));
 const InterviewResults = lazy(() => import('./pages/InterviewResults'));
 const Automation = lazy(() => import('./pages/practice/Automation'));
 const Database = lazy(() => import('./pages/practice/Database'));
+const Glossary = lazy(() => import('./pages/Glossary'));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -64,6 +65,7 @@ function App() {
               <Route path="practice/interview-results" element={<InterviewResults />} />
               <Route path="practice/automation" element={<Automation />} />
               <Route path="practice/database" element={<Database />} />
+              <Route path="glossary" element={<Glossary />} />
             </Route>
           </Routes>
         </Suspense>

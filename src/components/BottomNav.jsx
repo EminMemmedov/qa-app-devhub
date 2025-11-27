@@ -1,4 +1,4 @@
-import { Home, BookOpen, Bug } from 'lucide-react';
+import { Home, BookOpen, Bug, LibraryBig } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import clsx from 'clsx';
@@ -11,6 +11,7 @@ export default function BottomNav() {
         { icon: Home, label: 'Ana Səhifə', path: '/' },
         { icon: BookOpen, label: 'Nəzəriyyə', path: '/theory' },
         { icon: Bug, label: 'Təcrübə', path: '/practice' },
+        { icon: LibraryBig, label: 'Lüğət', path: '/glossary' },
     ];
 
     // Handle browser back/forward navigation and provide haptic feedback

@@ -9,6 +9,7 @@ import { achievements } from '../data/achievements';
 import { useStreak } from '../hooks/useStreak';
 import LearningProgress from '../components/LearningProgress';
 import { Flame } from 'lucide-react';
+import ThemeToggle from '../components/ThemeToggle';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -66,7 +67,7 @@ export default function Home() {
   ];
 
   return (
-    <PageTransition className="p-6 pb-24 min-h-screen bg-slate-50/50">
+    <PageTransition className="p-6 pb-24 min-h-screen bg-slate-50/50 dark:bg-slate-900 transition-colors duration-300">
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -86,13 +87,13 @@ export default function Home() {
                 <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
                 
                 {/* Logo Container */}
-                <div className="relative bg-white p-4 rounded-2xl shadow-xl shadow-slate-200/50 ring-1 ring-slate-100">
+                <div className="relative bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-black/30 ring-1 ring-slate-100 dark:ring-slate-700">
                     <img src="/qa-academy.png" alt="QA Academy" className="h-20 object-contain" />
                 </div>
             </motion.div>
 
-            <h1 className="text-4xl font-black text-slate-900 tracking-tighter mb-2">
-              {t('home.greeting').split(',')[0]}, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{t('home.greeting').split(' ')[1]}</span>
+            <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter mb-2">
+              {t('home.greeting').split(',')[0]}, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">{t('home.greeting').split(' ')[1]}</span>
               <motion.span
                 animate={{ rotate: [0, 10, -10, 0] }}
                 transition={{ repeat: Infinity, duration: 2, repeatDelay: 3 }}
@@ -101,17 +102,13 @@ export default function Home() {
                 👋
               </motion.span>
             </h1>
-            <p className="text-slate-500 text-lg font-medium">
+            <p className="text-slate-500 dark:text-slate-400 text-lg font-medium">
               {t('home.subtitle')}
             </p>
           </div>
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="hidden sm:flex items-center justify-center w-12 h-12 bg-white rounded-2xl shadow-lg shadow-blue-100 text-yellow-400"
-          >
-            <Star fill="currentColor" size={24} />
-          </motion.div>
+          <div className="hidden sm:block">
+             <ThemeToggle />
+          </div>
         </motion.header>
 
         {/* Main Stats Card - Redesigned for Clarity */}
@@ -257,14 +254,14 @@ export default function Home() {
               variants={itemVariants}
               whileHover={{ y: -5, shadow: "0 20px 25px -5px rgb(0 0 0 / 0.1)" }}
               whileTap={{ scale: 0.98 }}
-              className="bg-white p-6 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 h-full flex flex-col justify-between group"
+              className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-xl shadow-slate-200/50 dark:shadow-black/20 border border-slate-100 dark:border-slate-700 h-full flex flex-col justify-between group transition-all"
             >
-              <div className="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 mb-4 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-2xl flex items-center justify-center text-purple-600 dark:text-purple-400 mb-4 group-hover:scale-110 transition-transform duration-300">
                 <BookOpen size={24} />
               </div>
               <div>
-                <h3 className="font-bold text-slate-900 text-lg mb-1">{t('home.quickActions.theory.title')}</h3>
-                <p className="text-slate-500 text-sm leading-snug">{t('home.quickActions.theory.subtitle')}</p>
+                <h3 className="font-bold text-slate-900 dark:text-white text-lg mb-1">{t('home.quickActions.theory.title')}</h3>
+                <p className="text-slate-500 dark:text-slate-400 text-sm leading-snug">{t('home.quickActions.theory.subtitle')}</p>
               </div>
             </motion.div>
           </Link>
@@ -274,14 +271,14 @@ export default function Home() {
               variants={itemVariants}
               whileHover={{ y: -5, shadow: "0 20px 25px -5px rgb(0 0 0 / 0.1)" }}
               whileTap={{ scale: 0.98 }}
-              className="bg-white p-6 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 h-full flex flex-col justify-between group"
+              className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-xl shadow-slate-200/50 dark:shadow-black/20 border border-slate-100 dark:border-slate-700 h-full flex flex-col justify-between group transition-all"
             >
-              <div className="w-12 h-12 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-600 mb-4 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-2xl flex items-center justify-center text-orange-600 dark:text-orange-400 mb-4 group-hover:scale-110 transition-transform duration-300">
                 <Bug size={24} />
               </div>
               <div>
-                <h3 className="font-bold text-slate-900 text-lg mb-1">{t('home.quickActions.practice.title')}</h3>
-                <p className="text-slate-500 text-sm leading-snug">{t('home.quickActions.practice.subtitle')}</p>
+                <h3 className="font-bold text-slate-900 dark:text-white text-lg mb-1">{t('home.quickActions.practice.title')}</h3>
+                <p className="text-slate-500 dark:text-slate-400 text-sm leading-snug">{t('home.quickActions.practice.subtitle')}</p>
               </div>
             </motion.div>
           </Link>
@@ -297,8 +294,8 @@ export default function Home() {
                 <Newspaper size={20} className="text-blue-600" />
               </div>
               <div>
-                <h3 className="font-bold text-lg text-slate-900">{t('home.dailyQuote.title', 'Faydalı Məqalələr')}</h3>
-                <p className="text-xs text-slate-500 font-medium">{t('home.dailyQuote.subtitle', 'QA biliklərinizi artırın')}</p>
+                <h3 className="font-bold text-lg text-slate-900 dark:text-white">{t('home.dailyQuote.title', 'Faydalı Məqalələr')}</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{t('home.dailyQuote.subtitle', 'QA biliklərinizi artırın')}</p>
               </div>
             </div>
 
@@ -355,37 +352,37 @@ export default function Home() {
 
         {/* Recent Activity / Stats Row */}
         <motion.div variants={itemVariants} className="grid grid-cols-2 gap-4 mb-8">
-          <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
-            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+          <div className="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm flex items-center gap-4 transition-colors">
+            <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400">
               <Bug size={20} />
             </div>
             <div>
-              <div className="text-2xl font-black text-slate-900">{foundBugs.length}</div>
-              <div className="text-xs text-slate-500 font-bold uppercase">{t('home.stats.foundBugs')}</div>
+              <div className="text-2xl font-black text-slate-900 dark:text-white">{foundBugs.length}</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase">{t('home.stats.foundBugs')}</div>
             </div>
           </div>
           <Link to="/achievements">
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4 cursor-pointer hover:border-yellow-300 hover:shadow-lg transition-all"
+              className="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm flex items-center gap-4 cursor-pointer hover:border-yellow-300 dark:hover:border-yellow-700 hover:shadow-lg transition-all"
             >
-              <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600">
+              <div className="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center text-yellow-600 dark:text-yellow-400">
                 <Medal size={20} />
               </div>
               <div>
-                <div className="text-2xl font-black text-slate-900">{unlockedCount}</div>
-                <div className="text-xs text-slate-500 font-bold uppercase">{t('home.stats.achievements')}</div>
+                <div className="text-2xl font-black text-slate-900 dark:text-white">{unlockedCount}</div>
+                <div className="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase">{t('home.stats.achievements')}</div>
               </div>
             </motion.div>
           </Link>
         </motion.div>
 
         {/* Footer / Contact Section */}
-        <motion.div variants={itemVariants} className="mt-12 border-t border-slate-200 pt-8">
+        <motion.div variants={itemVariants} className="mt-12 border-t border-slate-200 dark:border-slate-700 pt-8">
             <div className="text-center mb-6">
-                <h3 className="text-xl font-bold text-slate-900">{t('contact.title')}</h3>
-                <p className="text-slate-500 text-sm">{t('contact.subtitle')}</p>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">{t('contact.title')}</h3>
+                <p className="text-slate-500 dark:text-slate-400 text-sm">{t('contact.subtitle')}</p>
             </div>
             
             <div className="flex justify-center gap-6 flex-wrap">
@@ -395,10 +392,10 @@ export default function Home() {
                     rel="noopener noreferrer"
                     className="flex flex-col items-center gap-2 group"
                 >
-                    <div className="w-14 h-14 bg-white border border-slate-100 shadow-sm rounded-2xl flex items-center justify-center text-blue-600 group-hover:bg-blue-50 group-hover:scale-110 transition-all duration-300">
+                    <div className="w-14 h-14 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm rounded-2xl flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:bg-blue-50 dark:group-hover:bg-blue-900/30 group-hover:scale-110 transition-all duration-300">
                         <Linkedin size={24} />
                     </div>
-                    <span className="text-xs font-medium text-slate-500 group-hover:text-blue-600">LinkedIn</span>
+                    <span className="text-xs font-medium text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400">LinkedIn</span>
                 </a>
 
                 <a 
@@ -407,10 +404,10 @@ export default function Home() {
                     rel="noopener noreferrer"
                     className="flex flex-col items-center gap-2 group"
                 >
-                    <div className="w-14 h-14 bg-white border border-slate-100 shadow-sm rounded-2xl flex items-center justify-center text-pink-600 group-hover:bg-pink-50 group-hover:scale-110 transition-all duration-300">
+                    <div className="w-14 h-14 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm rounded-2xl flex items-center justify-center text-pink-600 dark:text-pink-400 group-hover:bg-pink-50 dark:group-hover:bg-pink-900/30 group-hover:scale-110 transition-all duration-300">
                         <Instagram size={24} />
                     </div>
-                    <span className="text-xs font-medium text-slate-500 group-hover:text-pink-600">Instagram</span>
+                    <span className="text-xs font-medium text-slate-500 dark:text-slate-400 group-hover:text-pink-600 dark:group-hover:text-pink-400">Instagram</span>
                 </a>
 
                 <a 
@@ -419,15 +416,15 @@ export default function Home() {
                     rel="noopener noreferrer"
                     className="flex flex-col items-center gap-2 group"
                 >
-                    <div className="w-14 h-14 bg-white border border-slate-100 shadow-sm rounded-2xl flex items-center justify-center text-green-600 group-hover:bg-green-50 group-hover:scale-110 transition-all duration-300">
+                    <div className="w-14 h-14 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm rounded-2xl flex items-center justify-center text-green-600 dark:text-green-400 group-hover:bg-green-50 dark:group-hover:bg-green-900/30 group-hover:scale-110 transition-all duration-300">
                         <Phone size={24} />
                     </div>
-                    <span className="text-xs font-medium text-slate-500 group-hover:text-green-600">WhatsApp</span>
+                    <span className="text-xs font-medium text-slate-500 dark:text-slate-400 group-hover:text-green-600 dark:group-hover:text-green-400">WhatsApp</span>
                 </a>
             </div>
             
             <div className="mt-8 text-center">
-                 <p className="text-slate-400 text-xs font-medium">© 2025 QA Academy. Made with ❤️ by Emin</p>
+                 <p className="text-slate-400 dark:text-slate-500 text-xs font-medium">© 2025 QA Academy. Made with ❤️ by Emin</p>
             </div>
         </motion.div>
 

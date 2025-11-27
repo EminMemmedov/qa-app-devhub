@@ -89,10 +89,10 @@ export default function PracticeHub() {
         }*/
     ];
     return (
-        <PageTransition className="p-6 pt-12 pb-24 min-h-screen">
+        <PageTransition className="p-6 pt-12 pb-24 min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
             <header className="mb-8">
-                <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-2">{t('practice.title')}</h1>
-                <p className="text-slate-500 font-medium">{t('practice.subtitle')}</p>
+                <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-2">{t('practice.title')}</h1>
+                <p className="text-slate-500 dark:text-slate-400 font-medium">{t('practice.subtitle')}</p>
             </header>
 
             <motion.div
@@ -107,21 +107,21 @@ export default function PracticeHub() {
                             variants={item}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-5 group hover:shadow-xl hover:shadow-slate-200/50 transition-all"
+                            className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-5 group hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-black/30 transition-all"
                         >
-                            <div className={`w-16 h-16 rounded-2xl ${scenario.color} flex items-center justify-center text-white shadow-lg shadow-slate-200`}>
+                            <div className={`w-16 h-16 rounded-2xl ${scenario.color} flex items-center justify-center text-white shadow-lg shadow-slate-200 dark:shadow-black/20`}>
                                 <scenario.icon size={32} />
                             </div>
                             <div className="flex-1">
-                                <h3 className="text-xl font-bold text-slate-900 mb-1 group-hover:text-blue-600 transition-colors">
+                                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                                     {scenario.title}
                                 </h3>
-                                <p className="text-slate-500 text-sm leading-relaxed">
+                                <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
                                     {scenario.description}
                                 </p>
                             </div>
-                            <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-blue-50 transition-colors">
-                                <ChevronRight className="text-slate-400 group-hover:text-blue-500" />
+                            <div className="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-700 flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-slate-600 transition-colors">
+                                <ChevronRight className="text-slate-400 dark:text-slate-300 group-hover:text-blue-500 dark:group-hover:text-blue-300" />
                             </div>
                         </motion.div>
                     </Link>
