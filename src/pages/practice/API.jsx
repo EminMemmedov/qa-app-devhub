@@ -269,9 +269,9 @@ export default function API() {
                     ))}
                 </div>
 
-                <div className="grid grid-cols-1 2xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Task Panel */}
-                    <div className="2xl:col-span-1 space-y-6">
+                    <div className="lg:col-span-1 space-y-6">
                         <div className="bg-slate-800 rounded-2xl p-5 border border-slate-700 shadow-lg">
                             <div className="flex items-center gap-2 mb-3">
                                 <Server className="text-sky-400" size={20} />
@@ -319,10 +319,10 @@ export default function API() {
                     </div>
 
                     {/* API Client Interface */}
-                    <div className="2xl:col-span-2 bg-slate-800 rounded-2xl border border-slate-700 shadow-xl overflow-hidden flex flex-col">
+                    <div className="lg:col-span-2 bg-slate-800 rounded-2xl border border-slate-700 shadow-xl overflow-hidden flex flex-col">
                         {/* Request Bar */}
                         <div className="p-4 border-b border-slate-700 bg-slate-800/80 backdrop-blur-sm">
-                            <div className="flex flex-col gap-3">
+                            <div className="flex flex-col xl:flex-row gap-3">
                                 <div className="flex-1 flex gap-2">
                                     <select 
                                         value={method} 
@@ -335,23 +335,24 @@ export default function API() {
                                         <option>DELETE</option>
                                     </select>
                                     <div className="flex-1 relative">
-                                        <span className="hidden md:block absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-mono text-sm">https://api.qa</span>
+                                        <span className="hidden md:block absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-mono text-sm select-none">https://api.qa</span>
                                         <input 
                                             type="text" 
                                             value={url}
                                             onChange={(e) => setUrl(e.target.value)}
                                             placeholder="/users"
-                                            className="w-full bg-slate-900 text-white rounded-xl pl-4 md:pl-28 pr-4 py-3 border border-slate-700 outline-none focus:border-sky-500 font-mono"
+                                            className="w-full bg-slate-900 text-white rounded-xl pl-4 md:pl-32 pr-4 py-3 border border-slate-700 outline-none focus:border-sky-500 font-mono"
                                         />
                                     </div>
                                 </div>
                                 <button 
                                     onClick={sendRequest}
                                     disabled={isLoading}
-                                    className="bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-xl px-6 py-3 flex items-center justify-center gap-2 transition-all shadow-lg shadow-sky-500/20 active:scale-95 w-full"
+                                    className="bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-xl px-6 py-3 flex items-center justify-center gap-2 transition-all shadow-lg shadow-sky-500/20 active:scale-95 w-full xl:w-auto shrink-0"
                                 >
                                     {isLoading ? <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" /> : <Play size={18} fill="currentColor" />}
-                                    <span>{t('api.send', 'Sorğu Göndər')}</span>
+                                    <span className="xl:hidden 2xl:inline">{t('api.send', 'Sorğu Göndər')}</span>
+                                    <span className="hidden xl:inline 2xl:hidden">Send</span>
                                 </button>
                             </div>
                         </div>
