@@ -204,40 +204,12 @@ export default function Home() {
         </Link>
 
         {/* Learning Progress Card */}
-        <LearningProgress />
-
-        {/* Streak Card */}
-        {currentStreak > 0 && (
-          <motion.div
-            variants={itemVariants}
-            className="bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden mb-2 -mt-6 z-10"
-          >
-            <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full blur-2xl -mr-8 -mt-8"></div>
-            <div className="relative z-10 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md">
-                  <Flame size={28} className="text-orange-200" />
-                </div>
-                <div>
-                  <div className="text-sm text-white/80 font-medium">{t('streak.title')}</div>
-                  <div className="text-3xl font-black">{currentStreak} {t('streak.days')}</div>
-                  {longestStreak > currentStreak && (
-                    <div className="text-xs text-white/70 mt-1">{t('streak.record')}: {longestStreak} {t('streak.days')}</div>
-                  )}
-                </div>
-              </div>
-              {currentStreak >= 7 && (
-                <div className="text-right">
-                  <div className="text-xs text-white/80 font-medium">{t('streak.bonus')}</div>
-                  <div className="text-2xl font-black">+50% XP</div>
-                </div>
-              )}
-            </div>
-          </motion.div>
-        )}
+        <div className="mb-8">
+          <LearningProgress />
+        </div>
 
         {/* Quick Actions Grid */}
-        <div className={`grid grid-cols-2 gap-4 mb-6 relative z-20 ${currentStreak > 0 ? '-mt-6' : '-mt-20'}`}>
+        <div className="grid grid-cols-2 gap-4 mb-6">
           <Link to="/theory" className="block" rel="prefetch">
             <motion.div
               variants={itemVariants}
