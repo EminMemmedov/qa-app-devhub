@@ -1,4 +1,4 @@
-import { Home, BookOpen, Bug, LibraryBig } from 'lucide-react';
+import { Home, BookOpen, Bug, LibraryBig, GraduationCap } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import clsx from 'clsx';
@@ -11,6 +11,7 @@ export default function BottomNav() {
         { icon: Home, label: 'Ana Səhifə', path: '/' },
         { icon: BookOpen, label: 'Nəzəriyyə', path: '/theory' },
         { icon: Bug, label: 'Təcrübə', path: '/practice' },
+        { icon: GraduationCap, label: 'ISTQB', path: '/istqb' },
         { icon: LibraryBig, label: 'Lüğət', path: '/glossary' },
     ];
 
