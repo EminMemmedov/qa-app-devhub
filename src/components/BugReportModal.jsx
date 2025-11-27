@@ -41,16 +41,20 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
     const validateReport = () => {
         const issues = [];
         
-        // 1. Summary check
-        if (reportData.summary.length < 10) {
+        // 1. Summary check (Smart: Word count)
+        const summaryWords = reportData.summary.trim().split(/\s+/).length;
+        if (summaryWords < 3) {
             issues.push(t('bugReport.feedback.shortSummary'));
         }
 
-        // 2. Steps check
-        if (!reportData.steps.trim()) {
-            issues.push(t('bugReport.feedback.noSteps'));
-        } else if (reportData.steps.length < 20) {
-            issues.push(t('bugReport.feedback.shortSteps'));
+        // 2. Steps check (Smart: Formatting & Count)
+        const stepsLines = reportData.steps.split('\n').filter(line => line.trim().length > 0);
+        const hasNumbering = /\d+\.|-/.test(reportData.steps); // Checks for "1." or "-"
+        
+        if (stepsLines.length < 2) {
+            issues.push(t('bugReport.feedback.shortSteps')); // Need at least 2 steps
+        } else if (!hasNumbering) {
+            issues.push(t('bugReport.feedback.stepsFormat')); // Recommend list format
         }
 
         // 3. Results check
@@ -61,10 +65,29 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
             issues.push(t('bugReport.feedback.noExpected'));
         }
         
-        // 4. Logical check
+        // 4. Logical check (Comparison)
         if (reportData.actualResult && reportData.expectedResult && 
             reportData.actualResult.toLowerCase() === reportData.expectedResult.toLowerCase()) {
             issues.push(t('bugReport.feedback.sameResults'));
+        }
+
+        // 5. Severity Check (Smart: Keyword matching)
+        if (reportData.severity === 'Critical') {
+            // English, Azerbaijani, Russian keywords for critical issues
+            const criticalKeywords = [
+                // EN
+                'crash', 'block', 'freeze', '500', '404', 'broken', 'data loss', 'security',
+                // AZ
+                'çökür', 'işləmir', 'donur', 'blok', 'itki', 'təhlükəsizlik', 'xəta',
+                // RU
+                'краш', 'упал', 'завис', 'блок', 'потеря', 'безопасность'
+            ];
+            const textToCheck = (reportData.summary + ' ' + reportData.actualResult).toLowerCase();
+            const hasCriticalKeyword = criticalKeywords.some(k => textToCheck.includes(k));
+            
+            if (!hasCriticalKeyword) {
+                issues.push(t('bugReport.feedback.severityMismatch'));
+            }
         }
 
         return issues;
@@ -148,7 +171,7 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
                             <p className="text-slate-800 font-medium text-lg">{bug.description}</p>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="space-y-6">
+                        <form id="bug-report-form" onSubmit={handleSubmit} className="space-y-6">
                             {/* Summary */}
                             <div>
                                 <label className="block text-sm font-bold text-slate-700 mb-2">
@@ -287,29 +310,32 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
                                     </motion.div>
                                 )}
                             </AnimatePresence>
-
-                            {/* Submit Button */}
-                            <button
-                                type="submit"
-                                disabled={isChecking || !reportData.severity || !reportData.priority}
-                                className={`w-full py-4 rounded-xl font-black text-lg shadow-xl transition-all flex items-center justify-center gap-2 ${
-                                    isChecking 
-                                        ? 'bg-slate-100 text-slate-400 cursor-wait'
-                                        : feedback?.type === 'success'
-                                            ? 'bg-green-500 text-white hover:bg-green-600'
-                                            : 'bg-slate-900 text-white hover:bg-slate-800 hover:shadow-2xl hover:-translate-y-1'
-                                }`}
-                            >
-                                {isChecking ? (
-                                    <>
-                                        <UserCheck className="animate-pulse" />
-                                        {t('bugReport.feedback.checking')}
-                                    </>
-                                ) : (
-                                    t('bugReport.submit')
-                                )}
-                            </button>
                         </form>
+                    </div>
+
+                    {/* Footer - Fixed Button */}
+                    <div className="p-4 md:p-6 border-t border-slate-100 bg-white shrink-0 pb-8 md:pb-6">
+                        <button
+                            type="submit"
+                            form="bug-report-form"
+                            disabled={isChecking || !reportData.severity || !reportData.priority}
+                            className={`w-full py-3 md:py-4 rounded-xl font-black text-base md:text-lg shadow-xl transition-all flex items-center justify-center gap-2 ${
+                                isChecking 
+                                    ? 'bg-slate-100 text-slate-400 cursor-wait'
+                                    : feedback?.type === 'success'
+                                        ? 'bg-green-500 text-white hover:bg-green-600'
+                                        : 'bg-slate-900 text-white hover:bg-slate-800 hover:shadow-2xl hover:-translate-y-1'
+                            }`}
+                        >
+                            {isChecking ? (
+                                <>
+                                    <UserCheck className="animate-pulse w-5 h-5" />
+                                    {t('bugReport.feedback.checking')}
+                                </>
+                            ) : (
+                                t('bugReport.submit')
+                            )}
+                        </button>
                     </div>
                 </motion.div>
             </motion.div>

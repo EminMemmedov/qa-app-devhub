@@ -213,12 +213,14 @@
             "checking": "Team Lead yoxlayır...",
             "success": "Əla report! Hər şey qaydasındadır.",
             "improvements": "Reportu təkmilləşdirin:",
-            "shortSummary": "Xülasə çox qısadır. Daha ətraflı yazın.",
+            "shortSummary": "Xülasə çox qısadır. Ən azı 3 sözdən ibarət olmalıdır.",
             "noSteps": "Addımları (Steps) qeyd etmək vacibdir.",
-            "shortSteps": "Addımlar çox azdır. Necə təkrarlamaq olar?",
+            "stepsFormat": "Addımları siyahı şəklində yazın (1. Daxil ol, 2. Kliklə).",
+            "shortSteps": "Addımlar çox azdır. Ən azı 2 addım olmalıdır.",
             "noActual": "Faktiki nəticəni qeyd edin.",
             "noExpected": "Gözlənilən nəticəni qeyd edin.",
-            "sameResults": "Faktiki və gözlənilən nəticə eyni ola bilməz."
+            "sameResults": "Faktiki və gözlənilən nəticə eyni ola bilməz.",
+            "severityMismatch": "Bu 'Critical' xətaya bənzəmir. 'Crash' və ya 'blok' yoxdur?"
         }
     },
     "dailyChallenge": {
