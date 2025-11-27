@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Database as DbIcon, Play, CheckCircle, AlertCircle, Bug, Table, Search, ChevronLeft, Lock, Unlock, ArrowRight } from 'lucide-react';
+import { Database as DbIcon, Play, CheckCircle, AlertCircle, RefreshCw, Terminal, ChevronLeft, Lock, Unlock, Table, Eye, RotateCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PageTransition from '../../components/PageTransition';
 import { useGameProgress } from '../../hooks/useGameProgress';
@@ -8,182 +8,274 @@ import { useAchievements } from '../../hooks/useAchievements';
 import { useTranslation } from 'react-i18next';
 import confetti from 'canvas-confetti';
 
+// Mock Database Data
+const initialDB = {
+    users: [
+        { id: 1, username: 'admin', email: 'admin@example.com', status: 'active', role: 'admin' },
+        { id: 2, username: 'john_doe', email: 'john@test.com', status: 'active', role: 'user' },
+        { id: 3, username: 'jane_smith', email: 'jane@test.com', status: 'inactive', role: 'user' },
+        { id: 4, username: 'hacker_1337', email: 'x@hacked.com', status: 'banned', role: 'user' },
+        { id: 5, username: 'guest', email: 'guest@temp.mail', status: 'active', role: 'guest' }
+    ],
+    orders: [
+        { id: 101, user_id: 2, amount: 50.00, status: 'completed' },
+        { id: 102, user_id: 2, amount: 120.50, status: 'pending' },
+        { id: 103, user_id: 3, amount: 15.00, status: 'cancelled' }
+    ]
+};
+
 export default function Database() {
     const { t } = useTranslation();
     const { addXP, xp } = useGameProgress();
     const { checkAchievements } = useAchievements();
 
     const [level, setLevel] = useState(1);
-    const [userAnswers, setUserAnswers] = useState(() => {
-        const saved = localStorage.getItem('qa_database_answers');
-        return saved ? JSON.parse(saved) : {};
-    });
-    const [feedback, setFeedback] = useState(null);
+    const [userInputs, setUserInputs] = useState({}); // { levelId: query }
+    const [query, setQuery] = useState('');
+    const [hasSeenAnswer, setHasSeenAnswer] = useState(false); // Reset on level change
+    
+    const [history, setHistory] = useState([]); 
+    const [historyIndex, setHistoryIndex] = useState(-1);
+    const [result, setResult] = useState(null); 
     const [completedLevels, setCompletedLevels] = useState(() => {
         const saved = localStorage.getItem('qa_database_completed');
         return saved ? JSON.parse(saved) : [];
     });
 
-    // Persist to localStorage
-    useEffect(() => {
-        localStorage.setItem('qa_database_answers', JSON.stringify(userAnswers));
-    }, [userAnswers]);
+    const textareaRef = useRef(null);
 
+    // Persist completed levels
     useEffect(() => {
         localStorage.setItem('qa_database_completed', JSON.stringify(completedLevels));
     }, [completedLevels]);
 
-    // Level Data
+    // Level Logic
     const levels = {
         1: {
-            title: t('database.levels.level1'),
-            description: t('database.levels.level1_desc'),
-            buggyCode: `// Get user orders
-const userId = req.body.userId;
-
-// Bug: SQL Injection & SELECT *
-const query = "SELECT * FROM Users, Orders WHERE Users.id = " + userId;
-
-db.execute(query);`,
-            hint: "Use parameterized queries (?) and specify columns instead of *.",
-            validate: (code) => {
-                const hasParams = code.includes('?') || code.includes('$1');
-                const hasSelectAll = code.includes('SELECT *');
-                const hasConcat = code.includes('+ userId') || code.includes('${userId}');
-                return hasParams && !hasSelectAll && !hasConcat;
-            }
+            id: 1,
+            task: t('database.levels.level1_task'),
+            expected: (db) => db.users,
+            validate: (res) => res.length === 5 && res[0].username, 
+            hint: "İstifadəçilər cədvəlindən bütün məlumatları seçmək üçün hansı açar söz lazımdır? (SELECT ... FROM ...)",
+            answer: "SELECT * FROM users"
         },
         2: {
-            title: t('database.levels.level2'),
-            description: t('database.levels.level2_desc'),
-            buggyCode: `// Get active orders
-// Bug: Missing JOIN condition & Index
-const query = \`
-    SELECT u.name, o.amount 
-    FROM Users u, Orders o 
-    WHERE o.status = 'active'
-\`;`,
-            hint: "Use INNER JOIN ... ON ... to avoid Cartesian Product.",
-            validate: (code) => {
-                const lower = code.toLowerCase();
-                const hasJoin = lower.includes('join') && lower.includes('on');
-                return hasJoin;
-            }
+            id: 2,
+            task: t('database.levels.level2_task'),
+            expected: (db) => db.users.filter(u => u.status === 'active'),
+            validate: (res) => res.length === 3 && res.every(r => r.status === 'active'),
+            hint: "Şərt vermək üçün WHERE istifadə et. status = 'active'",
+            answer: "SELECT * FROM users WHERE status = 'active'"
         },
         3: {
-            title: t('database.levels.level3'),
-            description: t('database.levels.level3_desc'),
-            buggyCode: `// Transfer money
-const transfer = async (fromId, toId, amount) => {
-    // Bug: No Transaction & N+1 Problem
-    await db.query('UPDATE Accounts SET balance = balance - ? WHERE id = ?', [amount, fromId]);
-    
-    const history = await db.query('SELECT * FROM History');
-    for(let h of history) {
-        await db.query('SELECT * FROM Meta WHERE h_id = ?', [h.id]);
-    }
-
-    await db.query('UPDATE Accounts SET balance = balance + ? WHERE id = ?', [amount, toId]);
-};`,
-            hint: "Wrap updates in BEGIN/COMMIT transaction.",
-            validate: (code) => {
-                const lower = code.toLowerCase();
-                const hasTransaction = (lower.includes('begin') || lower.includes('start transaction')) && lower.includes('commit');
-                return hasTransaction;
-            }
+            id: 3,
+            task: t('database.levels.level3_task'),
+            expected: (db) => db.users.map(u => ({ username: u.username, email: u.email })),
+            validate: (res) => res.length > 0 && Object.keys(res[0]).length === 2 && res[0].username && res[0].email && !res[0].id,
+            hint: "SELECT * əvəzinə konkret sütun adlarını yazın (vergüllə ayıraraq).",
+            answer: "SELECT username, email FROM users"
         },
         4: {
-            title: t('database.levels.level4'),
-            description: t('database.levels.level4_desc'),
-            buggyCode: `// Get users with more than 5 orders
-// Bug: Filtering aggregate in WHERE
-const query = \`
-    SELECT user_id, COUNT(*) as order_count
-    FROM Orders
-    WHERE COUNT(*) > 5
-    GROUP BY user_id
-\`;`,
-            hint: "Use HAVING for filtering aggregate functions (COUNT, SUM).",
-            validate: (code) => {
-                const lower = code.toLowerCase();
-                const hasHaving = lower.includes('having count');
-                const hasWhereCount = lower.includes('where count');
-                return hasHaving && !hasWhereCount;
-            }
+            id: 4,
+            task: t('database.levels.level4_task'),
+            expected: (db) => [...db.users].sort((a, b) => b.id - a.id),
+            validate: (res) => res.length === 5 && res[0].id === 5,
+            hint: "Sıralamaq üçün ORDER BY ... DESC istifadə edin.",
+            answer: "SELECT * FROM users ORDER BY id DESC"
         },
         5: {
-            title: t('database.levels.level5'),
-            description: t('database.levels.level5_desc'),
-            buggyCode: `// Register User
-const register = async (username, password) => {
-    // Bug: Storing password in plain text
-    await db.query('INSERT INTO Users (username, password) VALUES (?, ?)', [username, password]);
-};`,
-            hint: "Hash the password before storing (e.g., bcrypt.hash).",
-            validate: (code) => {
-                const lower = code.toLowerCase();
-                const hasHash = lower.includes('hash') || lower.includes('bcrypt') || lower.includes('md5') || lower.includes('sha');
-                return hasHash;
-            }
+            id: 5,
+            task: t('database.levels.level5_task'),
+            expected: (db) => db.users, 
+            validate: (res, q) => res.length === 5 && (q.toLowerCase().includes('or 1=1') || q.toLowerCase().includes('or true')),
+            hint: "WHERE şərtində elə bir ifadə yaz ki, həmişə doğru (TRUE) olsun. Məsələn: OR 1=1",
+            answer: "SELECT * FROM users WHERE username = 'admin' OR 1=1"
         }
     };
 
-    const currentLevelData = levels[level];
+    const currentLevel = levels[level];
 
-    // Reset feedback on level change
+    // Handle Level Change
     useEffect(() => {
-        setFeedback(null);
+        // Load saved input for this level or empty
+        setQuery(userInputs[level] || '');
+        setHasSeenAnswer(false); // Reset cheat flag
+        setResult(null);
     }, [level]);
 
-    const handleCodeChange = (e) => {
-        const newCode = e.target.value;
-        setUserAnswers(prev => ({
-            ...prev,
-            [level]: newCode
-        }));
+    const handleQueryChange = (val) => {
+        setQuery(val);
+        setUserInputs(prev => ({ ...prev, [level]: val }));
     };
 
-    const checkAnswer = () => {
-        const codeToCheck = userAnswers[level] || '';
-        const isValid = currentLevelData.validate(codeToCheck);
+    const handleShowAnswer = () => {
+        setHasSeenAnswer(true);
+        handleQueryChange(currentLevel.answer);
+    };
 
-        if (isValid) {
-            setFeedback({ type: 'success', message: t('database.correct') });
-            confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 }
+    // Simple SQL Engine
+    const executeSQL = (sql) => {
+        const q = sql.trim();
+        if (!q) return;
+        
+        const lowerQ = q.toLowerCase();
+        
+        setHistory(prev => [...prev, q]);
+        setHistoryIndex(-1);
+
+        try {
+            // Basic validation
+            if (!lowerQ.startsWith('select')) {
+                throw new Error("Only SELECT queries are supported in this terminal.");
+            }
+
+            let data = [...initialDB.users]; // Default table
+            let columns = Object.keys(initialDB.users[0]);
+
+            // 1. Parse Table (FROM)
+            const fromMatch = lowerQ.match(/from\s+(\w+)/);
+            if (!fromMatch) throw new Error("Syntax Error: Missing FROM clause.");
+            
+            const tableName = fromMatch[1];
+            if (!initialDB[tableName]) throw new Error(`Table '${tableName}' not found.`);
+            data = [...initialDB[tableName]];
+            columns = Object.keys(data[0]);
+
+            // 2. Parse WHERE
+            if (lowerQ.includes('where')) {
+                const wherePart = q.substring(lowerQ.indexOf('where') + 5).split(/order by/i)[0].trim();
+                
+                // Handle SQL Injection Level 5
+                if (level === 5 && (wherePart.includes('OR 1=1') || wherePart.includes('OR true'))) {
+                    // Return all data (Injection successful)
+                } else {
+                    // Simple parser
+                    const conditionMatch = wherePart.match(/(\w+)\s*(=|!=|>|<)\s*['"]?([^'"]+)['"]?/);
+                    
+                    if (conditionMatch) {
+                        const [_, field, op, val] = conditionMatch;
+                        data = data.filter(row => {
+                            const rowVal = row[field];
+                            const cmpVal = isNaN(val) ? val : Number(val);
+                            
+                            switch(op) {
+                                case '=': return rowVal == cmpVal;
+                                case '!=': return rowVal != cmpVal;
+                                case '>': return rowVal > cmpVal;
+                                case '<': return rowVal < cmpVal;
+                                default: return false;
+                            }
+                        });
+                    }
+                }
+            }
+
+            // 3. Parse SELECT columns
+            const selectPart = q.substring(6, lowerQ.indexOf('from')).trim();
+            if (selectPart !== '*') {
+                const requestedCols = selectPart.split(',').map(c => c.trim());
+                // Validate columns
+                const invalidCol = requestedCols.find(c => !columns.includes(c));
+                if (invalidCol) throw new Error(`Column '${invalidCol}' not found in '${tableName}'.`);
+
+                data = data.map(row => {
+                    const newRow = {};
+                    requestedCols.forEach(col => newRow[col] = row[col]);
+                    return newRow;
+                });
+                columns = requestedCols;
+            }
+
+            // 4. Parse ORDER BY
+            if (lowerQ.includes('order by')) {
+                const orderPart = lowerQ.split('order by')[1].trim();
+                const [field, dir] = orderPart.split(/\s+/);
+                
+                if (field && columns.includes(field)) {
+                    data.sort((a, b) => {
+                        if (dir === 'desc') return b[field] > a[field] ? 1 : -1;
+                        return a[field] > b[field] ? 1 : -1;
+                    });
+                }
+            }
+
+            // Validation check
+            const passed = currentLevel.validate(data, q);
+
+            setResult({
+                columns: columns,
+                rows: data,
+                success: passed,
+                error: null
             });
 
-            if (!completedLevels.includes(level)) {
-                const newCompletedLevels = [...completedLevels, level];
-                setCompletedLevels(newCompletedLevels);
-                addXP(200);
-
-                // Check achievements
-                const savedAutoLevels = JSON.parse(localStorage.getItem('qa_automation_completed') || '[]');
-
-                checkAchievements({
-                    xp: xp + 200,
-                    completedLevels: {
-                        database: newCompletedLevels,
-                        automation: savedAutoLevels
-                    },
-                    addXP,
-                    foundBugs: [],
-                    moduleBugs: {},
-                    getBugDifficulty: () => 'easy'
-                });
+            if (passed && !completedLevels.includes(level)) {
+                handleLevelComplete();
+            } else if (passed) {
+                confetti({ particleCount: 50, spread: 50, origin: { y: 0.7 } });
             }
-        } else {
-            setFeedback({ type: 'error', message: t('database.incorrect') });
+
+        } catch (err) {
+            setResult({
+                columns: [],
+                rows: [],
+                success: false,
+                error: err.message
+            });
+        }
+    };
+
+    const handleLevelComplete = () => {
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        const newCompleted = [...completedLevels, level];
+        setCompletedLevels(newCompleted);
+        
+        // Only award XP if answer wasn't shown
+        const xpAmount = hasSeenAnswer ? 0 : 300;
+        if (xpAmount > 0) addXP(xpAmount);
+        
+        // Check achievements
+        checkAchievements({
+            xp: xp + xpAmount,
+            completedLevels: { database: newCompleted },
+            addXP, // Pass function, but achievements hook might add XP internally. 
+                   // Ideally we should control XP here, but for now let's pass 0 if cheated.
+            foundBugs: [],
+            moduleBugs: {},
+            getBugDifficulty: () => 'medium'
+        });
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            executeSQL(query);
+        }
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (historyIndex < history.length - 1) {
+                const newIndex = historyIndex + 1;
+                setHistoryIndex(newIndex);
+                handleQueryChange(history[history.length - 1 - newIndex]);
+            }
+        }
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (historyIndex > 0) {
+                const newIndex = historyIndex - 1;
+                setHistoryIndex(newIndex);
+                handleQueryChange(history[history.length - 1 - newIndex]);
+            } else {
+                setHistoryIndex(-1);
+                handleQueryChange('');
+            }
         }
     };
 
     return (
         <PageTransition className="min-h-screen bg-slate-900 text-slate-300 p-6 pt-20 pb-24">
             <div className="max-w-7xl mx-auto">
-                {/* Header & Back Button */}
+                {/* Header */}
                 <div className="flex items-center gap-4 mb-8">
                     <Link to="/practice" className="p-2 bg-slate-800 rounded-xl hover:bg-slate-700 transition-colors">
                         <ChevronLeft className="text-white" />
@@ -202,7 +294,6 @@ const register = async (username, password) => {
                     {[1, 2, 3, 4, 5].map((lvl) => {
                         const isLocked = lvl > 1 && !completedLevels.includes(lvl - 1);
                         const isCompleted = completedLevels.includes(lvl);
-
                         return (
                             <button
                                 key={lvl}
@@ -217,77 +308,194 @@ const register = async (username, password) => {
                             >
                                 <div className="flex items-center gap-2">
                                     {isLocked ? <Lock size={16} /> : isCompleted ? <CheckCircle size={16} className="text-green-500" /> : <Unlock size={16} />}
-                                    <span className="font-bold">{t(`database.levels.level${lvl}`)}</span>
+                                    <span className="font-bold text-sm">{t(`database.levels.level${lvl}`)}</span>
                                 </div>
                             </button>
                         );
                     })}
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Left: Buggy Code (Read-only) */}
-                    <div className="bg-slate-800 rounded-2xl overflow-hidden shadow-xl border border-slate-700 flex flex-col min-h-[300px] lg:h-[600px]">
-                        <div className="px-4 py-3 bg-slate-950 border-b border-slate-700 flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <Bug size={18} className="text-red-400" />
-                                <span className="font-mono text-sm font-bold text-slate-200">Buggy Code</span>
+                {/* Main Content Grid: Changed to be mobile-friendly (flex-col) */}
+                <div className="flex flex-col lg:grid lg:grid-cols-3 gap-6 min-h-[600px]">
+                    {/* Left: Schema & Task */}
+                    <div className="lg:col-span-1 flex flex-col gap-6 order-2 lg:order-1">
+                        {/* Task Card */}
+                        <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl">
+                            <div className="flex items-center gap-2 mb-4">
+                                <Terminal className="text-indigo-400" />
+                                <h2 className="text-xl font-bold text-white">{t('database.task')}</h2>
                             </div>
-                            <span className="text-xs text-slate-400 italic ml-4 text-right hidden sm:block">
-                                {currentLevelData.description}
-                            </span>
+                            <p className="text-lg text-slate-200 font-medium mb-4">
+                                {currentLevel.task}
+                            </p>
+                            <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-700 text-sm text-slate-400 mb-4">
+                                <p className="font-bold text-slate-500 mb-1">{t('database.hint')}:</p>
+                                {currentLevel.hint}
+                            </div>
+                            
+                            {/* Control Buttons */}
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => handleQueryChange('')}
+                                    className="flex-1 py-2 px-3 rounded-lg bg-slate-700 hover:bg-slate-600 text-white text-sm font-bold flex items-center justify-center gap-2 transition-colors"
+                                >
+                                    <RotateCcw size={14} />
+                                    Sıfırla
+                                </button>
+                                <button
+                                    onClick={handleShowAnswer}
+                                    disabled={hasSeenAnswer}
+                                    className={`flex-1 py-2 px-3 rounded-lg border text-sm font-bold flex items-center justify-center gap-2 transition-colors ${
+                                        hasSeenAnswer 
+                                            ? 'bg-slate-800 border-slate-700 text-slate-500 cursor-not-allowed'
+                                            : 'bg-indigo-900/50 hover:bg-indigo-900 border-indigo-500/30 text-indigo-300'
+                                    }`}
+                                >
+                                    <Eye size={14} />
+                                    {hasSeenAnswer ? 'Göstərilib' : 'Cavab'}
+                                </button>
+                            </div>
+                            {hasSeenAnswer && (
+                                <div className="mt-2 text-xs text-amber-500 text-center font-bold">
+                                    Cavaba baxdığınız üçün XP verilməyəcək!
+                                </div>
+                            )}
                         </div>
-                        <div className="p-4 font-mono text-sm overflow-auto flex-1 bg-slate-900/50">
-                            <pre className="text-red-300/80">{currentLevelData.buggyCode}</pre>
+
+                        {/* Schema Card */}
+                        <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl flex-1 overflow-y-auto max-h-[300px] lg:max-h-none">
+                            <div className="flex items-center gap-2 mb-4">
+                                <Table className="text-emerald-400" />
+                                <h2 className="text-xl font-bold text-white">{t('database.tables')}</h2>
+                            </div>
+                            
+                            {/* Users Table Schema */}
+                            <div className="mb-6">
+                                <h3 className="text-sm font-bold text-slate-400 mb-2 uppercase tracking-wider">Users Table</h3>
+                                <div className="bg-slate-900 rounded-xl overflow-hidden border border-slate-700">
+                                    <div className="grid grid-cols-2 bg-slate-950 p-2 text-xs font-bold text-slate-500">
+                                        <div>Column</div>
+                                        <div>Type</div>
+                                    </div>
+                                    <div className="divide-y divide-slate-800 text-sm">
+                                        <div className="grid grid-cols-2 p-2 hover:bg-slate-800/50">
+                                            <span className="font-mono text-indigo-300">id</span>
+                                            <span className="text-slate-500">INT (PK)</span>
+                                        </div>
+                                        <div className="grid grid-cols-2 p-2 hover:bg-slate-800/50">
+                                            <span className="font-mono text-indigo-300">username</span>
+                                            <span className="text-slate-500">VARCHAR</span>
+                                        </div>
+                                        <div className="grid grid-cols-2 p-2 hover:bg-slate-800/50">
+                                            <span className="font-mono text-indigo-300">email</span>
+                                            <span className="text-slate-500">VARCHAR</span>
+                                        </div>
+                                        <div className="grid grid-cols-2 p-2 hover:bg-slate-800/50">
+                                            <span className="font-mono text-indigo-300">status</span>
+                                            <span className="text-slate-500">ENUM</span>
+                                        </div>
+                                        <div className="grid grid-cols-2 p-2 hover:bg-slate-800/50">
+                                            <span className="font-mono text-indigo-300">role</span>
+                                            <span className="text-slate-500">ENUM</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Right: Solution Editor */}
-                    <div className="bg-slate-800 rounded-2xl overflow-hidden shadow-xl border border-slate-700 flex flex-col min-h-[300px] lg:h-[600px]">
-                        <div className="px-4 py-3 bg-slate-950 border-b border-slate-700 flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <CheckCircle size={18} className="text-green-400" />
-                                <span className="font-mono text-sm font-bold text-slate-200">{t('database.fix_instruction')}</span>
+                    {/* Right: SQL Terminal & Results */}
+                    <div className="lg:col-span-2 flex flex-col gap-4 order-1 lg:order-2">
+                        {/* Terminal */}
+                        <div className="bg-slate-900 rounded-2xl border border-slate-700 shadow-2xl flex flex-col overflow-hidden">
+                            <div className="bg-slate-950 px-4 py-2 flex items-center justify-between border-b border-slate-800">
+                                <div className="flex gap-2">
+                                    <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50" />
+                                    <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50" />
+                                    <div className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50" />
+                                </div>
+                                <span className="text-xs font-mono text-slate-500">mysql-client — v8.0</span>
                             </div>
-                            <button
-                                onClick={checkAnswer}
-                                className="flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm font-bold bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-lg shadow-indigo-500/20"
-                            >
-                                {t('database.check')}
-                                <ArrowRight size={14} />
-                            </button>
+                            <div className="p-4 flex-1 relative min-h-[150px]">
+                                <textarea
+                                    ref={textareaRef}
+                                    value={query}
+                                    onChange={(e) => handleQueryChange(e.target.value)}
+                                    onKeyDown={handleKeyDown}
+                                    placeholder={t('database.terminal_placeholder')}
+                                    className="w-full h-full bg-transparent font-mono text-base text-emerald-400 placeholder:text-slate-700 focus:outline-none resize-none pb-12"
+                                    spellCheck="false"
+                                />
+                                <div className="absolute bottom-4 right-4 flex gap-2">
+                                    <button 
+                                        onClick={() => handleQueryChange('')}
+                                        className="p-2 rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
+                                        title={t('database.clear')}
+                                    >
+                                        <RefreshCw size={16} />
+                                    </button>
+                                    <button 
+                                        onClick={() => executeSQL(query)}
+                                        className="px-4 py-2 rounded-lg bg-indigo-600 text-white font-bold hover:bg-indigo-500 transition-colors flex items-center gap-2 shadow-lg shadow-indigo-500/20"
+                                    >
+                                        <Play size={16} fill="currentColor" />
+                                        {t('database.execute')}
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <textarea
-                            value={userAnswers[level] || ''}
-                            onChange={handleCodeChange}
-                            placeholder={t('database.placeholder')}
-                            className="flex-1 w-full bg-slate-900 p-4 font-mono text-sm text-green-300 focus:outline-none resize-none"
-                            spellCheck="false"
-                        />
 
-                        {/* Feedback Area */}
-                        <AnimatePresence>
-                            {feedback && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0 }}
-                                    className={`p-4 border-t ${feedback.type === 'success'
-                                        ? 'bg-green-500/10 border-green-500/20 text-green-400'
-                                        : 'bg-red-500/10 border-red-500/20 text-red-400'
-                                        }`}
-                                >
-                                    <div className="flex items-center gap-2 font-bold">
-                                        {feedback.type === 'success' ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
-                                        {feedback.message}
+                        {/* Results Table */}
+                        <div className="flex-1 bg-slate-800 rounded-2xl border border-slate-700 shadow-xl overflow-hidden flex flex-col min-h-[200px]">
+                            <div className="px-4 py-3 bg-slate-950 border-b border-slate-800 flex justify-between items-center">
+                                <span className="font-bold text-slate-400 text-sm uppercase tracking-wider">{t('database.result')}</span>
+                                {result?.success && (
+                                    <span className="bg-green-500/10 text-green-400 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                                        <CheckCircle size={12} />
+                                        {t('database.success')}
+                                    </span>
+                                )}
+                            </div>
+                            
+                            {/* Mobile-friendly table wrapper */}
+                            <div className="flex-1 overflow-x-auto p-0">
+                                {result?.error ? (
+                                    <div className="p-8 flex flex-col items-center justify-center text-center h-full text-red-400">
+                                        <AlertCircle size={48} className="mb-4 opacity-50" />
+                                        <h3 className="text-lg font-bold mb-2">{t('database.error')}</h3>
+                                        <p className="font-mono bg-red-950/30 px-4 py-2 rounded-lg border border-red-900/50">
+                                            {result.error}
+                                        </p>
                                     </div>
-                                    {feedback.type === 'error' && (
-                                        <div className="mt-1 text-xs opacity-70 ml-6">
-                                            {t('database.hint')}: {currentLevelData.hint}
-                                        </div>
-                                    )}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                                ) : result?.rows?.length > 0 ? (
+                                    <div className="min-w-[500px]"> {/* Ensure table has min width to scroll */}
+                                        <table className="w-full text-left border-collapse">
+                                            <thead className="bg-slate-900/50 text-xs uppercase font-bold text-slate-500 sticky top-0">
+                                                <tr>
+                                                    {result.columns.map(col => (
+                                                        <th key={col} className="p-4 border-b border-slate-700">{col}</th>
+                                                    ))}
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-slate-700/50 font-mono text-sm text-slate-300">
+                                                {result.rows.map((row, idx) => (
+                                                    <tr key={idx} className="hover:bg-slate-700/30 transition-colors">
+                                                        {result.columns.map(col => (
+                                                            <td key={col} className="p-4">{row[col]}</td>
+                                                        ))}
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                ) : (
+                                    <div className="h-full flex flex-col items-center justify-center text-slate-600 p-8">
+                                        <Table size={48} className="mb-4 opacity-20" />
+                                        <p className="text-center text-sm">{t('database.terminal_placeholder')}</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
