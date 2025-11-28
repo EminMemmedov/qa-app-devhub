@@ -37,6 +37,7 @@ export default function Layout() {
     }, [location.pathname, controls]);
 
     const isWidePage = ['/practice/database', '/practice/automation'].includes(location.pathname);
+    const isHomePage = location.pathname === '/';
 
     return (
         <motion.div
@@ -52,7 +53,7 @@ export default function Layout() {
         >
             <div className={`w-full mx-auto min-h-screen bg-white dark:bg-slate-800 md:shadow-2xl relative overflow-hidden transition-colors duration-300 ${isWidePage ? 'max-w-7xl' : 'max-w-md'}`}>
                 {/* Top Controls */}
-                <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
+                <div className={`fixed top-4 right-4 z-50 flex items-center gap-2 ${isHomePage ? 'sm:hidden' : ''}`}>
                     <ThemeToggle />
                     {/* LanguageSelector temporarily hidden - using only Azerbaijani */}
                     {/* <LanguageSelector /> */}
