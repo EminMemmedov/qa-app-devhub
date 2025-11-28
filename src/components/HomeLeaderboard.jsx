@@ -22,8 +22,9 @@ const PodiumStep = ({ rank, user, delay }) => {
     const isSecond = rank === 2;
     const isThird = rank === 3;
 
-    // Heights and Styles
-    const heightClass = isFirst ? 'h-36' : isSecond ? 'h-24' : 'h-20';
+    // Adjusted heights for better proportions
+    const heightClass = isFirst ? 'h-32' : isSecond ? 'h-20' : 'h-16';
+    
     const gradientClass = isFirst 
         ? 'bg-gradient-to-b from-yellow-300 to-yellow-500 shadow-yellow-500/20' 
         : isSecond 
@@ -39,49 +40,44 @@ const PodiumStep = ({ rank, user, delay }) => {
             transition={{ delay, type: "spring", stiffness: 200, damping: 20 }}
             className={`flex flex-col items-center justify-end w-1/3 relative ${isFirst ? 'z-20' : 'z-10'}`}
         >
-            {/* Avatar Container - Sitting on top of the block */}
-            <div className={`flex flex-col items-center mb-[-10px] relative z-20 transition-transform ${isFirst ? 'scale-110' : 'scale-90'}`}>
+            {/* Avatar Container - Strictly ABOVE the block */}
+            <div className={`flex flex-col items-center mb-1 w-full relative z-20 transition-transform ${isFirst ? 'scale-105' : 'scale-95'}`}>
                 {isFirst && (
-                    <Crown className="text-yellow-400 drop-shadow-sm animate-bounce mb-1" size={24} fill="currentColor" />
+                    <Crown className="text-yellow-400 drop-shadow-sm animate-bounce mb-0.5" size={20} fill="currentColor" />
                 )}
                 
                 <div className={`
                     relative flex items-center justify-center rounded-2xl text-white font-black shadow-md
                     ${user ? getAvatarColor(user.name) : 'bg-slate-100 dark:bg-slate-800 border-2 border-dashed border-slate-300 dark:border-slate-600'}
-                    ${isFirst ? 'w-16 h-16 text-2xl border-4 border-white dark:border-slate-900' : 'w-12 h-12 text-lg border-2 border-white dark:border-slate-900'}
+                    ${isFirst ? 'w-14 h-14 text-xl border-4 border-white dark:border-slate-900' : 'w-11 h-11 text-base border-2 border-white dark:border-slate-900'}
                 `}>
                     {user ? (
                         user.name.charAt(0)
                     ) : (
-                        <User className="text-slate-300 dark:text-slate-600" size={isFirst ? 24 : 20} />
-                    )}
-
-                    {/* XP Badge Pill */}
-                    {user && (
-                        <div className={`
-                            absolute -bottom-2 left-1/2 -translate-x-1/2 
-                            bg-white dark:bg-slate-800 px-2 py-0.5 rounded-full 
-                            shadow-sm border border-slate-100 dark:border-slate-600
-                            flex items-center justify-center min-w-[40px]
-                        `}>
-                            <span className="text-[9px] font-bold text-slate-900 dark:text-white whitespace-nowrap">
-                                {user.xp} XP
-                            </span>
-                        </div>
+                        <User className="text-slate-300 dark:text-slate-600" size={isFirst ? 22 : 18} />
                     )}
                 </div>
 
-                {/* Name */}
-                <div className={`mt-3 font-bold text-slate-700 dark:text-slate-200 text-center truncate w-20 ${isFirst ? 'text-xs' : 'text-[10px]'}`}>
+                {/* XP Badge - Properly spaced */}
+                {user && (
+                    <div className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm px-2 py-0.5 rounded-full shadow-sm border border-slate-100 dark:border-slate-600 mt-1 z-30 relative">
+                        <span className="text-[9px] font-bold text-slate-900 dark:text-white whitespace-nowrap block leading-none">
+                            {user.xp} XP
+                        </span>
+                    </div>
+                )}
+
+                {/* Name - Clear separation */}
+                <div className={`mt-1 font-bold text-slate-700 dark:text-slate-200 text-center truncate w-full px-1 ${isFirst ? 'text-xs' : 'text-[10px]'}`}>
                     {user ? user.name.split(' ')[0] : ''}
                 </div>
             </div>
 
             {/* The Block */}
-            <div className={`w-full ${heightClass} ${gradientClass} rounded-t-xl relative flex justify-center pt-2 shadow-xl`}>
+            <div className={`w-full ${heightClass} ${gradientClass} rounded-t-xl relative flex justify-center items-start pt-2 shadow-xl`}>
                 {/* Shine overlay */}
                 <div className="absolute inset-0 bg-white/10 rounded-t-xl pointer-events-none"></div>
-                <span className={`font-black text-4xl ${numberColor}`}>{rank}</span>
+                <span className={`font-black text-3xl ${numberColor}`}>{rank}</span>
             </div>
         </motion.div>
     );
