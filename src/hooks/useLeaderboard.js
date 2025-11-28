@@ -84,6 +84,7 @@ export function useLeaderboard() {
 
             let uid;
             let isNewUser = true;
+            let remoteData = null;
 
             if (!querySnapshot.empty) {
                 // User exists! Restore account
@@ -93,6 +94,7 @@ export function useLeaderboard() {
                 
                 uid = bestMatch.id; 
                 isNewUser = false;
+                remoteData = bestMatch;
                 console.log("User restored:", cleanName, uid);
             } else {
                 // New User
@@ -103,7 +105,38 @@ export function useLeaderboard() {
             setStorageItem('qa_user_profile', profile);
             setUserProfile(profile);
 
-            // Sync to DB
+            // If restored, check if we need to pull data from DB to LocalStorage
+            if (!isNewUser && remoteData) {
+                const currentXP = xp || 0;
+                const remoteXP = remoteData.xp || 0;
+
+                // If remote progress is better, sync it to local
+                if (remoteXP > currentXP) {
+                    console.log("Syncing from DB to LocalStorage...");
+                    
+                    // Update XP
+                    const gameProgress = getStorageItem('qa_game_progress', { 
+                        xp: 0, 
+                        level: 1, 
+                        foundBugs: [],
+                        completedLevels: { sql: [], automation: [], api: [], mobile: [] } 
+                    });
+                    gameProgress.xp = remoteXP;
+                    gameProgress.level = remoteData.level || 1;
+                    setStorageItem('qa_game_progress', gameProgress);
+
+                    // Update Badges
+                    if (remoteData.badges && remoteData.badges.length > 0) {
+                        setStorageItem('qa_achievements', remoteData.badges);
+                    }
+
+                    // Force reload to apply changes to hooks
+                    window.location.reload();
+                    return true;
+                }
+            }
+
+            // Sync to DB (Update XP/Level/Badges to current local state or merge)
             const userData = {
                 name: cleanName,
                 name_lower: nameLower,
