@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, User, Loader2, ChevronRight, Sparkles, Crown } from 'lucide-react';
+import { Trophy, User, Loader2, ChevronRight, Sparkles, Crown, Edit2, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useLeaderboard } from '../hooks/useLeaderboard';
 
@@ -45,12 +45,12 @@ const PodiumStep = ({ rank, user, delay }) => {
                 )}
                 
                 <div className={`
-                    relative flex items-center justify-center rounded-2xl text-white font-black shadow-xl
+                    relative flex items-center justify-center rounded-2xl text-white font-black shadow-xl overflow-hidden
                     ${user ? getAvatarColor(user.name) : 'bg-slate-100 dark:bg-slate-800 border-2 border-dashed border-slate-300 dark:border-slate-600'}
                     ${isFirst ? 'w-20 h-20 text-2xl border-4 border-white dark:border-slate-900' : 'w-14 h-14 text-lg border-2 border-white dark:border-slate-900'}
                 `}>
                     {user ? (
-                        user.name.charAt(0)
+                        <span className="pb-1">{user.name.charAt(0)}</span>
                     ) : (
                         <User className="text-slate-300 dark:text-slate-600" size={isFirst ? 32 : 24} />
                     )}
@@ -85,8 +85,9 @@ export default function Leaderboard() {
   const { t } = useTranslation();
   const { leaders, loading, userProfile, saveProfile } = useLeaderboard();
   
-  // Registration State
+  // Registration/Editing State
   const [showRegistration, setShowRegistration] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [nameInput, setNameInput] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -95,6 +96,14 @@ export default function Leaderboard() {
           setShowRegistration(true);
       }
   }, [loading, userProfile]);
+
+  // Pre-fill data when editing
+  useEffect(() => {
+      if (isEditing && userProfile) {
+          setNameInput(userProfile.name || '');
+          setShowRegistration(true);
+      }
+  }, [isEditing, userProfile]);
 
   const handleRegister = async (e) => {
       e.preventDefault();
@@ -106,6 +115,7 @@ export default function Leaderboard() {
       
       if (success) {
           setShowRegistration(false);
+          setIsEditing(false);
       }
   };
 
@@ -142,12 +152,29 @@ export default function Leaderboard() {
                       animate={{ scale: 1, y: 0 }}
                       className="bg-white dark:bg-slate-800 w-full max-w-sm p-6 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700"
                   >
+                      {/* Close button for editing mode */}
+                      {isEditing && (
+                          <button 
+                              onClick={() => {
+                                  setShowRegistration(false);
+                                  setIsEditing(false);
+                              }}
+                              className="absolute top-4 right-4 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400"
+                          >
+                              <X size={20} />
+                          </button>
+                      )}
+
                       <div className="text-center mb-6">
                           <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-indigo-600 dark:text-indigo-400">
                               <User size={32} />
                           </div>
-                          <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2">Tanış olaq!</h2>
-                          <p className="text-slate-500 dark:text-slate-400 text-sm">Liderlər cədvəlində iştirak etmək üçün adınızı və soyadınızı daxil edin.</p>
+                          <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2">
+                              {isEditing ? 'Profil Düzəlişi' : 'Tanış olaq!'}
+                          </h2>
+                          <p className="text-slate-500 dark:text-slate-400 text-sm">
+                              {isEditing ? 'Məlumatlarınızı yeniləyin.' : 'Liderlər cədvəlində iştirak etmək üçün adınızı daxil edin.'}
+                          </p>
                       </div>
 
                       <form onSubmit={handleRegister}>
@@ -159,6 +186,7 @@ export default function Leaderboard() {
                               className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-700 focus:border-indigo-500 focus:ring-0 outline-none transition-all text-slate-900 dark:text-white font-medium mb-4 placeholder:text-slate-400"
                               autoFocus
                           />
+
                           <button
                               type="submit"
                               disabled={!nameInput.trim() || isSubmitting}
@@ -166,7 +194,8 @@ export default function Leaderboard() {
                           >
                               {isSubmitting ? <Loader2 className="animate-spin" size={20} /> : (
                                   <>
-                                      Davam et <ChevronRight size={20} />
+                                      {isEditing ? 'Yadda Saxla' : 'Davam et'} 
+                                      <ChevronRight size={20} />
                                   </>
                               )}
                           </button>
@@ -210,9 +239,11 @@ export default function Leaderboard() {
               className={`rounded-2xl p-4 flex items-center gap-4 shadow-sm border ${user.uid === userProfile?.uid ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800 ring-1 ring-indigo-500/30' : 'bg-slate-50 dark:bg-slate-900 border-slate-100 dark:border-slate-700'}`}
             >
               <div className="font-bold text-slate-400 w-6 text-center">{index + 4}</div>
+              
               <div className={`w-10 h-10 min-w-[2.5rem] rounded-xl ${getAvatarColor(user.name)} flex items-center justify-center text-white font-bold shadow-sm`}>
                 {user.name.charAt(0)}
               </div>
+
               <div className="flex-1 min-w-0">
                 <div className="font-bold text-slate-900 dark:text-white flex items-center gap-2 truncate">
                     {user.name} {user.uid === userProfile?.uid && <span className="text-[10px] bg-indigo-100 text-indigo-600 px-1.5 rounded font-bold">(Sən)</span>}
@@ -254,10 +285,34 @@ export default function Leaderboard() {
                         </div>
                         <div className="text-xs text-indigo-200 font-medium">Sənin nəticən</div>
                     </div>
-                    <div className="text-white font-black whitespace-nowrap bg-white/10 px-3 py-1 rounded-lg">
-                        {currentUser.xp} XP
+                    <div className="flex items-center gap-3">
+                        <div className="text-white font-black whitespace-nowrap bg-white/10 px-3 py-1 rounded-lg">
+                            {currentUser.xp} XP
+                        </div>
+                        <button 
+                            onClick={() => setIsEditing(true)}
+                            className="p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
+                        >
+                            <Edit2 size={16} className="text-white" />
+                        </button>
                     </div>
                 </div>
+            </motion.div>
+        )}
+        
+        {/* Add Edit Button to Header if not in Sticky Mode (Rank <= 3) */}
+        {currentUserRank <= 3 && currentUser && (
+             <motion.div 
+                initial={{ y: 100 }}
+                animate={{ y: 0 }}
+                className="fixed bottom-20 right-4 z-40"
+            >
+                <button 
+                    onClick={() => setIsEditing(true)}
+                    className="p-4 bg-indigo-600 text-white rounded-full shadow-xl shadow-indigo-500/40 hover:bg-indigo-700 transition-all hover:scale-110"
+                >
+                    <Edit2 size={24} />
+                </button>
             </motion.div>
         )}
       </AnimatePresence>

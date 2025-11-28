@@ -7,10 +7,10 @@ export const examQuestions = [
         difficulty: 'easy',
         question: 'QA-nın (Quality Assurance) əsas məqsədi nədir?',
         options: [
-            'Proqramdakı bütün səhvləri tapmaq və dərhal developerə göndərmək',
-            'Proqramın keyfiyyətini təmin edən prosesləri qurmaq və qüsurların qarşısını almaq',
-            'Test sənədlərini hazırlamaq və hesabat vermək',
-            'Kodun düzgün yazıldığını yoxlamaq və optimallaşdırmaq'
+            'Proqram təminatındakı bütün səhvləri aşkar etmək və düzəltmək',
+            'Proseslərin keyfiyyətini təmin edərək qüsurların yaranmasının qarşısını almaq',
+            'Test sənədlərini hazırlamaq və testləri icra etmək',
+            'Müştəri məmnuniyyətini təmin etmək üçün son yoxlamanı aparmaq'
         ],
         correctAnswer: 1,
         explanation: 'QA - keyfiyyəti təmin etmək üçün proseslərin qurulması və qüsurların yaranmasının qarşısının alınmasıdır (Proses yönümlü). Testləşdirmə isə məhsul yönümlüdür.'
@@ -21,7 +21,7 @@ export const examQuestions = [
         difficulty: 'medium',
         question: 'Verifikasiya və Validasiya arasındakı fərq hansıdır?',
         options: [
-            'Verifikasiya istifadəçi mühitində, Validasiya test mühitində aparılır',
+            'Verifikasiya prosesin düzgünlüyünü, Validasiya məhsulun düzgünlüyünü yoxlayır',
             'Verifikasiya: "Biz məhsulu düzgün qururuq?" (Tələblərə uyğunluq); Validasiya: "Biz düzgün məhsulu qururuq?" (İstifadəçi ehtiyacı)',
             'Verifikasiya dinamik testdir, Validasiya statik testdir',
             'Validasiya yalnız sənədlər üzərində aparılır, Verifikasiya isə kod üzərində'
@@ -60,13 +60,13 @@ export const examQuestions = [
     {
         id: 5,
         category: 'qa_basics',
-        difficulty: 'easy',
-        question: 'Test Case-in əsas komponentləri hansılardır?',
+        difficulty: 'medium', // Upgraded difficulty
+        question: 'Test Case-in ən vacib komponentləri hansılardır?',
         options: [
-            'Test Addımları və Gözlənilən Nəticə',
+            'Test Addımları, Test Məlumatları və Gözlənilən Nəticə',
             'ID, Təsvir, İlkin Şərtlər (Pre-conditions), Addımlar, Gözlənilən Nəticə',
-            'Yalnız Gözlənilən Nəticə və Faktiki Nəticə',
-            'Baq Hesabatı, Status və Prioritet'
+            'Yalnız Faktiki Nəticə və Gözlənilən Nəticə',
+            'Baq Hesabatı, Status, Prioritet və Təyin edilən şəxs'
         ],
         correctAnswer: 1,
         explanation: 'Test Case konkret bir ssenarini yoxlamaq üçün lazım olan addımları, ilkin şərtləri və gözlənilən nəticəni ehtiva edir.'
@@ -106,8 +106,8 @@ export const examQuestions = [
         question: 'White Box (Ağ Qutu) testi hansı bilikləri tələb edir?',
         options: [
             'Yalnız biznes tələblərini və istifadəçi hekayələrini',
-            'Proqramın daxili kod strukturunu və məntiqini',
-            'İstifadəçi interfeysini və dizayn prinsiplərini',
+            'Proqramın daxili kod strukturunu, alqoritmləri və məntiqini',
+            'Sistem memarlığını və istifadəçi interfeysini',
             'Heç bir texniki bilik tələb etmir, sadəcə məntiq'
         ],
         correctAnswer: 1,
@@ -133,10 +133,10 @@ export const examQuestions = [
         difficulty: 'medium',
         question: 'Smoke Test (Tüstü Testi) nədir?',
         options: [
-            'Sistemi maksimum yük altında yoxlayaraq dayanıklılığı ölçmək',
-            'Yeni build-in (versiyanın) əsas funksionallığının işlədiyini təsdiqləyən ilkin yoxlama',
+            'Sistemin maksimum yük altında dayanıqlılığını yoxlamaq',
+            'Yeni build-in əsas funksionallığının işlədiyini təsdiqləyən səthi yoxlama',
             'Təhlükəsizlik zəifliklərini və giriş nöqtələrini yoxlamaq',
-            'Detallı reqressiya testi aparmaq'
+            'Sistemin bütün modullarını detallı şəkildə yoxlamaq'
         ],
         correctAnswer: 1,
         explanation: 'Smoke Test - "build partlayır ya yox?" yoxlamasıdır. Əgər əsas funksiyalar işləmirsə, daha dərin testə ehtiyac yoxdur.'
@@ -174,13 +174,13 @@ export const examQuestions = [
     {
         id: 11,
         category: 'test_types',
-        difficulty: 'easy',
+        difficulty: 'medium', // Upgraded
         question: 'Qeyri-funksional (Non-functional) testləşdirmə nəyi yoxlayır?',
         options: [
-            'Sistem nə edir? (Funksional tələblər)',
-            'Sistem necə işləyir? (Performans, Təhlükəsizlik, Usability)',
+            'Sistemin funksional tələblərini (nə etdiyini)',
+            'Sistemin necə işlədiyini (Performans, Təhlükəsizlik, Usability)',
             'Kodun sintaksisini və strukturunu',
-            'Verilənlər bazasının tamlığını'
+            'Verilənlər bazasının strukturunu və əlaqələrini'
         ],
         correctAnswer: 1,
         explanation: 'Qeyri-funksional testlər sistemin atributlarını (sürət, etibarlılıq, təhlükəsizlik) yoxlayır.'
@@ -189,12 +189,12 @@ export const examQuestions = [
         id: 12,
         category: 'test_types',
         difficulty: 'medium',
-        question: 'Stress Testing-in məqsədi nədir?',
+        question: 'Stress Testing-in əsas məqsədi nədir?',
         options: [
-            'Sistemin normal yük altında işini yoxlamaq',
+            'Sistemin gözlənilən istifadəçi yükü altında necə işlədiyini yoxlamaq',
             'Sistemin limitlərini və limitdən artıq yükdə davranışını (qırılma nöqtəsini) yoxlamaq',
-            'Sistemin təhlükəsizlik boşluqlarını tapmaq',
-            'İstifadəçi interfeysinin rahatlığını yoxlamaq'
+            'Sistemin uzun müddətli yük altında sabitliyini yoxlamaq',
+            'Serverin cavab vermə müddətini ölçmək'
         ],
         correctAnswer: 1,
         explanation: 'Load test normal yükü, Stress test isə ekstremal yükü yoxlayır ki, sistemin dayanıqlığını və bərpa olunma qabiliyyətini görək.'
@@ -205,10 +205,10 @@ export const examQuestions = [
         difficulty: 'hard',
         question: 'Sanity Test ilə Smoke Test arasındakı incə fərq nədir?',
         options: [
-            'Heç bir fərq yoxdur, sinonimlərdir',
+            'Smoke test avtomatlaşdırılmışdır, Sanity test manualdır',
             'Smoke test geniş və səthidir (bütün sistemi əhatə edir), Sanity test isə dar və dərindir (müəyyən funksiyanı yoxlayır)',
             'Smoke test sənədləri yoxlayır, Sanity kodu yoxlayır',
-            'Sanity test layihənin əvvəlində, Smoke test sonunda edilir'
+            'Sanity test reqressiya testindən əvvəl, Smoke test sonra edilir'
         ],
         correctAnswer: 1,
         explanation: 'Smoke test "ümumi sağlamlığı" yoxlayır (General Health Check). Sanity test isə spesifik dəyişikliklərin (bug fix) düzgün işlədiyini yoxlayan alt çoxluqdur.'
@@ -222,7 +222,7 @@ export const examQuestions = [
             'Yalnız kodun müəllifi olan developerlər',
             'Real istifadəçilər və ya onları təmsil edən testçilər',
             'Sistem administratorları və DevOps mühəndisləri',
-            'Mühasiblər və Maliyyəçilər'
+            'Layihə menecerləri'
         ],
         correctAnswer: 1,
         explanation: 'Usability testing məhsulun istifadəçi üçün nə qədər rahat olduğunu yoxlayır, buna görə real istifadəçi baxışı vacibdir.'
@@ -233,10 +233,10 @@ export const examQuestions = [
         difficulty: 'hard',
         question: 'İnteqrasiya Testində (Integration Testing) "Top-down" yanaşması nədir?',
         options: [
-            'Aşağı səviyyəli modullardan başlayıb yuxarı qalxmaq',
-            'Yuxarı səviyyəli modullardan başlayıb aşağı enmək (Stub istifadə edərək)',
+            'Aşağı səviyyəli modullardan başlayıb yuxarı qalxmaq (Drivers istifadə edərək)',
+            'Yuxarı səviyyəli modullardan başlayıb aşağı enmək (Stubs istifadə edərək)',
             'Bütün modulları eyni anda birləşdirmək (Big Bang)',
-            'Yalnız ən vacib modulu yoxlamaq'
+            'Yalnız kritik modulları test etmək (Sandwich)'
         ],
         correctAnswer: 1,
         explanation: 'Top-down yanaşmada əsas idarəetmə modulu birinci test edilir, aşağı səviyyəli modullar isə "Stub" (kötük) ilə əvəz olunur.'
@@ -278,7 +278,7 @@ export const examQuestions = [
             'Developer kodun bitdiyini deyəndə',
             'Müştəri/İstifadəçi sistemin onların biznes ehtiyaclarını ödədiyini təsdiqləyəndə',
             'Bütün Unit testlər keçəndə',
-            'Vaxt bitəndə və büdcə tükənəndə'
+            'Sistemdə heç bir kritik səhv qalmayanda'
         ],
         correctAnswer: 1,
         explanation: 'UAT-nin məqsədi məhsulun biznes ehtiyaclarını ödədiyini təsdiqləməkdir (Validation).'
@@ -286,16 +286,16 @@ export const examQuestions = [
     {
         id: 19,
         category: 'test_types',
-        difficulty: 'medium',
-        question: 'API Testing-də hansı status kodu "Uğurlu" nəticəni göstərir?',
+        difficulty: 'medium', // Upgraded
+        question: 'API Testing-də hansı status kodu sorğunun "Uğurlu" olduğunu bildirir?',
         options: [
             '404 Not Found',
             '500 Internal Server Error',
             '200 OK',
-            '403 Forbidden'
+            '301 Moved Permanently'
         ],
         correctAnswer: 2,
-        explanation: 'HTTP 200 OK - sorğunun uğurla yerinə yetirildiyini göstərir. 404 (Not Found), 500 (Server Error), 403 (Forbidden) xəta kodlarıdır.'
+        explanation: 'HTTP 200 OK - sorğunun uğurla yerinə yetirildiyini göstərir. 404 (Not Found), 500 (Server Error), 301 (Redirect) fərqli mənaları daşıyır.'
     },
     {
         id: 20,
@@ -329,7 +329,7 @@ export const examQuestions = [
         id: 34,
         category: 'test_types',
         difficulty: 'hard',
-        question: 'Dinamik Testin (Dynamic Testing) 4 əsas mərhələsi hansılardır?',
+        question: 'Dinamik Testin (Dynamic Testing) 4 əsas test səviyyəsi hansılardır?',
         options: [
             'Planlaşdırma, Dizayn, Kodlaşdırma, Silmə',
             'Komponent, İnteqrasiya, Sistem, Qəbul (Test Səviyyələri)',
@@ -344,16 +344,16 @@ export const examQuestions = [
     {
         id: 21,
         category: 'bug_reporting',
-        difficulty: 'easy',
-        question: 'Baq hesabatının ən vacib hissəsi hansıdır?',
+        difficulty: 'medium', // Upgraded
+        question: 'Baq hesabatında developera ən çox kömək edən hissə hansıdır?',
         options: [
-            'Baqı tapanın adı və vəzifəsi',
+            'Baqı tapanın şəxsi rəyi',
             'Addımlar (Steps to Reproduce) - baqı necə təkrarlamaq olar',
-            'Baqın yaranma tarixi və saatı',
-            'Layihə menecerinin şəxsi rəyi'
+            'Baqın tapıldığı mühit (Environment) və Loglar',
+            'Prioritet və Ciddilik dərəcəsi'
         ],
         correctAnswer: 1,
-        explanation: 'Əgər developer baqı təkrarlaya bilmirsə (reproduce), onu düzəldə bilməz. Ona görə "Addımlar" ən kritik hissədir.'
+        explanation: 'Baxmayaraq ki, Environment və Loglar vacibdir, "Steps to Reproduce" olmadan developer baqı təkrarlaya və düzəldə bilməz.'
     },
     {
         id: 22,
@@ -405,7 +405,7 @@ export const examQuestions = [
         options: [
             'Baqı dərhal bağlamalıdır',
             'Developerlə mübahisə etməli və şikayət etməlidir',
-            'Baqı yenidən yoxlamalı, mühit fərqlərini (Environment) analiz etməli və əlavə sübutlar (video/log) təqdim etməlidir',
+            'Baqı yenidən yoxlamalı, mühit fərqlərini analiz etməli və əlavə sübutlar təqdim etməlidir',
             'Baqı silməlidir'
         ],
         correctAnswer: 2,
@@ -434,7 +434,7 @@ export const examQuestions = [
             'Baq çox vacibdir və təcili düzəldilməlidir',
             'Bu baq artıq sistemdə başqa bir ID ilə qeydiyyatdadır',
             'Baq iki dəfə düzəldilib',
-            'Baqın iki fərqli həlli var'
+            'Baq təkrarlana bilən baqdır'
         ],
         correctAnswer: 1,
         explanation: 'Duplicate - eyni xətanın artıq başqa bir testçi tərəfindən report edildiyini bildirir. Belə baqlar bağlanır.'
@@ -444,13 +444,13 @@ export const examQuestions = [
     {
         id: 26,
         category: 'test_planning',
-        difficulty: 'easy',
-        question: 'Test Planı (Test Plan) nədir?',
+        difficulty: 'medium', // Upgraded
+        question: 'Test Planı (Test Plan) hansı suala cavab verir?',
         options: [
-            'Konkret bir testin addımları',
-            'Test prosesinin əhatə dairəsini, yanaşmasını, resurslarını və qrafikini təsvir edən sənəd',
-            'Baqların siyahısı',
-            'Avtomatlaşdırma kodu'
+            'Sistemi necə test edəcəyik? (Texniki detallar)',
+            'Nəyi, kim, nə vaxt və hansı resurslarla test edəcək?',
+            'Testlər nə vaxt bitəcək? (Yalnız qrafik)',
+            'Hansı baqlar tapılıb? (Hesabat)'
         ],
         correctAnswer: 1,
         explanation: 'Test Planı - "Nəyi, necə, kim və nə vaxt test edəcəyik?" suallarına cavab verən əsas idarəetmə sənədidir.'
@@ -489,9 +489,9 @@ export const examQuestions = [
         difficulty: 'hard',
         question: 'Test Strategiyası (Test Strategy) ilə Test Planı arasındakı fərq nədir?',
         options: [
-            'Fərq yoxdur',
+            'Fərq yoxdur, eyni sənəddir',
             'Strategiya layihədən asılı olmayan ümumi yanaşmadır, Plan isə konkret layihə üçün detallardır',
-            'Plan ümumi, Strategiya detaldır',
+            'Plan ümumi yanaşmadır, Strategiya konkret detallardır',
             'Strategiya yalnız avtomatlaşdırma üçündür'
         ],
         correctAnswer: 1,
@@ -501,12 +501,12 @@ export const examQuestions = [
         id: 30,
         category: 'test_planning',
         difficulty: 'hard',
-        question: 'Məhsul Riski (Product Risk) nədir?',
+        question: 'Məhsul Riski (Product Risk) nümunəsi hansıdır?',
         options: [
-            'Layihənin gecikməsi',
-            'Büdcənin bitməsi',
-            'Sistemin istifadəçi gözləntilərini qarşılamaması (məs: səhv hesablama, çökmə)',
-            'Komanda üzvünün xəstələnməsi'
+            'Layihənin təhvil verilməsinin gecikməsi',
+            'Test mühitinin vaxtında hazır olmaması',
+            'Sistemin istifadəçi gözləntilərini qarşılamaması (məs: səhv hesablama)',
+            'Test komandasının təcrübəsiz olması'
         ],
         correctAnswer: 2,
         explanation: 'Məhsul riski birbaşa proqramın keyfiyyəti ilə bağlıdır. Digərləri (vaxt, büdcə, heyət) Layihə Riskləridir.'
@@ -518,7 +518,7 @@ export const examQuestions = [
         question: 'Konfiqurasiya İdarəetməsi (Configuration Management) testdə niyə vacibdir?',
         options: [
             'Testçilərin kompüterlərini idarə etmək üçün',
-            'Test edilən proqramın (testware) versiyalarını və mühitini nəzarətdə saxlamaq üçün',
+            'Test edilən proqramın versiyalarını və mühitini nəzarətdə saxlamaq üçün',
             'Baqları silmək üçün',
             'Ofis ləvazimatlarını izləmək üçün'
         ],
@@ -544,12 +544,12 @@ export const examQuestions = [
         id: 39,
         category: 'qa_basics',
         difficulty: 'hard',
-        question: 'Qüsurların Toplanması (Defect Clustering) prinsipi nə deyir?',
+        question: 'Qüsurların Toplanması (Defect Clustering) prinsipi nəyi nəzərdə tutur?',
         options: [
-            'Baqlar bütün sistemə bərabər paylanır',
-            'Baqların 80%-i modulların 20%-də cəmləşir (Pareto prinsipi)',
-            'Baqlar təsadüfi yerlərdə olur',
-            'Baqlar yalnız UI-da olur'
+            'Baqlar sistemin bütün modullarına bərabər paylanır',
+            'Baqların əksəriyyəti (80%) modulların kiçik bir hissəsində (20%) cəmləşir',
+            'Baqlar təsadüfi yerlərdə olur və onları proqnozlaşdırmaq mümkün deyil',
+            'Baqlar yalnız istifadəçi interfeysində (UI) olur'
         ],
         correctAnswer: 1,
         explanation: 'Defect Clustering prinsipinə görə, qüsurlar bərabər paylanmır, adətən ən mürəkkəb və ya dəyişən modullarda toplanır.'
@@ -558,7 +558,7 @@ export const examQuestions = [
         id: 40,
         category: 'test_types',
         difficulty: 'medium',
-        question: 'Black Box texnikalarına hansı aiddir?',
+        question: 'Black Box (Qara Qutu) test dizayn texnikalarına hansı aiddir?',
         options: [
             'Statement Coverage',
             'Boundary Value Analysis (Sərhəd Dəyərləri Analizi)',
@@ -572,7 +572,7 @@ export const examQuestions = [
         id: 41,
         category: 'test_types',
         difficulty: 'medium',
-        question: 'White Box texnikalarına hansı aiddir?',
+        question: 'White Box (Ağ Qutu) test dizayn texnikalarına hansı aiddir?',
         options: [
             'Use Case Testing',
             'Decision Coverage (Qərar örtüyü)',
@@ -585,16 +585,16 @@ export const examQuestions = [
     {
         id: 42,
         category: 'qa_basics',
-        difficulty: 'easy',
+        difficulty: 'hard', // Upgraded
         question: 'Hansı halda testləşdirmə dayandırılmalıdır?',
         options: [
-            'Bütün baqlar tapılanda (Mümkünsüzdür)',
+            'Bütün baqlar tapıldıqda (Zero Defect)',
             'Çıxış Meyarları (Exit Criteria) qarşılandıqda və risklər məqbul səviyyəyə endikdə',
-            'Tester yorulanda',
-            'Developer xahiş edəndə'
+            'Test üçün ayrılan vaxt bitdikdə',
+            'Bütün Test Case-lər icra edildikdə (nəticədən asılı olmayaraq)'
         ],
         correctAnswer: 1,
-        explanation: 'Testi dayandırma qərarı əvvəlcədən müəyyən edilmiş meyarlara (Exit Criteria) və risk analizinə əsaslanmalıdır.'
+        explanation: 'Testi dayandırma qərarı əvvəlcədən müəyyən edilmiş meyarlara (Exit Criteria) və risk analizinə əsaslanmalıdır. Vaxt bitməsi məcburi səbəbdir, ideal səbəb deyil.'
     },
     {
         id: 43,
@@ -619,7 +619,7 @@ export const examQuestions = [
             'Verilənlər bazasının məlumat itirməsi',
             'Test mühitinin vaxtında hazır olmaması',
             'Hesablama modulunda səhv',
-            'İstifadəçi interfeysinin çirkin olması'
+            'Sistemin cavab müddətinin uzun olması'
         ],
         correctAnswer: 1,
         explanation: 'Test mühitinin hazır olmaması layihənin gedişatına mane olur (Project Risk). Digərləri Məhsul riskləridir.'
@@ -632,8 +632,8 @@ export const examQuestions = [
         options: [
             'Yalnız sonuncu modulu yoxlamaq',
             'Sistemin başlanğıcdan sona qədər bütöv bir biznes prosesi kimi düzgün işlədiyini yoxlamaq',
-            'Yalnız backend və verilənlər bazası testi',
-            'Bütün Unit testlərin cəmi'
+            'Sistem Testi ilə eyni şeydir',
+            'Bütün inteqrasiya testlərinin cəmidir'
         ],
         correctAnswer: 1,
         explanation: 'E2E testi istifadəçinin sistemdəki tam yolunu (məs: Qeydiyyat -> Sifariş -> Ödəniş -> Çatdırılma) yoxlayır, bütün inteqrasiyaları əhatə edir.'
@@ -644,9 +644,9 @@ export const examQuestions = [
         difficulty: 'medium',
         question: 'İzləniləbilirlik Matrisi (Traceability Matrix) nə işə yarayır?',
         options: [
-            'Testçilərin iş saatlarını izləmək üçün',
+            'Testçilərin performansını izləmək üçün',
             'Tələblər (Requirements) ilə Test Case-lər arasındakı əlaqəni göstərmək və əhatəni (coverage) yoxlamaq üçün',
-            'Baqları izləmək və silmək üçün',
+            'Baqların statusunu izləmək üçün',
             'Kodun versiyasını və tarixçəsini izləmək üçün'
         ],
         correctAnswer: 1,
@@ -673,7 +673,7 @@ export const examQuestions = [
         question: 'Localization (L10n) vs Internationalization (I18n) fərqi nədir?',
         options: [
             'Eyni şeydir',
-            'I18n tətbiqi müxtəlif dillərə uyğunlaşdırmaq üçün hazırlamaqdır, L10n isə konkret bir dilə/regiona uyğunlaşdırmaqdır',
+            'I18n tətbiqi müxtəlif dillərə uyğunlaşdırmaq üçün texniki hazırlıqdır, L10n isə konkret bir dilə/regiona uyğunlaşdırmaqdır',
             'L10n proqramlaşdırmadır, I18n tərcümədir',
             'I18n yalnız tərcümədir, L10n isə valyuta dəyişimidir'
         ],
@@ -701,7 +701,7 @@ export const examQuestions = [
         question: '"Risk-Based Testing" (Riskə əsaslanan test) yanaşmasının əsas prinsipi nədir?',
         options: [
             'Bütün testləri eyni dərəcədə vacib saymaq',
-            'Test səylərini risk səviyyəsi yüksək olan sahələrə yönəltmək (daha vacib və riskli yerləri daha çox test etmək)',
+            'Test səylərini risk səviyyəsi yüksək olan sahələrə yönəltmək',
             'Risklərə fikir verməmək, yalnız funksionallığı yoxlamaq',
             'Yalnız asan və sürətli yerləri test etmək'
         ],
@@ -754,16 +754,16 @@ export const examQuestions = [
     {
         id: 54,
         category: 'qa_basics',
-        difficulty: 'medium',
+        difficulty: 'medium', // Upgraded
         question: '"Shift Left" (Sola sürüşdürmə) yanaşması nə deməkdir?',
         options: [
             'Testləşdirməni layihənin sonuna saxlamaq',
-            'Testləşdirmə fəaliyyətlərini SDLC-nin mümkün qədər erkən mərhələlərində başlatmaq',
-            'Testçilərin sol tərəfdə oturması',
+            'Test fəaliyyətlərini inkişaf dövrünün (SDLC) mümkün qədər erkən mərhələlərində başlatmaq',
+            'TDD (Test Driven Development) ilə eyni şeydir',
             'Yalnız Unit testlərə fokuslanmaq'
         ],
         correctAnswer: 1,
-        explanation: 'Shift Left - səhvləri erkən tapmaq və düzəltmək üçün test fəaliyyətlərini inkişaf dövrünün əvvəlinə (sola) çəkməkdir.'
+        explanation: 'Shift Left - səhvləri erkən tapmaq və düzəltmək üçün test fəaliyyətlərini inkişaf dövrünün əvvəlinə (sola) çəkməkdir. TDD bunun bir yoludur, amma eyni şey deyil.'
     },
     {
         id: 55,

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, CheckCircle, XCircle, ArrowRight, Award } from 'lucide-react';
 import { getRandomQuestions } from '../../data/examQuestions';
 import { useAdaptiveExam } from '../../hooks/useAdaptiveExam';
+import { useGameProgress } from '../../hooks/useGameProgress';
 import PageTransition from '../../components/PageTransition';
 import { Sparkles, Brain } from 'lucide-react';
 
@@ -12,6 +13,7 @@ export default function Exam() {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const { getNextQuestion, currentDifficulty, resetExam } = useAdaptiveExam();
+    const { addXP } = useGameProgress();
 
     const [questions, setQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -111,6 +113,12 @@ export default function Exam() {
             }
         });
 
+        // Award XP for correct answers (e.g., 10 XP per correct answer)
+        const xpEarned = correctCount * 10;
+        if (xpEarned > 0) {
+            addXP(xpEarned);
+        }
+
         // Navigate to results
         navigate('/practice/exam-results', {
             state: {
@@ -119,7 +127,8 @@ export default function Exam() {
                 categoryScores,
                 userAnswers,
                 questions,
-                timeSpent: 900 - timeLeft
+                timeSpent: 900 - timeLeft,
+                xpEarned // Pass XP to results page
             }
         });
     };

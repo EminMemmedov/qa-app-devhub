@@ -52,7 +52,7 @@ const PodiumStep = ({ rank, user, delay }) => {
                     ${isFirst ? 'w-14 h-14 text-xl border-4 border-white dark:border-slate-900' : 'w-11 h-11 text-base border-2 border-white dark:border-slate-900'}
                 `}>
                     {user ? (
-                        user.name.charAt(0)
+                        <span className="pb-1">{user.name.charAt(0)}</span>
                     ) : (
                         <User className="text-slate-300 dark:text-slate-600" size={isFirst ? 22 : 18} />
                     )}
@@ -167,7 +167,7 @@ export default function HomeLeaderboard() {
                             <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
                                  <div className="flex items-center gap-3 p-3 bg-indigo-600 text-white rounded-2xl shadow-lg shadow-indigo-500/30">
                                     <div className="text-xs font-bold text-indigo-200 w-4 text-center">#{currentUserRank}</div>
-                                    <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-white text-xs font-bold">
+                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold bg-white/20 text-white`}>
                                         {currentUser.name.charAt(0)}
                                     </div>
                                     <div className="flex-1 min-w-0">

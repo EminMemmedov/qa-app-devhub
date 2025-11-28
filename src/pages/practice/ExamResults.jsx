@@ -14,7 +14,8 @@ export default function ExamResults() {
         categoryScores = {},
         timeSpent = 0,
         questions = [],
-        userAnswers = []
+        userAnswers = [],
+        xpEarned = 0
     } = location.state || {};
 
     const [showDetails, setShowDetails] = useState(false);
@@ -77,6 +78,16 @@ export default function ExamResults() {
                     <p className="text-center text-slate-600 dark:text-slate-400 mb-8">
                         {passed ? 'Siz imtahandan uğurla keçdiniz!' : 'Bir az daha çalışın və yenidən cəhd edin'}
                     </p>
+
+                    {/* XP Earned Badge */}
+                    {xpEarned > 0 && (
+                        <div className="flex justify-center mb-6">
+                            <div className="bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 px-4 py-2 rounded-xl font-black text-lg flex items-center gap-2 border-2 border-indigo-200 dark:border-indigo-800">
+                                <Award size={20} />
+                                +{xpEarned} XP
+                            </div>
+                        </div>
+                    )}
 
                     {/* Score */}
                     <div className="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-6 mb-6">
@@ -212,6 +223,12 @@ export default function ExamResults() {
                                                                     <p className="text-green-700 dark:text-green-400">
                                                                         <span className="font-bold">Doğru cavab:</span> {q.options[q.correctAnswer]}
                                                                     </p>
+                                                                )}
+                                                                {isCorrect && (
+                                                                    <div className="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs font-bold">
+                                                                        <Award size={12} />
+                                                                        +10 XP
+                                                                    </div>
                                                                 )}
                                                             </div>
                                                         </div>

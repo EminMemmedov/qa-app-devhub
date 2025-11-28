@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { db } from '../lib/firebase';
-import { collection, query, orderBy, limit, onSnapshot, doc, setDoc, getDoc } from 'firebase/firestore';
+import { collection, query, orderBy, limit, onSnapshot, doc, setDoc } from 'firebase/firestore';
 import { getStorageItem, setStorageItem } from '../utils/storage';
 import { useGameProgress } from './useGameProgress';
 import { useAchievements } from './useAchievements';
@@ -96,4 +96,3 @@ export function useLeaderboard() {
         saveProfile
     };
 }
-
