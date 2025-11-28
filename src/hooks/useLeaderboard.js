@@ -16,10 +16,13 @@ export function useLeaderboard() {
     // Calculate level manually since it's not returned by useGameProgress
     const currentLevel = Math.floor(xp / 500) + 1;
 
+    // Determine collection name based on environment (dev or prod)
+    const COLLECTION_NAME = import.meta.env.DEV ? 'users_test' : 'users';
+
     // 1. Listen to leaderboard changes in real-time
     useEffect(() => {
         const q = query(
-            collection(db, 'users'),
+            collection(db, COLLECTION_NAME),
             orderBy('xp', 'desc'),
             limit(50) // Top 50
         );
@@ -45,7 +48,7 @@ export function useLeaderboard() {
             if (!userProfile?.uid) return;
 
             try {
-                await setDoc(doc(db, 'users', userProfile.uid), {
+                await setDoc(doc(db, COLLECTION_NAME, userProfile.uid), {
                     name: userProfile.name,
                     xp: xp,
                     level: currentLevel,
@@ -72,7 +75,7 @@ export function useLeaderboard() {
 
         // Initial push to DB
         try {
-            await setDoc(doc(db, 'users', uid), {
+            await setDoc(doc(db, COLLECTION_NAME, uid), {
                 name: name,
                 xp: xp,
                 level: currentLevel,

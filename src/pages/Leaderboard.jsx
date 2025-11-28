@@ -107,7 +107,7 @@ export default function Leaderboard() {
           )}
       </AnimatePresence>
 
-      <div className="bg-indigo-600 pt-8 pb-16 px-6 rounded-b-[2.5rem] shadow-xl relative overflow-hidden">
+      <div className="bg-indigo-600 pt-16 pb-16 px-6 rounded-b-[2.5rem] shadow-xl relative overflow-hidden">
         {/* Background decorative circles */}
         <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -ml-20 -mt-20"></div>
         <div className="absolute bottom-0 right-0 w-48 h-48 bg-purple-500/20 rounded-full blur-2xl -mr-10 -mb-10"></div>
@@ -173,7 +173,7 @@ export default function Leaderboard() {
                             <div className="absolute inset-0 bg-white/10 rounded-2xl pointer-events-none"></div>
                         </div>
                         
-                        <div className="absolute -bottom-3 bg-yellow-400 text-yellow-900 text-xs font-black px-3 py-1 rounded-full shadow-md border-2 border-white dark:border-slate-800 z-20 min-w-[2rem] text-center">#1</div>
+                        <div className="absolute -bottom-3 bg-yellow-400 text-yellow-900 text-xs font-black px-3 py-1 rounded-full shadow-md border-2 border-white dark:border-slate-800 z-20 min-w-[2rem] text-center whitespace-nowrap">#1</div>
                     </div>
                     <div className="mt-5 text-center w-full">
                         <div className="text-sm font-black text-slate-900 dark:text-white truncate px-1">{top3[0].name.split(' ')[0]}</div>
