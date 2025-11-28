@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { db } from '../lib/firebase';
-import { collection, query, orderBy, limit, onSnapshot, doc, setDoc } from 'firebase/firestore';
+import { collection, query, orderBy, limit, onSnapshot, doc, setDoc, where, getDocs } from 'firebase/firestore';
 import { getStorageItem, setStorageItem } from '../utils/storage';
 import { useGameProgress } from './useGameProgress';
 import { useAchievements } from './useAchievements';
@@ -64,27 +64,51 @@ export function useLeaderboard() {
         return () => clearTimeout(timeoutId);
     }, [xp, currentLevel, unlockedAchievements, userProfile]);
 
-    // 3. Create or Update User Profile
+    // 3. Create or Restore User Profile
     const saveProfile = async (name) => {
-        // Generate a simple ID if not exists
-        const uid = userProfile?.uid || `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        
-        const profile = { uid, name };
-        setStorageItem('qa_user_profile', profile);
-        setUserProfile(profile);
-
-        // Initial push to DB
         try {
-            await setDoc(doc(db, COLLECTION_NAME, uid), {
+            // Check if user with this name already exists (Login Logic)
+            const q = query(collection(db, COLLECTION_NAME), where("name", "==", name));
+            const querySnapshot = await getDocs(q);
+
+            let uid;
+            let isNewUser = true;
+
+            if (!querySnapshot.empty) {
+                // User exists! Restore account
+                const existingUser = querySnapshot.docs[0].data();
+                uid = querySnapshot.docs[0].id; // Use the Document ID as UID
+                isNewUser = false;
+                console.log("User restored:", name, uid);
+            } else {
+                // New User
+                uid = userProfile?.uid || `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            }
+            
+            const profile = { uid, name };
+            setStorageItem('qa_user_profile', profile);
+            setUserProfile(profile);
+
+            // Sync to DB (Update XP/Level/Badges to current local state or merge)
+            // Note: Ideally we should pull remote XP if it's higher, but for simplicity we sync current local state
+            // or keep remote state if local is fresh (0 XP).
+            
+            const userData = {
                 name: name,
-                xp: xp,
+                xp: xp, 
                 level: currentLevel,
                 badges: unlockedAchievements,
-                createdAt: new Date().toISOString()
-            }, { merge: true });
+                lastActive: new Date().toISOString()
+            };
+
+            if (isNewUser) {
+                userData.createdAt = new Date().toISOString();
+            }
+
+            await setDoc(doc(db, COLLECTION_NAME, uid), userData, { merge: true });
             return true;
         } catch (error) {
-            console.error("Error saving profile:", error);
+            console.error("Error saving/restoring profile:", error);
             return false;
         }
     };
