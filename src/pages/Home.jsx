@@ -8,8 +8,13 @@ import { useAchievements } from '../hooks/useAchievements';
 import { achievements } from '../data/achievements';
 import { useStreak } from '../hooks/useStreak';
 import LearningProgress from '../components/LearningProgress';
+import HomeLeaderboard from '../components/HomeLeaderboard';
 import { Flame } from 'lucide-react';
 import ThemeToggle from '../components/ThemeToggle';
+import { useLeaderboard } from '../hooks/useLeaderboard';
+import { useState, useEffect } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import { User, ChevronRight, Loader2 } from 'lucide-react';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -31,6 +36,27 @@ export default function Home() {
   const { xp, foundBugs } = useGameProgress();
   const { unlockedAchievements } = useAchievements();
   const { currentStreak, longestStreak } = useStreak();
+
+  // Leaderboard & Registration Logic
+  const { loading: leaderboardLoading, userProfile, saveProfile } = useLeaderboard();
+  const [showRegistration, setShowRegistration] = useState(false);
+  const [nameInput, setNameInput] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+      if (!leaderboardLoading && !userProfile) {
+          setShowRegistration(true);
+      }
+  }, [leaderboardLoading, userProfile]);
+
+  const handleRegister = async (e) => {
+      e.preventDefault();
+      if (!nameInput.trim()) return;
+      setIsSubmitting(true);
+      const success = await saveProfile(nameInput.trim());
+      setIsSubmitting(false);
+      if (success) setShowRegistration(false);
+  };
 
   // Level calculation: 1 level per 500 XP
   const level = Math.floor(xp / 500) + 1;
@@ -69,6 +95,54 @@ export default function Home() {
 
   return (
     <PageTransition className="p-6 pb-24 min-h-screen bg-slate-50/50 dark:bg-slate-900 transition-colors duration-300">
+      {/* Registration Modal */}
+      <AnimatePresence>
+          {showRegistration && (
+              <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm"
+              >
+                  <motion.div
+                      initial={{ scale: 0.9, y: 20 }}
+                      animate={{ scale: 1, y: 0 }}
+                      className="bg-white dark:bg-slate-800 w-full max-w-sm p-6 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700"
+                  >
+                      <div className="text-center mb-6">
+                          <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-indigo-600 dark:text-indigo-400">
+                              <User size={32} />
+                          </div>
+                          <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2">Tanış olaq!</h2>
+                          <p className="text-slate-500 dark:text-slate-400 text-sm">Liderlər cədvəlində iştirak etmək üçün adınızı daxil edin.</p>
+                      </div>
+
+                      <form onSubmit={handleRegister}>
+                          <input
+                              type="text"
+                              value={nameInput}
+                              onChange={(e) => setNameInput(e.target.value)}
+                              placeholder="Ad və Soyad"
+                              className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-700 focus:border-indigo-500 focus:ring-0 outline-none transition-all text-slate-900 dark:text-white font-medium mb-4 placeholder:text-slate-400"
+                              autoFocus
+                          />
+                          <button
+                              type="submit"
+                              disabled={!nameInput.trim() || isSubmitting}
+                              className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-lg shadow-indigo-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                          >
+                              {isSubmitting ? <Loader2 className="animate-spin" size={20} /> : (
+                                  <>
+                                      Davam et <ChevronRight size={20} />
+                                  </>
+                              )}
+                          </button>
+                      </form>
+                  </motion.div>
+              </motion.div>
+          )}
+      </AnimatePresence>
+
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -78,23 +152,37 @@ export default function Home() {
         {/* Header Section */}
         <motion.header variants={itemVariants} className="relative z-10 flex justify-between items-start mb-8">
           <div className="flex-1">
-            <motion.div 
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ type: "spring", stiffness: 260, damping: 20 }}
-              className="relative inline-block mb-6 group"
-            >
-                {/* Animated Glow Effect */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
-                
-                {/* Logo Container */}
-                <div className="relative bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-black/30 ring-1 ring-slate-100 dark:ring-slate-700">
-                    <img src="/qa-academy.png" alt="QA Academy" className="h-20 object-contain" />
+            <div className="flex items-center gap-4 mb-6">
+                <motion.div 
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                  className="relative group"
+                >
+                    {/* Animated Glow Effect */}
+                    <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
+                    
+                    {/* Logo Container */}
+                    <div className="relative bg-white dark:bg-slate-800 p-3 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-black/30 ring-1 ring-slate-100 dark:ring-slate-700">
+                        <img src="/qa-academy.png" alt="QA Academy" className="h-12 w-auto object-contain" />
+                    </div>
+                </motion.div>
+                <div className="flex flex-col justify-center">
+                   <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-0.5">Welcome to</div>
+                   <div className="font-black text-lg text-slate-900 dark:text-white leading-none">QA Academy</div>
                 </div>
-            </motion.div>
+            </div>
 
             <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter mb-2">
-              {t('home.greeting').split(',')[0]}, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">{t('home.greeting').split(' ')[1]}</span>
+              {userProfile ? (
+                  <>
+                    Salam, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">{userProfile.name.split(' ')[0]}</span>!
+                  </>
+              ) : (
+                  <>
+                    {t('home.greeting').split(',')[0]}, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">{t('home.greeting').split(' ')[1]}</span>
+                  </>
+              )}
               <motion.span
                 animate={{ rotate: [0, 10, -10, 0] }}
                 transition={{ repeat: Infinity, duration: 2, repeatDelay: 3 }}
@@ -143,6 +231,7 @@ export default function Home() {
           whileHover={{ scale: 1.02 }}
           className="relative overflow-hidden bg-slate-900 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-slate-400/20 mb-8"
         >
+          {/* ... existing stats card content ... */}
           {/* Decorative Background Elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl -ml-16 -mb-16"></div>
@@ -187,6 +276,11 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </motion.div>
+
+        {/* Leaderboard Widget */}
+        <motion.div variants={itemVariants}>
+           <HomeLeaderboard />
         </motion.div>
 
         {/* Exam Card - Prominent Feature */}

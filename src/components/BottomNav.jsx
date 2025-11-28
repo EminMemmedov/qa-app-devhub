@@ -1,4 +1,4 @@
-import { Home, BookOpen, Bug, LibraryBig, GraduationCap } from 'lucide-react';
+import { Home, BookOpen, Bug, LibraryBig, GraduationCap, Trophy } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import clsx from 'clsx';

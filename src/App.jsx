@@ -26,6 +26,7 @@ const Automation = lazy(() => import('./pages/practice/Automation'));
 const Database = lazy(() => import('./pages/practice/Database'));
 const Glossary = lazy(() => import('./pages/Glossary'));
 const ISTQB = lazy(() => import('./pages/ISTQB'));
+const Leaderboard = lazy(() => import('./pages/Leaderboard'));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -68,6 +69,7 @@ function App() {
               <Route path="practice/database" element={<Database />} />
               <Route path="glossary" element={<Glossary />} />
               <Route path="istqb" element={<ISTQB />} />
+              <Route path="leaderboard" element={<Leaderboard />} />
             </Route>
           </Routes>
         </Suspense>
