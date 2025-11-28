@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { GraduationCap, Clock, BarChart2, BookOpen, ChevronRight, ArrowLeft, CheckCircle, XCircle, HelpCircle, Play, Target, ArrowRight, Calculator, BrainCircuit, Info, Flag, LayoutGrid, StopCircle, Eye, EyeOff, PauseCircle, PlayCircle } from 'lucide-react';
+import Certificate from '../components/Certificate'; // Import Certificate
+import { GraduationCap, Clock, BarChart2, BookOpen, ChevronRight, ArrowLeft, CheckCircle, XCircle, HelpCircle, Play, Target, ArrowRight, Calculator, BrainCircuit, Info, Flag, LayoutGrid, StopCircle, Eye, EyeOff, PauseCircle, PlayCircle, Linkedin } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 import { istqbChapters, istqbQuestions } from '../data/istqb';
 import { glossaryTerms } from '../data/glossary';
@@ -188,6 +189,16 @@ export default function ISTQB() {
                         {percentage}%
                     </p>
 
+                    {/* Show Certificate if Passed */}
+                    {passed && (
+                        <div className="mb-8 w-full">
+                            <Certificate score={score} percentage={percentage} />
+                            <p className="text-xs text-slate-400 text-center mt-4 mb-8">
+                                Sertifikatı yükləyin və LinkedIn postunuza əlavə edin! 🎓
+                            </p>
+                        </div>
+                    )}
+
                     <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl p-6 mb-8 max-w-md mx-auto border border-slate-100 dark:border-slate-700 text-left">
                         <h3 className="font-bold text-slate-900 dark:text-white mb-4 text-sm uppercase tracking-wider">Fəsillər üzrə Nəticələr</h3>
                         <div className="space-y-3">
@@ -210,6 +221,21 @@ export default function ISTQB() {
                             })}
                         </div>
                     </div>
+
+                    {/* LinkedIn Share Button */}
+                    {passed && (
+                        <button
+                            onClick={() => {
+                                const text = `Mən indicə QA Student App-də ISTQB sınaq imtahanını uğurla keçdim! 🎉\n\nNəticə: ${percentage}%\n\nSiz də özünüzü yoxlayın: https://qa-student-app.vercel.app`;
+                                const url = `https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(text)}`;
+                                window.open(url, '_blank');
+                            }}
+                            className="w-full max-w-md mx-auto py-4 bg-[#0a66c2] text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 hover:bg-[#004182] transition-all mb-6"
+                        >
+                            <Linkedin size={24} />
+                            LinkedIn-də Paylaş
+                        </button>
+                    )}
 
                     <div className="flex gap-4 justify-center mb-8">
                         <button 
