@@ -4,18 +4,21 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 export default function OfflineIndicator() {
     const [isOnline, setIsOnline] = useState(navigator.onLine);
-    const [showToast, setShowToast] = useState(false);
+    // If we start offline, show the toast immediately
+    const [showToast, setShowToast] = useState(!navigator.onLine);
 
     useEffect(() => {
         const handleOnline = () => {
             setIsOnline(true);
             setShowToast(true);
-            setTimeout(() => setShowToast(false), 3000); // Hide "Back Online" after 3s
+            // Only hide toast automatically if we are back online
+            setTimeout(() => setShowToast(false), 3000);
         };
 
         const handleOffline = () => {
             setIsOnline(false);
             setShowToast(true);
+            // Do NOT hide toast while offline
         };
 
         window.addEventListener('online', handleOnline);
