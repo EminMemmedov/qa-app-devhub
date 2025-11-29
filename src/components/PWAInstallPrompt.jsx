@@ -8,7 +8,7 @@ export default function PWAInstallPrompt() {
     const [showPrompt, setShowPrompt] = useState(false);
     const [deferredPrompt, setDeferredPrompt] = useState(null);
 
-    useEffect() => {
+    useEffect(() => {
         // Don't show if already installed
         if (isStandalone()) {
             return;
