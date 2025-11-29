@@ -140,26 +140,32 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[100] flex items-end md:items-center justify-center bg-black/50 backdrop-blur-sm p-0 md:p-4 overflow-hidden"
+                className="fixed inset-0 z-[100] flex items-end md:items-center justify-center bg-black/50 backdrop-blur-sm p-0 md:p-6 overflow-hidden"
+                onClick={onClose}
             >
                 <motion.div
                     initial={{ y: "100%", opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: "100%", opacity: 0 }}
                     transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                    className="bg-white rounded-t-2xl md:rounded-2xl shadow-2xl w-full max-w-2xl md:h-auto md:max-h-[90vh] flex flex-col"
+                    className="bg-white rounded-t-2xl md:rounded-2xl shadow-2xl w-full max-w-2xl md:h-auto md:max-h-[85vh] flex flex-col"
                     style={{ height: 'calc(100vh - 80px)', maxHeight: 'calc(100vh - 80px)' }} // Leave space for bottom nav
+                    onClick={(e) => e.stopPropagation()}
                 >
                     {/* Header */}
-                    <div className="bg-slate-900 text-white p-4 md:p-6 flex justify-between items-start shrink-0">
-                        <div>
+                    <div className="bg-slate-900 text-white p-4 md:p-6 flex justify-between items-start shrink-0 rounded-t-2xl">
+                        <div className="flex-1 pr-4">
                             <h2 className="text-xl font-bold flex items-center gap-2">
                                 <AlertTriangle className="text-yellow-400" />
                                 {t('bugReport.title')}
                             </h2>
                             <p className="text-slate-400 text-sm mt-1">{t('bugReport.subtitle')}</p>
                         </div>
-                        <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
+                        <button 
+                            onClick={onClose} 
+                            className="text-slate-400 hover:text-white transition-colors p-2 hover:bg-slate-800 rounded-lg shrink-0"
+                            aria-label="Close"
+                        >
                             <X size={24} />
                         </button>
                     </div>
