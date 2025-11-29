@@ -149,12 +149,14 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: "100%", opacity: 0 }}
                     transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                    drag={false}
+                    dragConstraints={{ top: 0, bottom: 0 }}
                     className="bg-white rounded-t-3xl md:rounded-2xl w-full max-w-2xl md:h-auto md:max-h-[85vh] flex flex-col overflow-hidden transform-gpu"
                     style={{ 
                         height: 'calc(100dvh - 140px)',
                         maxHeight: 'calc(100dvh - 140px)',
                         marginTop: 'auto',
-                        touchAction: 'pan-y',
+                        touchAction: 'none',
                         willChange: 'transform',
                         boxShadow: '0 -4px 20px rgba(0,0,0,0.15)'
                     }}
@@ -179,14 +181,16 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
                     </div>
 
                     <div 
-                        className="p-4 md:p-8 overflow-y-auto overflow-x-hidden flex-1 overscroll-contain transform-gpu"
+                        className="p-4 md:p-8 overflow-y-auto overflow-x-hidden flex-1 overscroll-y-contain transform-gpu"
                         style={{ 
                             WebkitOverflowScrolling: 'touch',
                             touchAction: 'pan-y',
                             willChange: 'scroll-position',
                             transform: 'translateZ(0)',
-                            backfaceVisibility: 'hidden'
+                            backfaceVisibility: 'hidden',
+                            overscrollBehaviorY: 'contain'
                         }}
+                        onTouchStart={(e) => e.stopPropagation()}
                     >
                         {/* Bug Description */}
                         <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
