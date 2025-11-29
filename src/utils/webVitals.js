@@ -1,4 +1,4 @@
-import { onCLS, onFID, onFCP, onLCP, onTTFB, onINP } from 'web-vitals';
+import { onCLS, onFCP, onLCP, onTTFB, onINP } from 'web-vitals';
 import { trackEvent } from '../lib/firebase';
 
 /**
@@ -32,8 +32,7 @@ function sendToAnalytics(metric) {
 export function initWebVitals() {
     // Core Web Vitals
     onCLS(sendToAnalytics); // Cumulative Layout Shift
-    onFID(sendToAnalytics); // First Input Delay (deprecated, use INP)
-    onINP(sendToAnalytics); // Interaction to Next Paint
+    onINP(sendToAnalytics); // Interaction to Next Paint (replaces FID)
     onLCP(sendToAnalytics); // Largest Contentful Paint
 
     // Other important metrics
