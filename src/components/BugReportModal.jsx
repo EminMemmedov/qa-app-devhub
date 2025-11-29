@@ -314,7 +314,7 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
                     </div>
 
                     {/* Footer - Fixed Button */}
-                    <div className="p-4 md:p-6 border-t border-slate-100 bg-white shrink-0 safe-area-bottom">
+                    <div className="px-4 pt-4 pb-6 md:p-6 border-t border-slate-100 bg-white shrink-0" style={{ paddingBottom: 'max(1.5rem, calc(env(safe-area-inset-bottom) + 1.5rem))' }}>
                         <button
                             type="submit"
                             form="bug-report-form"
