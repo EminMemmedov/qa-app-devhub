@@ -38,7 +38,7 @@ const PodiumStep = ({ rank, user, delay }) => {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay, type: "spring", stiffness: 200, damping: 20 }}
-            className={`flex flex-col items-center justify-end w-1/3 relative ${isFirst ? 'z-20' : 'z-10'}`}
+            className={`flex flex-col items-center justify-end w-1/3 relative ${isFirst ? 'z-20' : 'z-10'} hover:z-30 transition-all`}
         >
             {/* Avatar Container - Strictly ABOVE the block */}
             <div className={`flex flex-col items-center mb-1 w-full relative z-20 transition-transform ${isFirst ? 'scale-105' : 'scale-95'}`}>
