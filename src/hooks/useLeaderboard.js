@@ -82,6 +82,30 @@ export function useLeaderboard() {
         return () => clearTimeout(timeoutId);
     }, [xp, currentLevel, unlockedAchievements, userProfile, foundBugs]); // Added foundBugs dependency
 
+    // 4. Listen for remote changes (Admin updates or multi-device sync)
+    useEffect(() => {
+        if (!userProfile?.uid) return;
+
+        const unsubscribe = onSnapshot(doc(db, COLLECTION_NAME, userProfile.uid), (docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                const remoteXP = data.xp || 0;
+                const localXP = getStorageItem('qa_game_xp', 0);
+
+                // If remote XP is different from local storage (e.g. changed in Firebase Console)
+                // We check against localStorage to avoid loop with pending state updates
+                if (remoteXP !== localXP && Math.abs(remoteXP - localXP) > 5) { // Tolerance of 5 to avoid race conditions with small updates
+                    console.log("Remote XP update detected:", remoteXP);
+                    setStorageItem('qa_game_xp', remoteXP);
+                    // Reload to apply changes
+                    window.location.reload();
+                }
+            }
+        });
+
+        return () => unsubscribe();
+    }, [userProfile?.uid]);
+
     // 3. Create or Restore User Profile
     const saveProfile = async (name) => {
         const cleanName = name.trim();

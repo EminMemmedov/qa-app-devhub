@@ -23,11 +23,25 @@ export default function Exam() {
     const [examStarted, setExamStarted] = useState(false);
     const [isAdaptiveMode, setIsAdaptiveMode] = useState(false);
 
+    // Helper to shuffle options
+    const shuffleQuestionOptions = (question) => {
+        const optionsWithIndex = question.options.map((opt, i) => ({ text: opt, originalIndex: i }));
+        const shuffledOptions = optionsWithIndex.sort(() => Math.random() - 0.5);
+        const newCorrectIndex = shuffledOptions.findIndex(opt => opt.originalIndex === question.correctAnswer);
+        
+        return {
+            ...question,
+            options: shuffledOptions.map(opt => opt.text),
+            correctAnswer: newCorrectIndex
+        };
+    };
+
     // Initialize exam
     useEffect(() => {
         if (!isAdaptiveMode) {
             const randomQuestions = getRandomQuestions(30);
-            setQuestions(randomQuestions);
+            const shuffledQuestions = randomQuestions.map(shuffleQuestionOptions);
+            setQuestions(shuffledQuestions);
         }
     }, [isAdaptiveMode]);
 
@@ -52,7 +66,7 @@ export default function Exam() {
         if (isAdaptiveMode) {
             resetExam();
             const firstQuestion = getNextQuestion(null);
-            setQuestions([firstQuestion.question]);
+            setQuestions([shuffleQuestionOptions(firstQuestion.question)]);
         }
         setTimeLeft(900); // Reset timer to 15 minutes on start
         setExamStarted(true);
@@ -75,11 +89,11 @@ export default function Exam() {
         if (isAdaptiveMode) {
             if (currentQuestionIndex + 1 < 30) { // Limit to 30 questions
                 const nextQ = getNextQuestion(isCorrect);
-                setQuestions(prev => [...prev, nextQ.question]);
+                setQuestions(prev => [...prev, shuffleQuestionOptions(nextQ.question)]);
                 setCurrentQuestionIndex(currentQuestionIndex + 1);
                 setSelectedAnswer(null);
             } else {
-                finishExam();
+                finishExam(newAnswers);
             }
         } else {
             // Standard mode
@@ -87,18 +101,18 @@ export default function Exam() {
                 setCurrentQuestionIndex(currentQuestionIndex + 1);
                 setSelectedAnswer(userAnswers[currentQuestionIndex + 1] ?? null);
             } else {
-                finishExam();
+                finishExam(newAnswers);
             }
         }
     };
 
-    const finishExam = () => {
+    const finishExam = (finalUserAnswers = userAnswers) => {
         // Calculate score
         let correctCount = 0;
         const categoryScores = {};
 
         questions.forEach((question, index) => {
-            const userAnswer = userAnswers[index];
+            const userAnswer = finalUserAnswers[index];
             if (userAnswer === question.correctAnswer) {
                 correctCount++;
             }
@@ -125,7 +139,7 @@ export default function Exam() {
                 foundCount: correctCount,
                 totalQuestions: questions.length,
                 categoryScores,
-                userAnswers,
+                userAnswers: finalUserAnswers,
                 questions,
                 timeSpent: 900 - timeLeft,
                 xpEarned // Pass XP to results page

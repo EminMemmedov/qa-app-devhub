@@ -114,7 +114,12 @@ export default function Home() {
                               <User size={32} />
                           </div>
                           <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2">Tanış olaq!</h2>
-                          <p className="text-slate-500 dark:text-slate-400 text-sm">Liderlər cədvəlində iştirak etmək üçün adınızı daxil edin.</p>
+                          <p className="text-slate-500 dark:text-slate-400 text-sm mb-2">Liderlər cədvəlində iştirak etmək üçün adınızı daxil edin.</p>
+                          <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-xl border border-blue-100 dark:border-blue-800">
+                              <p className="text-xs text-blue-600 dark:text-blue-300 font-medium">
+                                  ℹ️ Əgər əvvəllər daxil olmusunuzsa, sadəcə eyni adınızı yazın – sistem sizi tanıyacaq və proqresinizi bərpa edəcək.
+                              </p>
+                          </div>
                       </div>
 
                       <form onSubmit={handleRegister}>
