@@ -5,36 +5,13 @@ import LanguageSelector from './LanguageSelector';
 import AchievementUnlocked from './AchievementUnlocked';
 import { useOfflineSync } from '../hooks/useOfflineSync';
 import { useAchievements } from '../hooks/useAchievements';
-import { motion, useAnimation } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
 import { WifiOff } from 'lucide-react';
 
 export default function Layout() {
-    const navigate = useNavigate();
     const location = useLocation();
-    const controls = useAnimation();
     const { isOnline } = useOfflineSync();
     const { newAchievement } = useAchievements();
-
-    // Swipe gestures for main sections (Home, Theory, Practice)
-    const handleDragEnd = (event, info) => {
-        const threshold = 100; // px
-        if (info.offset.x > threshold) {
-            // swipe right -> previous section
-            if (location.pathname === '/theory') navigate('/');
-            else if (location.pathname.startsWith('/practice')) navigate('/theory');
-        } else if (info.offset.x < -threshold) {
-            // swipe left -> next section
-            if (location.pathname === '/') navigate('/theory');
-            else if (location.pathname === '/theory') navigate('/practice');
-        }
-    };
-
-    // Ensure animation resets on route change
-    useEffect(() => {
-        controls.start({ x: 0 });
-    }, [location.pathname, controls]);
 
     // Memoized callback for achievement close handler
     const handleAchievementClose = useCallback(() => {
@@ -46,16 +23,12 @@ export default function Layout() {
 
     return (
         <>
-            <motion.div
+            <div
                 className="min-h-screen bg-slate-50 dark:bg-slate-900 safe-bottom transition-colors duration-300"
                 style={{
                     paddingBottom: 'max(env(safe-area-inset-bottom), 5rem)',
                     paddingTop: 'env(safe-area-inset-top)'
                 }}
-                drag={isWidePage ? false : "x"}
-                dragConstraints={{ left: 0, right: 0 }}
-                onDragEnd={handleDragEnd}
-                animate={controls}
             >
                 <div className={`w-full mx-auto min-h-screen bg-white dark:bg-slate-800 md:shadow-2xl relative overflow-hidden transition-colors duration-300 ${isWidePage ? 'max-w-7xl' : 'max-w-md'}`}>
                     {/* Top Controls */}
@@ -78,7 +51,7 @@ export default function Layout() {
 
                     <Outlet />
                 </div>
-            </motion.div>
+            </div>
             <BottomNav />
         </>
     );
