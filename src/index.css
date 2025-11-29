@@ -9,3 +9,17 @@
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
+
+/* Performance Optimizations */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 50px; /* Estimate height of a paragraph */
+}
+
+.contain-strict {
+  contain: content;
+}
+
+.will-change-scroll {
+  will-change: scroll-position;
+}

@@ -72,7 +72,7 @@ const SimpleMarkdown = memo(({ content }) => {
 
                 // Regular paragraphs
                 return (
-                    <p key={i} className="text-slate-600 dark:text-slate-300 leading-relaxed mb-4 text-lg">
+                    <p key={i} className="text-slate-600 dark:text-slate-300 leading-relaxed mb-4 text-lg content-visibility-auto contain-strict">
                         {line}
                     </p>
                 );
