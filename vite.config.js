@@ -4,7 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/qa-student-app/', // Base URL for GitHub Pages deployment
+  // No base URL needed for HashRouter - it handles routing client-side
   plugins: [
     react(),
     VitePWA({
@@ -19,8 +19,8 @@ export default defineConfig({
         background_color: '#ffffff',
         display: 'standalone',
         orientation: 'portrait-primary',
-        start_url: '/qa-student-app/',
-        scope: '/qa-student-app/',
+        start_url: '/',
+        scope: '/',
         icons: [
           {
             src: 'vite.svg',
