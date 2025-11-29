@@ -33,7 +33,9 @@ export default function Home() {
   const { unlockedAchievements } = useAchievements();
   
   // Leaderboard & Registration Logic
-  const { loading: leaderboardLoading, userProfile, saveProfile, updateName } = useLeaderboard();
+  // Pass false to skip fetching the full leaderboard list here, saving bandwidth/CPU
+  // The HomeLeaderboard component will fetch it separately.
+  const { loading: leaderboardLoading, userProfile, saveProfile, updateName } = useLeaderboard(false);
   const [showRegistration, setShowRegistration] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [nameInput, setNameInput] = useState('');
@@ -240,7 +242,7 @@ export default function Home() {
               )}
               <motion.span
                 animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ repeat: Infinity, duration: 2, repeatDelay: 3 }}
+                transition={{ repeat: Infinity, duration: 2, repeatDelay: 5 }} // Slower repeat delay to save battery
                 className="inline-block origin-bottom-right"
               >
                 👋
@@ -261,7 +263,7 @@ export default function Home() {
                     </motion.div>
 
                     {/* Tooltip */}
-                    <div className="absolute top-full mt-3 w-48 p-3 bg-slate-900/95 backdrop-blur-md text-white text-center rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 pointer-events-none shadow-xl border border-slate-700/50 z-50 whitespace-normal tracking-normal right-0 sm:left-1/2 sm:-translate-x-1/2 sm:right-auto">
+                    <div className="absolute top-full mt-3 w-48 p-3 bg-slate-900/95 text-white text-center rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 pointer-events-none shadow-xl border border-slate-700/50 z-50 whitespace-normal tracking-normal right-0 sm:left-1/2 sm:-translate-x-1/2 sm:right-auto">
                         <p className="font-bold text-amber-400 mb-1 text-sm">ISTQB Sertifikatlı</p>
                         <p className="text-slate-200 text-xs leading-relaxed">Bu tələbə sınaq imtahanını uğurla keçmişdir.</p>
                         
@@ -288,13 +290,13 @@ export default function Home() {
         >
           {/* ... existing stats card content ... */}
           {/* Decorative Background Elements */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl -ml-16 -mb-16"></div>
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-2xl -mr-16 -mt-16"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-2xl -ml-16 -mb-16"></div>
 
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
-                <div className="p-3 bg-blue-500/20 rounded-2xl backdrop-blur-md border border-blue-500/30">
+                <div className="p-3 bg-blue-500/20 rounded-2xl border border-blue-500/30">
                   <Trophy size={24} className="text-blue-400" />
                 </div>
                 <div>
@@ -310,7 +312,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50 backdrop-blur-sm">
+            <div className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50">
               <div className="flex justify-between text-sm mb-2">
                 <span className="text-slate-300 font-medium">{t('home.nextLevel')}</span>
                 <span className="text-blue-400 font-bold">{Math.round(progress)}%</span>
@@ -347,13 +349,13 @@ export default function Home() {
             className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-purple-400/30 cursor-pointer group mb-6"
           >
             {/* Decorative Elements */}
-            <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-500"></div>
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -ml-8 -mb-8 group-hover:scale-150 transition-transform duration-500"></div>
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-500"></div>
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full blur-xl -ml-8 -mb-8 group-hover:scale-150 transition-transform duration-500"></div>
 
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-md">
+                  <div className="p-3 bg-white/20 rounded-2xl">
                     <Trophy size={32} className="text-yellow-300" />
                   </div>
                   <div>
@@ -365,15 +367,15 @@ export default function Home() {
               </div>
 
               <div className="grid grid-cols-3 gap-3 mt-6">
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 text-center">
+                <div className="bg-white/10 rounded-xl p-3 text-center">
                   <div className="text-2xl font-black">30</div>
                   <div className="text-xs text-blue-100">{t('home.examCard.questions')}</div>
                 </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 text-center">
+                <div className="bg-white/10 rounded-xl p-3 text-center">
                   <div className="text-2xl font-black">15</div>
                   <div className="text-xs text-blue-100">{t('home.examCard.minutes')}</div>
                 </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 text-center">
+                <div className="bg-white/10 rounded-xl p-3 text-center">
                   <div className="text-2xl font-black">70%</div>
                   <div className="text-xs text-blue-100">{t('home.examCard.passRate')}</div>
                 </div>
@@ -391,13 +393,13 @@ export default function Home() {
             className="relative overflow-hidden bg-gradient-to-br from-purple-600 via-pink-600 to-rose-600 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-pink-400/30 cursor-pointer group mb-8"
           >
             {/* Decorative Elements */}
-            <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-500"></div>
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -ml-8 -mb-8 group-hover:scale-150 transition-transform duration-500"></div>
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-500"></div>
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full blur-xl -ml-8 -mb-8 group-hover:scale-150 transition-transform duration-500"></div>
 
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-md">
+                  <div className="p-3 bg-white/20 rounded-2xl">
                     <MessageSquare size={32} className="text-pink-200" />
                   </div>
                   <div>
@@ -484,12 +486,12 @@ export default function Home() {
                         className={`snap-center shrink-0 w-[280px] relative overflow-hidden rounded-[2rem] p-6 bg-gradient-to-br ${article.gradient} text-white shadow-lg shadow-slate-200/50 group hover:-translate-y-1 transition-all duration-300`}
                     >
                         {/* Decorative Background */}
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-500"></div>
-                        <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-xl -ml-8 -mb-8 group-hover:scale-150 transition-transform duration-500"></div>
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-xl -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-500"></div>
+                        <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-lg -ml-8 -mb-8 group-hover:scale-150 transition-transform duration-500"></div>
 
                         <div className="relative z-10 flex flex-col h-full justify-between min-h-[160px]">
                             <div className="flex justify-between items-start mb-2">
-                                <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-md">
+                                <div className="p-3 bg-white/20 rounded-2xl">
                                     <article.icon size={24} className="text-white" />
                                 </div>
                                 <Linkedin className="text-white/80 w-5 h-5" />

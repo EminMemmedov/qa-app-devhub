@@ -5,7 +5,7 @@ import { getStorageItem, setStorageItem } from '../utils/storage';
 import { useGameProgress } from './useGameProgress';
 import { useAchievements } from './useAchievements';
 
-export function useLeaderboard() {
+export function useLeaderboard(shouldFetchLeaders = true) {
     const [leaders, setLeaders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [userProfile, setUserProfile] = useState(() => getStorageItem('qa_user_profile', null));
@@ -19,8 +19,13 @@ export function useLeaderboard() {
     // Determine collection name based on environment (dev or prod)
     const COLLECTION_NAME = import.meta.env.DEV ? 'users_test' : 'users';
 
-    // 1. Listen to leaderboard changes in real-time
+    // 1. Listen to leaderboard changes in real-time (Conditional)
     useEffect(() => {
+        if (!shouldFetchLeaders) {
+            setLoading(false);
+            return;
+        }
+
         const q = query(
             collection(db, COLLECTION_NAME),
             orderBy('xp', 'desc'),
@@ -40,7 +45,7 @@ export function useLeaderboard() {
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [shouldFetchLeaders]);
 
     // 2. Sync current user data to Firestore
     useEffect(() => {
