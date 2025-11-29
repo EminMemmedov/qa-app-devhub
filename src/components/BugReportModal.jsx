@@ -149,17 +149,19 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: "100%", opacity: 0 }}
                     transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                    className="bg-white rounded-t-3xl md:rounded-2xl shadow-2xl w-full max-w-2xl md:h-auto md:max-h-[85vh] flex flex-col overflow-hidden"
+                    className="bg-white rounded-t-3xl md:rounded-2xl w-full max-w-2xl md:h-auto md:max-h-[85vh] flex flex-col overflow-hidden transform-gpu"
                     style={{ 
                         height: 'calc(100dvh - 140px)',
                         maxHeight: 'calc(100dvh - 140px)',
                         marginTop: 'auto',
-                        touchAction: 'pan-y'
+                        touchAction: 'pan-y',
+                        willChange: 'transform',
+                        boxShadow: '0 -4px 20px rgba(0,0,0,0.15)'
                     }}
                     onClick={(e) => e.stopPropagation()}
                 >
                     {/* Header */}
-                    <div className="bg-slate-900 text-white p-4 md:p-6 flex justify-between items-start shrink-0 rounded-t-2xl">
+                    <div className="bg-slate-900 text-white p-4 md:p-6 flex justify-between items-start shrink-0 rounded-t-3xl md:rounded-t-2xl">
                         <div className="flex-1 pr-4">
                             <h2 className="text-xl font-bold flex items-center gap-2">
                                 <AlertTriangle className="text-yellow-400" />
@@ -176,7 +178,16 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
                         </button>
                     </div>
 
-                    <div className="p-4 md:p-8 overflow-y-auto overflow-x-hidden flex-1 overscroll-contain" style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}>
+                    <div 
+                        className="p-4 md:p-8 overflow-y-auto overflow-x-hidden flex-1 overscroll-contain transform-gpu"
+                        style={{ 
+                            WebkitOverflowScrolling: 'touch',
+                            touchAction: 'pan-y',
+                            willChange: 'scroll-position',
+                            transform: 'translateZ(0)',
+                            backfaceVisibility: 'hidden'
+                        }}
+                    >
                         {/* Bug Description */}
                         <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
                             <h3 className="text-xs font-bold text-slate-500 uppercase mb-1">{t('bugReport.description')}</h3>
@@ -194,7 +205,7 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
                                     value={reportData.summary}
                                     onChange={(e) => handleChange('summary', e.target.value)}
                                     placeholder={t('bugReport.placeholders.summary')}
-                                    className="w-full p-3 rounded-xl border-2 border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium"
+                                    className="w-full p-3 rounded-xl border-2 border-slate-200 focus:border-blue-500 outline-none font-medium"
                                 />
                             </div>
 
@@ -208,7 +219,7 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
                                     onChange={(e) => handleChange('steps', e.target.value)}
                                     placeholder={t('bugReport.placeholders.steps')}
                                     rows={4}
-                                    className="w-full p-3 rounded-xl border-2 border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium resize-none"
+                                    className="w-full p-3 rounded-xl border-2 border-slate-200 focus:border-blue-500 outline-none font-medium resize-none"
                                 />
                             </div>
 
@@ -223,7 +234,7 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
                                         onChange={(e) => handleChange('actualResult', e.target.value)}
                                         placeholder={t('bugReport.placeholders.actual')}
                                         rows={3}
-                                        className="w-full p-3 rounded-xl border-2 border-slate-200 focus:border-red-500 focus:ring-4 focus:ring-red-500/10 outline-none transition-all font-medium resize-none"
+                                        className="w-full p-3 rounded-xl border-2 border-slate-200 focus:border-red-500 outline-none font-medium resize-none"
                                     />
                                 </div>
                                 <div>
@@ -235,7 +246,7 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
                                         onChange={(e) => handleChange('expectedResult', e.target.value)}
                                         placeholder={t('bugReport.placeholders.expected')}
                                         rows={3}
-                                        className="w-full p-3 rounded-xl border-2 border-slate-200 focus:border-green-500 focus:ring-4 focus:ring-green-500/10 outline-none transition-all font-medium resize-none"
+                                        className="w-full p-3 rounded-xl border-2 border-slate-200 focus:border-green-500 outline-none font-medium resize-none"
                                     />
                                 </div>
                             </div>
@@ -252,7 +263,7 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
                                                 key={s}
                                                 type="button"
                                                 onClick={() => handleChange('severity', s)}
-                                                className={`py-2 px-2 rounded-lg text-xs font-bold border-2 transition-all ${reportData.severity === s
+                                                className={`py-2 px-2 rounded-lg text-xs font-bold border-2 ${reportData.severity === s
                                                         ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
                                                         : 'border-slate-200 text-slate-500 hover:border-slate-300'
                                                     }`}
@@ -273,7 +284,7 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
                                                 key={p}
                                                 type="button"
                                                 onClick={() => handleChange('priority', p)}
-                                                className={`py-2 px-2 rounded-lg text-xs font-bold border-2 transition-all ${reportData.priority === p
+                                                className={`py-2 px-2 rounded-lg text-xs font-bold border-2 ${reportData.priority === p
                                                         ? 'border-orange-500 bg-orange-50 text-orange-700'
                                                         : 'border-slate-200 text-slate-500 hover:border-slate-300'
                                                     }`}
@@ -286,18 +297,14 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
                             </div>
 
                             {/* Feedback Area */}
-                            <AnimatePresence>
-                                {feedback && (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: -10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0 }}
-                                        className={`p-4 rounded-xl border-l-4 ${
-                                            feedback.type === 'success' 
-                                                ? 'bg-green-50 border-green-500 text-green-800' 
-                                                : 'bg-red-50 border-red-500 text-red-800'
-                                        }`}
-                                    >
+                            {feedback && (
+                                <div
+                                    className={`p-4 rounded-xl border-l-4 ${
+                                        feedback.type === 'success' 
+                                            ? 'bg-green-50 border-green-500 text-green-800' 
+                                            : 'bg-red-50 border-red-500 text-red-800'
+                                    }`}
+                                >
                                         <div className="flex items-start gap-3">
                                             {feedback.type === 'success' ? (
                                                 <CheckCircle2 className="shrink-0" />
@@ -319,9 +326,8 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
                                                 )}
                                             </div>
                                         </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
+                                </div>
+                            )}
                         </form>
                     </div>
 
