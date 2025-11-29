@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, User, Loader2, ChevronRight, Sparkles, Crown, Edit2, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useLeaderboard } from '../hooks/useLeaderboard';
-import { FixedSizeList } from 'react-window';
 
 const getAvatarColor = (name) => {
     if (!name) return 'bg-slate-200';
@@ -161,52 +160,6 @@ export default function Leaderboard() {
   const currentUserRank = leaders.findIndex(u => u.uid === userProfile?.uid) + 1;
   const currentUser = leaders.find(u => u.uid === userProfile?.uid);
 
-  // Memoize the list item renderer for performance
-  const ListItem = useMemo(() => ({ index, style }) => {
-    const user = rest[index];
-    
-    return (
-      <div style={style}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.05 }}
-          className={`mx-6 mb-3 rounded-2xl p-4 flex items-center gap-4 shadow-sm border transition-all ${
-              user.uid === userProfile?.uid 
-              ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800 ring-1 ring-indigo-500/30' 
-              : 'bg-slate-50 dark:bg-slate-900 border-slate-100 dark:border-slate-700'
-          }`}
-        >
-          <div className="font-bold text-slate-400 w-6 text-center">{index + 4}</div>
-          
-          <div className={`w-10 h-10 min-w-[2.5rem] rounded-xl ${getAvatarColor(user.name)} flex items-center justify-center text-white font-bold shadow-sm`}>
-            {user.name.charAt(0)}
-          </div>
-
-          <div className="flex-1 min-w-0">
-            <div className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <span className="truncate">
-                    {user.name} {user.uid === userProfile?.uid && <span className="text-[10px] bg-indigo-100 text-indigo-600 px-1.5 rounded font-bold">(Sən)</span>}
-                </span>
-                {user.badges && user.badges.includes('istqb_certified') && (
-                   <div className="relative group/list-item shrink-0">
-                       <Sparkles size={16} className="text-yellow-500" />
-                       <div className="absolute left-0 top-full mt-1 px-2 py-1 bg-slate-900/90 text-white text-[10px] rounded-lg opacity-0 group-hover/list-item:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50">
-                           ISTQB Sertifikatlı
-                       </div>
-                   </div>
-                )}
-            </div>
-            <div className="text-xs text-slate-500 font-medium">Level {user.level}</div>
-          </div>
-          <div className="text-indigo-600 dark:text-indigo-400 font-bold whitespace-nowrap">
-            {user.xp} XP
-          </div>
-        </motion.div>
-      </div>
-    );
-  }, [rest, userProfile]);
-
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pb-32 transition-colors">
       {/* Registration Modal */}
@@ -301,20 +254,48 @@ export default function Leaderboard() {
             <PodiumStep rank={3} user={top3[2]} delay={0.2} />
         </div>
 
-        {/* Virtualized List */}
-        <div className="pb-8 bg-white dark:bg-slate-800 rounded-t-[2.5rem] pt-8 -mx-4 min-h-[200px] shadow-xl border-t border-slate-100 dark:border-slate-700 relative z-10">
-          {rest.length > 0 ? (
-            <FixedSizeList
-              height={Math.min(rest.length * 85, 600)} // Max height of 600px or total items height
-              itemCount={rest.length}
-              itemSize={85} // Height of each item (including margin)
-              width="100%"
-              className="scrollbar-thin scrollbar-thumb-indigo-200 dark:scrollbar-thumb-indigo-800 scrollbar-track-transparent"
+        {/* List */}
+        <div className="space-y-3 pb-8 bg-white dark:bg-slate-800 rounded-t-[2.5rem] pt-8 -mx-4 px-6 min-h-[200px] shadow-xl border-t border-slate-100 dark:border-slate-700 relative z-10">
+          {rest.length > 0 ? rest.map((user, index) => (
+            <motion.div
+              key={user.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className={`rounded-2xl p-4 flex items-center gap-4 shadow-sm border transition-all ${
+                  user.uid === userProfile?.uid 
+                  ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800 ring-1 ring-indigo-500/30' 
+                  : 'bg-slate-50 dark:bg-slate-900 border-slate-100 dark:border-slate-700'
+              }`}
             >
-              {ListItem}
-            </FixedSizeList>
-          ) : (
-             <div className="text-center py-8 text-slate-400 text-sm font-medium px-6">
+              <div className="font-bold text-slate-400 w-6 text-center">{index + 4}</div>
+              
+              <div className={`w-10 h-10 min-w-[2.5rem] rounded-xl ${getAvatarColor(user.name)} flex items-center justify-center text-white font-bold shadow-sm`}>
+                {user.name.charAt(0)}
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <div className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <span className="truncate">
+                        {user.name} {user.uid === userProfile?.uid && <span className="text-[10px] bg-indigo-100 text-indigo-600 px-1.5 rounded font-bold">(Sən)</span>}
+                    </span>
+                    {user.badges && user.badges.includes('istqb_certified') && (
+                       <div className="relative group/list-item shrink-0">
+                           <Sparkles size={16} className="text-yellow-500" />
+                           <div className="absolute left-0 top-full mt-1 px-2 py-1 bg-slate-900/90 text-white text-[10px] rounded-lg opacity-0 group-hover/list-item:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50">
+                               ISTQB Sertifikatlı
+                           </div>
+                       </div>
+                    )}
+                </div>
+                <div className="text-xs text-slate-500 font-medium">Level {user.level}</div>
+              </div>
+              <div className="text-indigo-600 dark:text-indigo-400 font-bold whitespace-nowrap">
+                {user.xp} XP
+              </div>
+            </motion.div>
+          )) : (
+             <div className="text-center py-8 text-slate-400 text-sm font-medium">
                  Digər iştirakçılar hələ qoşulmayıb.
              </div>
           )}
