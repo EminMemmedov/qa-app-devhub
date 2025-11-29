@@ -75,7 +75,7 @@ export default defineConfig({
         ]
       },
       devOptions: {
-        enabled: false // Disable PWA in development to avoid these errors
+        enabled: true // Enable PWA in development for proper module loading
       }
     })
   ],
