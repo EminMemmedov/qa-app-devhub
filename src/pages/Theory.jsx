@@ -350,7 +350,7 @@ export default function Theory() {
                                                     decoding="async"
                                                     width="192"
                                                     height="192"
-                                                    className="w-48 h-48 object-contain rounded-2xl bg-white/10 p-4"
+                                                    className="w-48 h-48 object-contain rounded-2xl bg-white/10 p-4 pointer-events-none select-none transform-gpu"
                                                 />
                                             </div>
                                         )}
