@@ -25,56 +25,66 @@ const moduleImages = {
 import { memo } from 'react';
 
 const SimpleMarkdown = memo(({ content }) => {
+    // Split content into logical blocks (sections) for better scroll performance
+    const blocks = content.split(/^(?=### )/gm);
+
     return (
         <div className="prose prose-slate dark:prose-invert prose-lg max-w-none">
-            {content.split('\n').map((line, i) => {
-                // Headers
-                if (line.trim().startsWith('###')) {
-                    return (
-                        <h3 key={i} className="text-2xl font-black mt-10 mb-6 text-slate-800 dark:text-white flex items-center gap-3">
-                            <span className="w-1.5 h-8 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full"></span>
-                            {line.replace('###', '').trim()}
-                        </h3>
-                    );
-                }
-
-                // Bold text blocks (Alerts)
-                if (line.trim().startsWith('**') && line.trim().endsWith('**')) {
-                    return (
-                        <div key={i} className="bg-indigo-50 dark:bg-indigo-900/30 border-l-4 border-indigo-500 p-5 rounded-r-2xl my-6 shadow-sm">
-                            <strong className="text-indigo-900 dark:text-indigo-200 font-bold flex items-start gap-3">
-                                <Info className="w-6 h-6 text-indigo-600 dark:text-indigo-400 flex-shrink-0 mt-0.5" />
-                                <span>{line.replace(/\*\*/g, '')}</span>
-                            </strong>
-                        </div>
-                    );
-                }
-
-                // List items
-                if (line.trim().startsWith('-')) {
-                    return (
-                        <li key={i} className="ml-6 list-none pl-2 mb-3 relative flex items-start gap-3">
-                            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-2.5 flex-shrink-0"></span>
-                            <span className="text-slate-700 dark:text-slate-300 leading-relaxed text-lg">{line.replace('-', '').trim()}</span>
-                        </li>
-                    );
-                }
-
-                // Code blocks (simplified)
-                if (line.trim().startsWith('```')) {
-                    return null; // Skip code fence markers
-                }
-
-                // Empty lines
-                if (line.trim() === '') {
-                    return <br key={i} />;
-                }
-
-                // Regular paragraphs
+            {blocks.map((block, blockIndex) => {
+                const lines = block.split('\n');
                 return (
-                    <p key={i} className="text-slate-600 dark:text-slate-300 leading-relaxed mb-4 text-lg content-visibility-auto contain-strict">
-                        {line}
-                    </p>
+                    <div key={blockIndex} className="content-visibility-auto contain-strict mb-8">
+                        {lines.map((line, i) => {
+                            // Headers
+                            if (line.trim().startsWith('###')) {
+                                return (
+                                    <h3 key={i} className="text-2xl font-black mt-4 mb-6 text-slate-800 dark:text-white flex items-center gap-3 sticky top-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm py-2 z-10">
+                                        <span className="w-1.5 h-8 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full flex-shrink-0"></span>
+                                        {line.replace('###', '').trim()}
+                                    </h3>
+                                );
+                            }
+
+                            // Bold text blocks (Alerts)
+                            if (line.trim().startsWith('**') && line.trim().endsWith('**')) {
+                                return (
+                                    <div key={i} className="bg-indigo-50 dark:bg-indigo-900/20 border-l-4 border-indigo-500 p-5 rounded-r-2xl my-6 shadow-sm">
+                                        <strong className="text-indigo-900 dark:text-indigo-200 font-bold flex items-start gap-3 leading-relaxed">
+                                            <Info className="w-6 h-6 text-indigo-600 dark:text-indigo-400 flex-shrink-0 mt-0.5" />
+                                            <span>{line.replace(/\*\*/g, '')}</span>
+                                        </strong>
+                                    </div>
+                                );
+                            }
+
+                            // List items
+                            if (line.trim().startsWith('-')) {
+                                return (
+                                    <li key={i} className="ml-4 list-none pl-0 mb-4 relative flex items-start gap-3 group">
+                                        <div className="mt-2.5 w-1.5 h-1.5 rounded-full bg-indigo-400 dark:bg-indigo-500 flex-shrink-0 group-hover:scale-125 transition-transform"></div>
+                                        <span className="text-slate-700 dark:text-slate-300 leading-loose text-lg">{line.replace('-', '').trim()}</span>
+                                    </li>
+                                );
+                            }
+
+                            // Code blocks (simplified)
+                            if (line.trim().startsWith('```')) {
+                                return null; 
+                            }
+
+                            // Empty lines
+                            if (line.trim() === '') {
+                                return null; 
+                            }
+
+                            // Regular paragraphs
+                            return (
+                                <p key={i} className="text-slate-600 dark:text-slate-300 leading-loose mb-6 text-lg">
+                                    {line}
+                                </p>
+                            );
+                        })}
+                    </div>
                 );
             })}
         </div>
