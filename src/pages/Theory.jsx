@@ -350,11 +350,11 @@ export default function Theory() {
                                                     decoding="async"
                                                     width="192"
                                                     height="192"
-                                                    className="w-48 h-48 object-contain rounded-2xl bg-white/10 p-4 backdrop-blur-sm"
+                                                    className="w-48 h-48 object-contain rounded-2xl bg-white/10 p-4"
                                                 />
                                             </div>
                                         )}
-                                        <div className={`inline-flex items-center justify-center w-16 h-16 ${selectedModule.color} bg-white/20 backdrop-blur-sm rounded-2xl mb-4`}>
+                                        <div className={`inline-flex items-center justify-center w-16 h-16 ${selectedModule.color} bg-white/20 rounded-2xl mb-4`}>
                                             {(() => {
                                                 const Icon = moduleIcons[selectedModule.id] || BookOpen;
                                                 return <Icon size={32} className="text-white" strokeWidth={2.5} />;
