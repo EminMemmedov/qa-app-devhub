@@ -22,7 +22,9 @@ const moduleImages = {
     'test-planning': '/theory-test-planning.png'
 };
 
-    const SimpleMarkdown = ({ content }) => {
+import { memo } from 'react';
+
+const SimpleMarkdown = memo(({ content }) => {
     return (
         <div className="prose prose-slate dark:prose-invert prose-lg max-w-none">
             {content.split('\n').map((line, i) => {
@@ -77,7 +79,7 @@ const moduleImages = {
             })}
         </div>
     );
-};
+});
 
 const QuizComponent = ({ quiz, onComplete }) => {
     const { t } = useTranslation();
@@ -318,7 +320,7 @@ export default function Theory() {
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
                         className="fixed inset-0 z-50 bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-800 flex flex-col"
                     >
-                        <div className="p-6 border-b border-slate-200 dark:border-slate-700 flex items-center gap-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md sticky top-0 shadow-sm z-50">
+                        <div className="p-6 border-b border-slate-200 dark:border-slate-700 flex items-center gap-4 bg-white dark:bg-slate-900 sticky top-0 shadow-sm z-50">
                             <button
                                 onClick={handleBackClick}
                                 className="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors group"
@@ -327,13 +329,13 @@ export default function Theory() {
                                 <span className="font-medium text-slate-700 dark:text-slate-300">{t('common.back')}</span>
                             </button>
                             <div className="flex-1">
-                                <h2 className="text-xl font-bold text-slate-900 dark:text-white">{selectedModule.title}</h2>
-                                <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">{selectedModule.description}</p>
+                                <h2 className="text-xl font-bold text-slate-900 dark:text-white line-clamp-1">{selectedModule.title}</h2>
+                                <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">{selectedModule.description}</p>
                             </div>
                             <div className="w-12"></div> {/* Spacer for balance */}
                         </div>
 
-                        <div className="flex-1 overflow-y-auto">
+                        <div className="flex-1 overflow-y-auto overscroll-contain transform-gpu">
                             <div className="max-w-3xl mx-auto p-6 pb-32">
                                 <div className="mb-8 p-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl shadow-xl relative overflow-hidden">
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
