@@ -60,13 +60,13 @@ export default function Layout() {
                         {/* <LanguageSelector /> */}
                     </div>
 
-                    {/* Offline Banner */}
-                    {!isOnline && (
+                    {/* Offline Banner - Handled by global OfflineIndicator component now */}
+                    {/* {!isOnline && (
                         <div className="bg-slate-900 text-white px-4 py-2 flex items-center justify-center gap-2 text-sm font-medium animate-pulse sticky top-0 z-40">
                             <WifiOff size={16} />
                             <span>İnternet bağlantısı yoxdur. Oflayn rejim aktivdir.</span>
                         </div>
-                    )}
+                    )} */}
 
                     {/* Achievement Notification */}
                     <AchievementUnlocked achievement={newAchievement} onClose={() => { }} />
