@@ -140,19 +140,21 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[100] flex items-end md:items-center justify-center bg-black/50 backdrop-blur-sm p-0 md:p-6 overflow-hidden"
+                className="fixed inset-0 z-[100] flex items-end md:items-center justify-center bg-black/50 backdrop-blur-sm p-0 md:p-6 overflow-hidden touch-none"
                 onClick={onClose}
+                style={{ overscrollBehavior: 'contain' }}
             >
                 <motion.div
                     initial={{ y: "100%", opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: "100%", opacity: 0 }}
                     transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                    className="bg-white rounded-t-3xl md:rounded-2xl shadow-2xl w-full max-w-2xl md:h-auto md:max-h-[85vh] flex flex-col"
+                    className="bg-white rounded-t-3xl md:rounded-2xl shadow-2xl w-full max-w-2xl md:h-auto md:max-h-[85vh] flex flex-col overflow-hidden"
                     style={{ 
-                        height: 'calc(100dvh - 60px)',
-                        maxHeight: 'calc(100dvh - 60px)',
-                        marginTop: 'auto'
+                        height: 'calc(100dvh - 140px)',
+                        maxHeight: 'calc(100dvh - 140px)',
+                        marginTop: 'auto',
+                        touchAction: 'pan-y'
                     }}
                     onClick={(e) => e.stopPropagation()}
                 >
@@ -174,7 +176,7 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
                         </button>
                     </div>
 
-                    <div className="p-4 md:p-8 overflow-y-auto flex-1 overscroll-contain">
+                    <div className="p-4 md:p-8 overflow-y-auto overflow-x-hidden flex-1 overscroll-contain" style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}>
                         {/* Bug Description */}
                         <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
                             <h3 className="text-xs font-bold text-slate-500 uppercase mb-1">{t('bugReport.description')}</h3>
@@ -324,7 +326,7 @@ export default function BugReportModal({ isOpen, onClose, onSubmit, bug }) {
                     </div>
 
                     {/* Footer - Fixed Button */}
-                    <div className="px-4 pt-4 md:p-6 border-t border-slate-100 bg-white shrink-0 rounded-b-3xl md:rounded-b-2xl" style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom, 1.5rem))' }}>
+                    <div className="px-4 pt-4 pb-20 md:pb-6 border-t border-slate-100 bg-white shrink-0 rounded-b-3xl md:rounded-b-2xl">
                         <button
                             type="submit"
                             form="bug-report-form"
