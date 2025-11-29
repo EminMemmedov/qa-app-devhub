@@ -335,11 +335,11 @@ export default function Theory() {
                             <div className="w-12"></div> {/* Spacer for balance */}
                         </div>
 
-                        <div className="flex-1 overflow-y-auto overscroll-contain transform-gpu">
+                        <div className="flex-1 overflow-y-auto overscroll-contain transform-gpu will-change-scroll">
                             <div className="max-w-3xl mx-auto p-6 pb-32">
-                                <div className="mb-8 p-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl shadow-xl relative overflow-hidden">
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
-                                    <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mb-12"></div>
+                                <div className="mb-8 p-8 bg-indigo-600 sm:bg-gradient-to-br sm:from-indigo-500 sm:to-purple-600 rounded-3xl shadow-sm sm:shadow-xl relative overflow-hidden">
+                                    <div className="hidden sm:block absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+                                    <div className="hidden sm:block absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mb-12"></div>
                                     <div className="relative z-10">
                                         {moduleImages[selectedModule.id] && (
                                             <div className="mb-6 flex justify-center">
@@ -360,12 +360,12 @@ export default function Theory() {
                                                 return <Icon size={32} className="text-white" strokeWidth={2.5} />;
                                             })()}
                                         </div>
-                                        <h1 className="text-3xl font-black text-white mb-2">{selectedModule.title}</h1>
-                                        <p className="text-blue-100 text-lg">{selectedModule.description}</p>
+                                        <h1 className="text-2xl sm:text-3xl font-black text-white mb-2">{selectedModule.title}</h1>
+                                        <p className="text-indigo-100 text-base sm:text-lg">{selectedModule.description}</p>
                                     </div>
                                 </div>
 
-                                <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-lg border border-slate-100 dark:border-slate-700 mb-8">
+                                <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm sm:shadow-lg border border-slate-100 dark:border-slate-700 mb-8">
                                     <SimpleMarkdown content={selectedModule.content} />
                                 </div>
 
