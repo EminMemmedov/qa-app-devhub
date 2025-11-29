@@ -89,15 +89,43 @@ export function useLeaderboard() {
         const unsubscribe = onSnapshot(doc(db, COLLECTION_NAME, userProfile.uid), (docSnap) => {
             if (docSnap.exists()) {
                 const data = docSnap.data();
+                
+                // Compare all key data points
                 const remoteXP = data.xp || 0;
                 const localXP = getStorageItem('qa_game_xp', 0);
+                
+                const remoteBadges = data.badges || [];
+                const localBadges = getStorageItem('qa_achievements', []);
+                // Sort for comparison
+                const badgesChanged = JSON.stringify(remoteBadges.sort()) !== JSON.stringify(localBadges.sort());
+                
+                const xpChanged = remoteXP !== localXP;
 
-                // If remote XP is different from local storage (e.g. changed in Firebase Console)
-                // We check against localStorage to avoid loop with pending state updates
-                if (remoteXP !== localXP && Math.abs(remoteXP - localXP) > 5) { // Tolerance of 5 to avoid race conditions with small updates
-                    console.log("Remote XP update detected:", remoteXP);
+                // If ANY significant difference is detected (Admin Edit or Data Loss), trust Remote
+                if (xpChanged || badgesChanged) {
+                    console.log("Remote data mismatch detected (Admin Edit or Sync). Syncing down...", { remoteXP, localXP, badgesChanged });
+                    
+                    // 1. Update XP
                     setStorageItem('qa_game_xp', remoteXP);
-                    // Reload to apply changes
+                    
+                    // 2. Update Badges
+                    setStorageItem('qa_achievements', remoteBadges);
+
+                    // 3. Update Progress (Bugs & Levels) if available
+                    if (data.progress) {
+                        if (data.progress.foundBugs) {
+                            setStorageItem('qa_game_progress', data.progress.foundBugs);
+                        }
+                        if (data.progress.completedLevels) {
+                            const { sql, automation, api, mobile } = data.progress.completedLevels;
+                            if (sql) setStorageItem('qa_db_completed_levels', sql);
+                            if (automation) setStorageItem('qa_automation_completed_levels', automation);
+                            if (api) setStorageItem('qa_api_completed_levels', api);
+                            if (mobile) setStorageItem('qa_mobile_completed_levels', mobile);
+                        }
+                    }
+
+                    // Reload to apply changes immediately
                     window.location.reload();
                 }
             }
