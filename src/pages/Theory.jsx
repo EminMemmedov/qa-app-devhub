@@ -26,11 +26,14 @@ import { memo } from 'react';
 
 const SimpleMarkdown = memo(({ content }) => {
     // Split content into logical blocks (sections) for better scroll performance
-    const blocks = content.split(/^(?=### )/gm);
+    // Using a more robust regex to catch headers without losing them
+    const blocks = content.split(/(?=^### )/gm);
 
     return (
         <div className="prose prose-slate dark:prose-invert prose-lg max-w-none">
             {blocks.map((block, blockIndex) => {
+                if (!block.trim()) return null;
+                
                 const lines = block.split('\n');
                 return (
                     <div key={blockIndex} className="content-visibility-auto contain-strict mb-8">
@@ -38,7 +41,7 @@ const SimpleMarkdown = memo(({ content }) => {
                             // Headers
                             if (line.trim().startsWith('###')) {
                                 return (
-                                    <h3 key={i} className="text-2xl font-black mt-4 mb-6 text-slate-800 dark:text-white flex items-center gap-3 sticky top-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm py-2 z-10">
+                                    <h3 key={i} className="text-2xl font-black mt-4 mb-6 text-slate-800 dark:text-white flex items-center gap-3 sticky top-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-4 -mx-4 px-4 z-10 border-b border-slate-100 dark:border-slate-800/50 transition-colors">
                                         <span className="w-1.5 h-8 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full flex-shrink-0"></span>
                                         {line.replace('###', '').trim()}
                                     </h3>

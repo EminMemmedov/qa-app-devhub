@@ -115,7 +115,7 @@ export default function Home() {
   ];
 
   return (
-    <PageTransition className="p-6 pb-24 min-h-screen bg-slate-50/50 dark:bg-slate-900 transition-colors duration-300">
+    <PageTransition className="p-6 pb-32 min-h-screen bg-slate-50/50 dark:bg-slate-900 transition-colors duration-300">
       {/* Registration/Edit Modal */}
       <AnimatePresence>
           {showRegistration && (
