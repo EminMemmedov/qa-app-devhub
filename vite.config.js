@@ -12,9 +12,9 @@ export default defineConfig({
       injectRegister: 'auto',
       includeAssets: ['vite.svg', '*.png'],
       manifest: {
-        name: 'QA Student App',
-        short_name: 'QA Student',
-        description: 'Interactive QA learning platform for students',
+        name: 'DevHub Academy - QA Platform',
+        short_name: 'DevHub',
+        description: 'Interactive QA learning platform by DevHub Academy',
         theme_color: '#6366f1',
         background_color: '#ffffff',
         display: 'standalone',

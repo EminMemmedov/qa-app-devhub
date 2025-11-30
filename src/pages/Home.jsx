@@ -96,7 +96,7 @@ export default function Home() {
       id: 1,
       title: "Allure Report vs Extent Report",
       desc: "Hansı daha yaxşıdır? CI/CD, dizayn və funksionallıq müqayisəsi.",
-      link: "https://www.linkedin.com/posts/qa-academyaz_qaacademy-automationtesting-allurereport-activity-7396865939637538816-KYrh",
+      link: "https://www.linkedin.com/school/devhub-academy",
       icon: PieChart,
       gradient: "from-blue-500 to-cyan-500"
     },
@@ -104,7 +104,7 @@ export default function Home() {
       id: 2,
       title: "Test Sənədləşməsi",
       desc: "QA prosesinin görünməyən qəhrəmanı: Test Plan, Test Case və RTM.",
-      link: "https://www.linkedin.com/feed/update/urn:li:activity:7399097827135598593",
+      link: "https://www.linkedin.com/school/devhub-academy",
       icon: FileText,
       gradient: "from-purple-500 to-pink-500"
     },
@@ -112,7 +112,7 @@ export default function Home() {
       id: 3,
       title: "Automation yoxsa Manual?",
       desc: "Hansı yol daha düzgündür? Karyera üçün hansını seçməli?",
-      link: "https://www.linkedin.com/feed/update/urn:li:activity:7376610160896544768",
+      link: "https://www.linkedin.com/school/devhub-academy",
       icon: Bot,
       gradient: "from-orange-500 to-red-500"
     }
@@ -518,7 +518,7 @@ export default function Home() {
 
             {/* View More Card */}
             <a
-              href="https://www.linkedin.com/company/qa-academyaz/posts/?feedView=all&viewAsMember=true"
+              href="https://www.linkedin.com/school/devhub-academy"
               target="_blank"
               rel="noopener noreferrer"
               className="snap-center shrink-0 w-[100px] flex flex-col items-center justify-center bg-white rounded-[2rem] border-2 border-slate-100 text-slate-400 hover:border-blue-200 hover:text-blue-600 transition-all gap-2 shadow-sm hover:shadow-md"
@@ -569,7 +569,7 @@ export default function Home() {
 
           <div className="flex justify-center gap-6 flex-wrap">
             <a
-              href="https://www.linkedin.com/company/qa-academyaz"
+              href="https://www.linkedin.com/school/devhub-academy"
               target="_blank"
               rel="noopener noreferrer"
               className="flex flex-col items-center gap-2 group"
@@ -581,7 +581,7 @@ export default function Home() {
             </a>
 
             <a
-              href="https://www.instagram.com/qaacademy.az/"
+              href="https://www.instagram.com/devhub.edu.az/"
               target="_blank"
               rel="noopener noreferrer"
               className="flex flex-col items-center gap-2 group"
@@ -593,7 +593,7 @@ export default function Home() {
             </a>
 
             <a
-              href="https://wa.me/994505412141"
+              href="https://wa.me/994513688927"
               target="_blank"
               rel="noopener noreferrer"
               className="flex flex-col items-center gap-2 group"
@@ -606,7 +606,7 @@ export default function Home() {
           </div>
 
           <div className="mt-8 text-center">
-            <p className="text-slate-400 dark:text-slate-500 text-xs font-medium">© 2025 QA Academy. Made with ❤️ by Emin</p>
+            <p className="text-slate-400 dark:text-slate-500 text-xs font-medium">© 2025 DevHub Academy. Made with ❤️ by Emin</p>
           </div>
         </motion.div>
 
