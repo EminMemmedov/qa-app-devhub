@@ -603,6 +603,18 @@ export default function Home() {
               </div>
               <span className="text-xs font-medium text-slate-500 dark:text-slate-400 group-hover:text-green-600 dark:group-hover:text-green-400">WhatsApp</span>
             </a>
+
+            <a
+              href="https://devhub.edu.az/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center gap-2 group"
+            >
+              <div className="w-14 h-14 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-50 dark:group-hover:bg-indigo-900/30 group-hover:scale-110 transition-all duration-300">
+                <ExternalLink size={24} />
+              </div>
+              <span className="text-xs font-medium text-slate-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">Website</span>
+            </a>
           </div>
 
           <div className="mt-8 text-center">
