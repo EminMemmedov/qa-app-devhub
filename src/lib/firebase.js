@@ -3,14 +3,15 @@ import { getFirestore } from "firebase/firestore";
 import { getAnalytics, logEvent, isSupported } from "firebase/analytics";
 import { getPerformance } from "firebase/performance";
 
+// DevHub Firebase Configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAFAoHsh7rQ32qvIUqdyRaIZkGRjKI2t8M",
-  authDomain: "qa-student-app-12f98.firebaseapp.com",
-  projectId: "qa-student-app-12f98",
-  storageBucket: "qa-student-app-12f98.firebasestorage.app",
-  messagingSenderId: "1054149573722",
-  appId: "1:1054149573722:web:1603918839bc3ce34bac63",
-  measurementId: "G-DXPHJRLDTV"
+  apiKey: "AIzaSyBnLzlxOvEc6q9TvOdCfusuCTw4A2d00vE",
+  authDomain: "app-qa-devhub.firebaseapp.com",
+  projectId: "app-qa-devhub",
+  storageBucket: "app-qa-devhub.firebasestorage.app",
+  messagingSenderId: "758417977322",
+  appId: "1:758417977322:web:401f37410a64407f8f4c93",
+  measurementId: "G-7EBX1Y2PTH"
 };
 
 // Initialize Firebase
