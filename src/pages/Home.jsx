@@ -223,7 +223,7 @@ export default function Home() {
               </motion.div>
               <div className="flex flex-col justify-center">
                 <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-0.5">Welcome to</div>
-                <div className="font-black text-lg text-slate-900 dark:text-white leading-none">QA Academy</div>
+                <div className="font-black text-lg text-slate-900 dark:text-white leading-none">DevHub Academy</div>
               </div>
             </div>
 
