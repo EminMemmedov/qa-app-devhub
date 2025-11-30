@@ -23,9 +23,9 @@ export default defineConfig({
         scope: '/',
         icons: [
           {
-            src: 'vite.svg',
-            sizes: 'any',
-            type: 'image/svg+xml',
+            src: 'devhub-logo.jpg',
+            sizes: '200x200',
+            type: 'image/jpeg',
             purpose: 'any maskable'
           }
         ]

@@ -218,7 +218,7 @@ export default function Home() {
 
                 {/* Logo Container */}
                 <div className="relative bg-white dark:bg-slate-800 p-3 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-black/30 ring-1 ring-slate-100 dark:ring-slate-700">
-                  <img src="/qa-academy.png" alt="QA Academy" className="h-12 w-auto object-contain" />
+                  <img src="/devhub-logo.jpg" alt="DevHub Academy" className="h-12 w-auto object-contain" />
                 </div>
               </motion.div>
               <div className="flex flex-col justify-center">
