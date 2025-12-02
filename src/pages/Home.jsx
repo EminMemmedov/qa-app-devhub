@@ -214,11 +214,11 @@ export default function Home() {
                 className="relative group"
               >
                 {/* Animated Glow Effect */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
+                <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-yellow-400 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
 
                 {/* Logo Container */}
-                <div className="relative bg-white dark:bg-slate-800 p-3 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-black/30 ring-1 ring-slate-100 dark:ring-slate-700">
-                  <img src="/devhub-logo.jpg" alt="DevHub Academy" className="h-12 w-auto object-contain" />
+                <div className="relative p-2 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-black/30">
+                  <img src="/devhub-logo.jpg" alt="DevHub Academy" className="h-16 w-auto object-contain" />
                 </div>
               </motion.div>
               <div className="flex flex-col justify-center">
