@@ -716,15 +716,17 @@ const Home = () => {
 
         {/* Recent Activity / Stats Row */}
         <motion.div variants={itemVariants} className="grid grid-cols-2 gap-4 mb-8">
-          <div className="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col justify-between h-full transition-colors">
-            <div className="flex items-center gap-4 mb-2">
-              <div className="w-10 h-10 shrink-0 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400">
-                <Bug size={20} />
+          <Link to="/practice" state={{ activeTab: 'foundBugs' }} className="block h-full">
+            <div className="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col justify-between h-full transition-colors cursor-pointer hover:border-green-300 dark:hover:border-green-700 hover:shadow-lg">
+              <div className="flex items-center gap-4 mb-2">
+                <div className="w-10 h-10 shrink-0 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400">
+                  <Bug size={20} />
+                </div>
+                <div className="text-2xl font-black text-slate-900 dark:text-white">{foundBugs.length}</div>
               </div>
-              <div className="text-2xl font-black text-slate-900 dark:text-white">{foundBugs.length}</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase">{t('home.stats.foundBugs')}</div>
             </div>
-            <div className="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase">{t('home.stats.foundBugs')}</div>
-          </div>
+          </Link>
 
           <Link to="/achievements" className="block h-full">
             <motion.div
