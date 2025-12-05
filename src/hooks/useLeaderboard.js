@@ -183,35 +183,66 @@ export function useLeaderboard(shouldFetchLeaders = true) {
                 remoteData = bestMatch;
                 logger.log("User restored:", cleanName, uid);
             } else {
-                // New User
-                uid = userProfile?.uid || `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                // New User - ALWAYS generate a new UID
+                uid = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
             }
 
             const profile = { uid, name: cleanName };
             setStorageItem('qa_user_profile', profile);
 
             // Logic to determine what data to use
-            let finalXP = xp;
-            let finalLevel = currentLevel;
-            let finalBadges = unlockedAchievements;
-            // Capture current local state for fallback/merge
-            let finalProgress = {
-                foundBugs: foundBugs || [],
-                completedLevels: {
-                    sql: getStorageItem('qa_db_completed_levels', []),
-                    automation: getStorageItem('qa_automation_completed_levels', []),
-                    api: getStorageItem('qa_api_completed_levels', []),
-                    mobile: getStorageItem('qa_mobile_completed_levels', [])
-                }
-            };
+            let finalXP;
+            let finalLevel;
+            let finalBadges;
+            let finalProgress;
             let shouldReload = false;
 
-            if (!isNewUser && remoteData) {
+            if (isNewUser) {
+                // New user - start with empty progress
+                finalXP = 0;
+                finalLevel = 1;
+                finalBadges = [];
+                finalProgress = {
+                    foundBugs: [],
+                    completedLevels: {
+                        sql: [],
+                        automation: [],
+                        api: [],
+                        mobile: []
+                    }
+                };
+                // Clear localStorage for new user
+                setStorageItem('qa_game_xp', 0);
+                setStorageItem('qa_achievements', []);
+                setStorageItem('qa_game_progress', []);
+                setStorageItem('qa_db_completed_levels', []);
+                setStorageItem('qa_automation_completed_levels', []);
+                setStorageItem('qa_api_completed_levels', []);
+                setStorageItem('qa_mobile_completed_levels', []);
+                shouldReload = true;
+            } else if (remoteData) {
+                // Existing user - use current local data as baseline
+                finalXP = xp;
+                finalLevel = currentLevel;
+                finalBadges = unlockedAchievements;
+                finalProgress = {
+                    foundBugs: foundBugs || [],
+                    completedLevels: {
+                        sql: getStorageItem('qa_db_completed_levels', []),
+                        automation: getStorageItem('qa_automation_completed_levels', []),
+                        api: getStorageItem('qa_api_completed_levels', []),
+                        mobile: getStorageItem('qa_mobile_completed_levels', [])
+                    }
+                };
+
                 const remoteXP = remoteData.xp || 0;
                 const currentXP = xp || 0;
 
-                // If remote is ahead of local (which is 0 on fresh login), use remote
-                if (remoteXP > currentXP) {
+                // Check if we are switching to a different user
+                const isSwitchingUser = userProfile && userProfile.uid !== uid;
+
+                // If remote is ahead of local, OR if we are switching users, use remote
+                if (remoteXP > currentXP || isSwitchingUser) {
                     logger.log("Syncing from DB to LocalStorage...");
                     finalXP = remoteXP;
                     finalLevel = remoteData.level || 1;

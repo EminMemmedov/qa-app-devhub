@@ -1,9 +1,10 @@
 
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Layout from './components/Layout';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { DevToolsProvider } from './context/DevToolsContext';
+import { WifiOff } from 'lucide-react';
 
 // Lazy load pages for better performance with prefetching
 const Home = lazy(() => import(/* webpackPrefetch: true */ './pages/Home'));
@@ -42,6 +43,20 @@ const PageLoader = () => (
 
 function App() {
   const location = useLocation();
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   return (
     <DevToolsProvider>
@@ -74,6 +89,21 @@ function App() {
             </Route>
           </Routes>
         </Suspense>
+      </AnimatePresence>
+
+      {/* Offline Indicator */}
+      <AnimatePresence>
+        {!isOnline && (
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            className="fixed bottom-20 left-4 right-4 z-[9999] bg-slate-900/90 dark:bg-slate-800/90 backdrop-blur-md text-white px-4 py-3 rounded-xl shadow-lg border border-slate-700/50 flex items-center justify-center gap-3"
+          >
+            <WifiOff size={20} className="text-red-400" />
+            <span className="text-sm font-medium">İnternet bağlantısı yoxdur</span>
+          </motion.div>
+        )}
       </AnimatePresence>
     </DevToolsProvider>
   );

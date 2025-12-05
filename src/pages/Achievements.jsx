@@ -6,6 +6,8 @@ import { useGameProgress } from '../hooks/useGameProgress';
 import { useTranslation } from 'react-i18next';
 import confetti from 'canvas-confetti';
 import { useEffect } from 'react';
+import { triggerHaptic } from '../utils/mobileUtils';
+import ScrollToTop from '../components/ScrollToTop';
 
 export default function AchievementsPage() {
     const { t } = useTranslation();
@@ -96,6 +98,7 @@ export default function AchievementsPage() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 whileHover={{ y: -4 }}
+                                onClick={() => triggerHaptic('light')}
                                 className={`relative overflow-hidden rounded-[2rem] p-1 transition-all duration-300 ${isUnlocked
                                     ? 'bg-gradient-to-br from-yellow-300 via-orange-300 to-yellow-300 shadow-xl shadow-orange-500/10'
                                     : 'bg-slate-200 dark:bg-slate-700'
@@ -173,6 +176,7 @@ export default function AchievementsPage() {
                     })}
                 </div>
             </div>
+            <ScrollToTop />
         </div>
     );
 }

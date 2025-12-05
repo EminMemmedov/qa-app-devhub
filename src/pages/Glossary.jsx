@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import PageTransition from '../components/PageTransition';
 import { glossaryTerms, categories } from '../data/glossary';
 import { useDebounce } from '../hooks/useDebounce';
+import { triggerHaptic, usePullToRefresh } from '../utils/mobileUtils';
+import ScrollToTop from '../components/ScrollToTop';
 
 export default function Glossary() {
     const { t, i18n } = useTranslation();
@@ -15,6 +17,13 @@ export default function Glossary() {
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [expandedTerm, setExpandedTerm] = useState(null);
 
+    const { refreshing, pullDistance } = usePullToRefresh(async () => {
+        // Simulate refresh delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        // In a real app, you would refetch data here
+        triggerHaptic('success');
+    });
+
     // Term of the Day (Random based on date)
     const termOfDay = useMemo(() => {
         const today = new Date().getDate();
@@ -23,9 +32,9 @@ export default function Glossary() {
 
     const filteredTerms = useMemo(() => {
         return glossaryTerms.filter(item => {
-            const matchesSearch = item.term.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
-                                  item.definition[lang]?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-                                  item.definition['en'].toLowerCase().includes(debouncedSearch.toLowerCase());
+            const matchesSearch = item.term.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+                item.definition[lang]?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+                item.definition['en'].toLowerCase().includes(debouncedSearch.toLowerCase());
             const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
             return matchesSearch && matchesCategory;
         });
@@ -38,11 +47,31 @@ export default function Glossary() {
         techniques: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300',
         process: 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300',
         bug_management: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
+        automation: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300',
+        performance: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300',
+        security: 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-300',
+        tools: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300',
     };
 
     return (
         <PageTransition className="min-h-screen bg-slate-50 dark:bg-slate-900 p-6 pt-24 pb-24 transition-colors duration-300">
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-4xl mx-auto relative">
+                {/* Pull to Refresh Indicator */}
+                <div
+                    className="fixed top-20 left-0 right-0 flex justify-center pointer-events-none transition-transform duration-200 z-50"
+                    style={{ transform: `translateY(${pullDistance > 0 ? pullDistance : -100}px)` }}
+                >
+                    {refreshing ? (
+                        <div className="bg-white dark:bg-slate-800 rounded-full p-2 shadow-lg animate-spin">
+                            <Sparkles size={24} className="text-blue-600" />
+                        </div>
+                    ) : pullDistance > 0 && (
+                        <div className="bg-white dark:bg-slate-800 rounded-full p-2 shadow-lg transform rotate-180">
+                            <ChevronDown size={24} className="text-blue-600" />
+                        </div>
+                    )}
+                </div>
+
                 {/* Header */}
                 <div className="flex items-center gap-4 mb-8">
                     <Link to="/" className="p-3 bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all text-slate-600 dark:text-slate-300">
@@ -60,7 +89,7 @@ export default function Glossary() {
                 </div>
 
                 {/* Term of the Day */}
-                <motion.div 
+                <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-8 text-white shadow-xl shadow-indigo-500/20 mb-8 relative overflow-hidden"
@@ -90,11 +119,14 @@ export default function Glossary() {
                 <div className="flex flex-col gap-4 mb-8 sticky top-20 z-30 bg-slate-50/95 dark:bg-slate-900/95 backdrop-blur-xl py-4 -mx-4 px-4 md:mx-0 md:px-0 transition-colors duration-300">
                     <div className="relative w-full">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={20} />
-                        <input 
-                            type="text" 
-                            placeholder={t('common.search', 'Axtar...')} 
+                        <input
+                            type="text"
+                            placeholder={t('common.search', 'Axtar...')}
                             value={search}
-                            onChange={(e) => setSearch(e.target.value)}
+                            onChange={(e) => {
+                                setSearch(e.target.value);
+                                if (e.target.value.length === 0) triggerHaptic('light');
+                            }}
                             className="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm focus:shadow-md outline-none focus:border-blue-500 dark:focus:border-blue-400 text-slate-900 dark:text-white placeholder:text-slate-400 transition-all"
                         />
                     </div>
@@ -102,12 +134,14 @@ export default function Glossary() {
                         {Object.entries(categories).map(([key, label]) => (
                             <button
                                 key={key}
-                                onClick={() => setSelectedCategory(key)}
-                                className={`px-5 py-3 rounded-xl font-bold whitespace-nowrap transition-all ${
-                                    selectedCategory === key 
-                                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' 
-                                        : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
-                                }`}
+                                onClick={() => {
+                                    setSelectedCategory(key);
+                                    triggerHaptic('light');
+                                }}
+                                className={`px-5 py-3 rounded-xl font-bold whitespace-nowrap transition-all ${selectedCategory === key
+                                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
+                                    : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
+                                    }`}
                             >
                                 {label[lang] || label['en']}
                             </button>
@@ -126,7 +160,10 @@ export default function Glossary() {
                                     initial={{ opacity: 0, scale: 0.95 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.95 }}
-                                    onClick={() => setExpandedTerm(expandedTerm === item.id ? null : item.id)}
+                                    onClick={() => {
+                                        setExpandedTerm(expandedTerm === item.id ? null : item.id);
+                                        triggerHaptic('light');
+                                    }}
                                     className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-all cursor-pointer group"
                                 >
                                     <div className="flex justify-between items-start mb-3">
@@ -139,13 +176,13 @@ export default function Glossary() {
                                             </span>
                                         </div>
                                         {item.example && (
-                                            <ChevronDown 
-                                                size={20} 
-                                                className={`text-slate-400 transition-transform duration-300 ${expandedTerm === item.id ? 'rotate-180' : ''}`} 
+                                            <ChevronDown
+                                                size={20}
+                                                className={`text-slate-400 transition-transform duration-300 ${expandedTerm === item.id ? 'rotate-180' : ''}`}
                                             />
                                         )}
                                     </div>
-                                    
+
                                     <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
                                         {item.definition[lang] || item.definition['en']}
                                     </p>
@@ -172,7 +209,7 @@ export default function Glossary() {
                                 </motion.div>
                             ))
                         ) : (
-                            <motion.div 
+                            <motion.div
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 className="text-center py-12 text-slate-400"
@@ -184,6 +221,7 @@ export default function Glossary() {
                     </AnimatePresence>
                 </div>
             </div>
+            <ScrollToTop />
         </PageTransition>
     );
 }

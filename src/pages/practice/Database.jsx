@@ -33,10 +33,10 @@ export default function Database() {
     const [userInputs, setUserInputs] = useState({}); // { levelId: query }
     const [query, setQuery] = useState('');
     const [hasSeenAnswer, setHasSeenAnswer] = useState(false); // Reset on level change
-    
-    const [history, setHistory] = useState([]); 
+
+    const [history, setHistory] = useState([]);
     const [historyIndex, setHistoryIndex] = useState(-1);
-    const [result, setResult] = useState(null); 
+    const [result, setResult] = useState(null);
     const [completedLevels, setCompletedLevels] = useState(() => {
         const saved = localStorage.getItem('qa_database_completed');
         return saved ? JSON.parse(saved) : [];
@@ -55,8 +55,8 @@ export default function Database() {
             id: 1,
             task: t('database.levels.level1_task'),
             expected: (db) => db.users,
-            validate: (res) => res.length === 5 && res[0].username, 
-            hint: "İstifadəçilər cədvəlindən bütün məlumatları seçmək üçün hansı açar söz lazımdır? (SELECT ... FROM ...)",
+            validate: (res) => res.length === 5 && res[0].username,
+            hint: "Bütün istifadəçiləri seçmək üçün: SELECT * FROM users",
             answer: "SELECT * FROM users"
         },
         2: {
@@ -64,7 +64,7 @@ export default function Database() {
             task: t('database.levels.level2_task'),
             expected: (db) => db.users.filter(u => u.status === 'active'),
             validate: (res) => res.length === 3 && res.every(r => r.status === 'active'),
-            hint: "Şərt vermək üçün WHERE istifadə et. status = 'active'",
+            hint: "Yalnız aktiv istifadəçiləri seçmək üçün WHERE şərtindən istifadə edin",
             answer: "SELECT * FROM users WHERE status = 'active'"
         },
         3: {
@@ -72,7 +72,7 @@ export default function Database() {
             task: t('database.levels.level3_task'),
             expected: (db) => db.users.map(u => ({ username: u.username, email: u.email })),
             validate: (res) => res.length > 0 && Object.keys(res[0]).length === 2 && res[0].username && res[0].email && !res[0].id,
-            hint: "SELECT * əvəzinə konkret sütun adlarını yazın (vergüllə ayıraraq).",
+            hint: "Yalnız username və email sütunlarını seçin (vergüllə ayırın)",
             answer: "SELECT username, email FROM users"
         },
         4: {
@@ -80,15 +80,15 @@ export default function Database() {
             task: t('database.levels.level4_task'),
             expected: (db) => [...db.users].sort((a, b) => b.id - a.id),
             validate: (res) => res.length === 5 && res[0].id === 5,
-            hint: "Sıralamaq üçün ORDER BY ... DESC istifadə edin.",
+            hint: "Nəticələri ID-yə görə azalan sıra ilə göstərin (ORDER BY ... DESC)",
             answer: "SELECT * FROM users ORDER BY id DESC"
         },
         5: {
             id: 5,
             task: t('database.levels.level5_task'),
-            expected: (db) => db.users, 
+            expected: (db) => db.users,
             validate: (res, q) => res.length === 5 && (q.toLowerCase().includes('or 1=1') || q.toLowerCase().includes('or true')),
-            hint: "WHERE şərtində elə bir ifadə yaz ki, həmişə doğru (TRUE) olsun. Məsələn: OR 1=1",
+            hint: "SQL Injection: WHERE şərtində həmişə doğru olan ifadə yazın (OR 1=1)",
             answer: "SELECT * FROM users WHERE username = 'admin' OR 1=1"
         }
     };
@@ -100,7 +100,7 @@ export default function Database() {
         // Load saved input for this level or empty
         setQuery(userInputs[level] || '');
         setHasSeenAnswer(false); // Reset cheat flag
-        setResult(null);
+        setResult(null); // Clear previous results
     }, [level]);
 
     const handleQueryChange = (val) => {
@@ -117,9 +117,9 @@ export default function Database() {
     const executeSQL = (sql) => {
         const q = sql.trim();
         if (!q) return;
-        
+
         const lowerQ = q.toLowerCase();
-        
+
         setHistory(prev => [...prev, q]);
         setHistoryIndex(-1);
 
@@ -135,7 +135,7 @@ export default function Database() {
             // 1. Parse Table (FROM)
             const fromMatch = lowerQ.match(/from\s+(\w+)/);
             if (!fromMatch) throw new Error("Syntax Error: Missing FROM clause.");
-            
+
             const tableName = fromMatch[1];
             if (!initialDB[tableName]) throw new Error(`Table '${tableName}' not found.`);
             data = [...initialDB[tableName]];
@@ -144,21 +144,21 @@ export default function Database() {
             // 2. Parse WHERE
             if (lowerQ.includes('where')) {
                 const wherePart = q.substring(lowerQ.indexOf('where') + 5).split(/order by/i)[0].trim();
-                
+
                 // Handle SQL Injection Level 5
                 if (level === 5 && (wherePart.includes('OR 1=1') || wherePart.includes('OR true'))) {
                     // Return all data (Injection successful)
                 } else {
                     // Simple parser
                     const conditionMatch = wherePart.match(/(\w+)\s*(=|!=|>|<)\s*['"]?([^'"]+)['"]?/);
-                    
+
                     if (conditionMatch) {
                         const [_, field, op, val] = conditionMatch;
                         data = data.filter(row => {
                             const rowVal = row[field];
                             const cmpVal = isNaN(val) ? val : Number(val);
-                            
-                            switch(op) {
+
+                            switch (op) {
                                 case '=': return rowVal == cmpVal;
                                 case '!=': return rowVal != cmpVal;
                                 case '>': return rowVal > cmpVal;
@@ -190,7 +190,7 @@ export default function Database() {
             if (lowerQ.includes('order by')) {
                 const orderPart = lowerQ.split('order by')[1].trim();
                 const [field, dir] = orderPart.split(/\s+/);
-                
+
                 if (field && columns.includes(field)) {
                     data.sort((a, b) => {
                         if (dir === 'desc') return b[field] > a[field] ? 1 : -1;
@@ -229,17 +229,17 @@ export default function Database() {
         confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         const newCompleted = [...completedLevels, level];
         setCompletedLevels(newCompleted);
-        
+
         // Only award XP if answer wasn't shown
         const xpAmount = hasSeenAnswer ? 0 : 300;
         if (xpAmount > 0) addXP(xpAmount);
-        
+
         // Check achievements
         checkAchievements({
             xp: xp + xpAmount,
             completedLevels: { database: newCompleted },
             addXP, // Pass function, but achievements hook might add XP internally. 
-                   // Ideally we should control XP here, but for now let's pass 0 if cheated.
+            // Ideally we should control XP here, but for now let's pass 0 if cheated.
             foundBugs: [],
             moduleBugs: {},
             getBugDifficulty: () => 'medium'
@@ -273,7 +273,7 @@ export default function Database() {
     };
 
     return (
-        <PageTransition className="min-h-screen bg-slate-900 text-slate-300 p-6 pt-20 pb-24">
+        <PageTransition className="min-h-screen bg-slate-900 text-slate-300 p-4 sm:p-6 pt-20 pb-24">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
@@ -282,16 +282,16 @@ export default function Database() {
                             <ChevronLeft className="text-white" />
                         </Link>
                         <div>
-                            <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+                            <h1 className="text-2xl sm:text-4xl font-bold text-white flex items-center gap-3">
                                 <DbIcon size={32} className="text-indigo-500" />
                                 {t('database.title')}
                             </h1>
                             <p className="text-slate-400">{t('database.description')}</p>
                         </div>
                     </div>
-                    <button 
+                    <button
                         onClick={() => {
-                            if(window.confirm(t('common.reset_confirm') || "Are you sure you want to reset progress?")) {
+                            if (window.confirm(t('common.reset_confirm') || "Are you sure you want to reset progress?")) {
                                 setCompletedLevels([]);
                                 setLevel(1);
                                 setUserInputs({});
@@ -349,7 +349,7 @@ export default function Database() {
                                 <p className="font-bold text-slate-500 mb-1">{t('database.hint')}:</p>
                                 {currentLevel.hint}
                             </div>
-                            
+
                             {/* Control Buttons */}
                             <div className="flex gap-2">
                                 <button
@@ -362,11 +362,10 @@ export default function Database() {
                                 <button
                                     onClick={handleShowAnswer}
                                     disabled={hasSeenAnswer}
-                                    className={`flex-1 py-2 px-3 rounded-lg border text-sm font-bold flex items-center justify-center gap-2 transition-colors ${
-                                        hasSeenAnswer 
+                                    className={`flex-1 py-2 px-3 rounded-lg border text-sm font-bold flex items-center justify-center gap-2 transition-colors ${hasSeenAnswer
                                             ? 'bg-slate-800 border-slate-700 text-slate-500 cursor-not-allowed'
                                             : 'bg-indigo-900/50 hover:bg-indigo-900 border-indigo-500/30 text-indigo-300'
-                                    }`}
+                                        }`}
                                 >
                                     <Eye size={14} />
                                     {hasSeenAnswer ? 'Göstərilib' : 'Cavab'}
@@ -385,7 +384,7 @@ export default function Database() {
                                 <Table className="text-emerald-400" />
                                 <h2 className="text-xl font-bold text-white">{t('database.tables')}</h2>
                             </div>
-                            
+
                             {/* Users Table Schema */}
                             <div className="mb-6">
                                 <h3 className="text-sm font-bold text-slate-400 mb-2 uppercase tracking-wider">Users Table</h3>
@@ -444,14 +443,14 @@ export default function Database() {
                                     spellCheck="false"
                                 />
                                 <div className="absolute bottom-4 right-4 flex gap-2">
-                                    <button 
+                                    <button
                                         onClick={() => handleQueryChange('')}
                                         className="p-2 rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
                                         title={t('database.clear')}
                                     >
                                         <RefreshCw size={16} />
                                     </button>
-                                    <button 
+                                    <button
                                         onClick={() => executeSQL(query)}
                                         className="px-4 py-2 rounded-lg bg-indigo-600 text-white font-bold hover:bg-indigo-500 transition-colors flex items-center gap-2 shadow-lg shadow-indigo-500/20"
                                     >
@@ -473,7 +472,7 @@ export default function Database() {
                                     </span>
                                 )}
                             </div>
-                            
+
                             {/* Mobile-friendly table wrapper */}
                             <div className="flex-1 overflow-x-auto p-0">
                                 {result?.error ? (

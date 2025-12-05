@@ -3,7 +3,7 @@ import { Trophy, Crown, ChevronRight, User, Sparkles } from 'lucide-react';
 import { useLeaderboard } from '../hooks/useLeaderboard';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, memo } from 'react';
 
 const getAvatarColor = (name) => {
     if (!name) return 'bg-slate-200';
@@ -18,7 +18,7 @@ const getAvatarColor = (name) => {
     return colors[index];
 };
 
-const PodiumStep = ({ rank, user, delay }) => {
+const PodiumStep = memo(function PodiumStep({ rank, user, delay }) {
     const isFirst = rank === 1;
     const isSecond = rank === 2;
     const isThird = rank === 3;
@@ -93,9 +93,9 @@ const PodiumStep = ({ rank, user, delay }) => {
             </div>
         </motion.div>
     );
-};
+});
 
-const HomeLeaderboard = () => {
+const HomeLeaderboard = memo(function HomeLeaderboard() {
     const { t } = useTranslation();
     const { leaders, loading, userProfile, refreshLeaderboard } = useLeaderboard();
 
@@ -217,6 +217,6 @@ const HomeLeaderboard = () => {
             </Link>
         </div>
     );
-}
+});
 
 export default HomeLeaderboard;

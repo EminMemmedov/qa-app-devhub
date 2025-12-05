@@ -329,6 +329,201 @@ export const glossaryTerms = [
             ru: 'Этапы, которые проходит баг от обнаружения до закрытия.',
             en: 'The different stages of a defect during its life cycle (e.g., New, Open, Fixed, Verified, Closed).'
         }
+    },
+
+    // --- Automation ---
+    {
+        id: 'test_automation',
+        term: 'Test Automation',
+        category: 'automation',
+        definition: {
+            az: 'Testlərin avtomatik icrası üçün proqram vasitələrindən istifadə.',
+            ru: 'Использование программных средств для автоматического выполнения тестов.',
+            en: 'The use of software to control the execution of tests, the comparison of actual outcomes to predicted outcomes.'
+        },
+        example: {
+            az: 'Selenium, Cypress, Playwright ilə testlərin avtomatlaşdırılması.',
+            ru: 'Автоматизация тестов с помощью Selenium, Cypress, Playwright.',
+            en: 'Automating tests with Selenium, Cypress, Playwright.'
+        }
+    },
+    {
+        id: 'selenium',
+        term: 'Selenium',
+        category: 'automation',
+        definition: {
+            az: 'Veb tətbiqetmələrini test etmək üçün açıq mənbəli avtomatlaşdırma aləti.',
+            ru: 'Опен-сорс инструмент для автоматизации веб-приложений.',
+            en: 'An open-source tool for automating web browsers.'
+        }
+    },
+    {
+        id: 'appium',
+        term: 'Appium',
+        category: 'automation',
+        definition: {
+            az: 'Mobil tətbiqetmələri (iOS, Android) test etmək üçün avtomatlaşdırma aləti.',
+            ru: 'Инструмент для автоматизации мобильных приложений (iOS, Android).',
+            en: 'An open-source tool for automating mobile applications (iOS, Android).'
+        }
+    },
+    {
+        id: 'ci_cd',
+        term: 'CI/CD',
+        category: 'automation',
+        definition: {
+            az: 'Continuous Integration / Continuous Deployment. Kodun avtomatik inteqrasiya və deploy edilməsi.',
+            ru: 'Непрерывная интеграция / Непрерывная доставка. Автоматическая интеграция и развертывание кода.',
+            en: 'Continuous Integration / Continuous Deployment. Automated code integration and deployment.'
+        }
+    },
+
+    // --- Performance ---
+    {
+        id: 'performance_testing',
+        term: 'Performance Testing',
+        category: 'performance',
+        definition: {
+            az: 'Sistemin sürət, stabil lik və resurs istifadəsini yöxləyən test növü.',
+            ru: 'Тип тестирования, проверяющий скорость, стабильность и использование ресурсов.',
+            en: 'Testing to determine the speed, responsiveness and stability of a system under a particular workload.'
+        }
+    },
+    {
+        id: 'load_testing',
+        term: 'Load Testing',
+        category: 'performance',
+        definition: {
+            az: 'Sistemin müəyyən yük altında necxə işlədiyini yöxləmək.',
+            ru: 'Проверка работы системы под определенной нагрузкой.',
+            en: 'Testing to determine system behavior under both normal and anticipated peak load conditions.'
+        },
+        example: {
+            az: '1000 istifadəçi eyni anda login olur.',
+            ru: '1000 пользователей одновременно входят в систему.',
+            en: '1000 users logging in simultaneously.'
+        }
+    },
+    {
+        id: 'stress_testing',
+        term: 'Stress Testing',
+        category: 'performance',
+        definition: {
+            az: 'Sistemin həddindən artıq yük altında necxə davrandığını yöxləmək.',
+            ru: 'Проверка поведения системы при превышении нормальной нагрузки.',
+            en: 'Testing to determine system behavior beyond normal or peak load conditions.'
+        }
+    },
+
+    // --- Security ---
+    {
+        id: 'security_testing',
+        term: 'Security Testing',
+        category: 'security',
+        definition: {
+            az: 'Sistemin təhlükəsizlik zəiflərini və risk lərini müəyyənləşdirmək üçün test.',
+            ru: 'Тестирование для выявления уязвимостей и рисков безопасности.',
+            en: 'Testing to determine the security of the software product.'
+        }
+    },
+    {
+        id: 'penetration_testing',
+        term: 'Penetration Testing',
+        category: 'security',
+        definition: {
+            az: 'Sistemin təhlükəsizliyini yöxləmək üçün hücum simulyasiyası.',
+            ru: 'Симуляция атаки для проверки безопасности системы.',
+            en: 'A simulated cyber attack against your system to check for exploitable vulnerabilities.'
+        }
+    },
+    {
+        id: 'sql_injection',
+        term: 'SQL Injection',
+        category: 'security',
+        definition: {
+            az: 'Zərərli SQL kodunun daxil edilməsi ilə verilənlər bazəsına qeyri-qanuni giriş.',
+            ru: 'Внедрение вредоносного SQL-кода для несанкционированного доступа к БД.',
+            en: 'A code injection technique used to attack data-driven applications.'
+        },
+        example: {
+            az: "Username: admin' OR '1'='1",
+            ru: "Username: admin' OR '1'='1",
+            en: "Username: admin' OR '1'='1"
+        }
+    },
+    {
+        id: 'xss',
+        term: 'XSS (Cross-Site Scripting)',
+        category: 'security',
+        definition: {
+            az: 'Zərərli skriptlərin veb səhifəyə daxil edilməsi.',
+            ru: 'Внедрение вредоносных скриптов на веб-страницу.',
+            en: 'A security vulnerability that allows attackers to inject malicious scripts into web pages.'
+        }
+    },
+
+    // --- Tools ---
+    {
+        id: 'jira',
+        term: 'Jira',
+        category: 'tools',
+        definition: {
+            az: 'Layihə idarəetməsi və baq izləmə aləti.',
+            ru: 'Инструмент для управления проектами и отслеживания багов.',
+            en: 'A project management and bug tracking tool.'
+        }
+    },
+    {
+        id: 'postman',
+        term: 'Postman',
+        category: 'tools',
+        definition: {
+            az: 'API testləşdirmə və saz lama aləti.',
+            ru: 'Инструмент для тестирования и настройки API.',
+            en: 'An API testing and development tool.'
+        }
+    },
+    {
+        id: 'git',
+        term: 'Git',
+        category: 'tools',
+        definition: {
+            az: 'Versiya idarəetmə sistemi. Kod dəyişikliklərini izləmək üçün.',
+            ru: 'Система контроля версий. Для отслеживания изменений в коде.',
+            en: 'A distributed version control system for tracking changes in source code.'
+        }
+    },
+
+    // --- Mobile Testing ---
+    {
+        id: 'mobile_testing',
+        term: 'Mobile Testing',
+        category: 'types',
+        definition: {
+            az: 'Mobil tətbiqetmələrin (iOS, Android) test edilməsi.',
+            ru: 'Тестирование мобильных приложений (iOS, Android).',
+            en: 'Testing of mobile applications on iOS and Android platforms.'
+        }
+    },
+    {
+        id: 'usability_testing',
+        term: 'Usability Testing',
+        category: 'types',
+        definition: {
+            az: 'Tətbiqetmənin istifadə rahatlxğını və istifadəçi təcrübəsini yöxləmək.',
+            ru: 'Проверка удобства использования и пользовательского опыта.',
+            en: 'Testing to evaluate how easy and user-friendly the application is.'
+        }
+    },
+    {
+        id: 'acceptance_testing',
+        term: 'Acceptance Testing (UAT)',
+        category: 'types',
+        definition: {
+            az: 'İstifadəçi tərəfindən məhsulun qəbul edilməsi üçün son test.',
+            ru: 'Итоговое тестирование пользователем для приемки продукта.',
+            en: 'Formal testing conducted to determine whether a system satisfies its acceptance criteria.'
+        }
     }
 ];
 
@@ -339,5 +534,9 @@ export const categories = {
     types: { az: 'Test Növləri', ru: 'Виды тестов', en: 'Test Types' },
     techniques: { az: 'Texnikalar', ru: 'Техники', en: 'Techniques' },
     process: { az: 'Proses', ru: 'Процесс', en: 'Process' },
-    bug_management: { az: 'Baq İdarəetmə', ru: 'Управление багами', en: 'Bug Mgmt' }
+    bug_management: { az: 'Baq İdarəetmə', ru: 'Управление багами', en: 'Bug Mgmt' },
+    automation: { az: 'Avtomatlaşdırma', ru: 'Автоматизация', en: 'Automation' },
+    performance: { az: 'Performans', ru: 'Производительность', en: 'Performance' },
+    security: { az: 'Təhlükəsizlik', ru: 'Безопасность', en: 'Security' },
+    tools: { az: 'Alətlər', ru: 'Инструменты', en: 'Tools' }
 };

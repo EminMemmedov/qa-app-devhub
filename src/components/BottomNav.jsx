@@ -1,8 +1,9 @@
 import { Home, BookOpen, Bug, LibraryBig, GraduationCap, Trophy } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
+import { memo, useCallback } from 'react';
 
-export default function BottomNav() {
+const BottomNav = memo(function BottomNav() {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -17,13 +18,13 @@ export default function BottomNav() {
     // REMOVED: Problematic popstate handler that was causing double navigation
     // React Router already handles browser back/forward navigation correctly
 
-    const handleNavigation = (path) => {
+    const handleNavigation = useCallback((path) => {
         if (location.pathname !== path) {
             // Haptic feedback on supported devices
             if (navigator.vibrate) navigator.vibrate(30);
             navigate(path, { replace: false, state: { from: location.pathname, timestamp: Date.now() } });
         }
-    };
+    }, [location.pathname, navigate]);
 
     return (
         <nav
@@ -59,4 +60,6 @@ export default function BottomNav() {
             </div>
         </nav>
     );
-}
+});
+
+export default BottomNav;

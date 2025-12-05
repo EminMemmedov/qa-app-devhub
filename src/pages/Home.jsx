@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import PageTransition from '../components/PageTransition';
-import { Sparkles, Trophy, BookOpen, Bug, ArrowRight, Target, MessageSquare, Linkedin, Instagram, Phone, ExternalLink, Newspaper, FileText, Bot, GraduationCap, User, ChevronRight, Loader2, Edit2, X, PieChart, Medal } from 'lucide-react';
+import { Sparkles, Trophy, BookOpen, Bug, ArrowRight, Target, MessageSquare, Linkedin, Instagram, Phone, ExternalLink, Newspaper, FileText, Bot, GraduationCap, User, ChevronRight, Loader2, Edit2, X, PieChart, Medal, ChevronDown, Settings, BarChart3, UserPlus, Check } from 'lucide-react';
 import { useGameProgress } from '../hooks/useGameProgress';
 import { useAchievements } from '../hooks/useAchievements';
 import { useStreak } from '../hooks/useStreak';
@@ -10,27 +10,34 @@ import LearningProgress from '../components/LearningProgress';
 import HomeLeaderboard from '../components/HomeLeaderboard';
 import ThemeToggle from '../components/ThemeToggle';
 import { useLeaderboard } from '../hooks/useLeaderboard';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import { getAnimationConfig } from '../utils/mobilePerformance';
+import { createPortal } from 'react-dom';
+import { getStorageItem, setStorageItem } from '../utils/storage';
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 }
-};
-
-export default function Home() {
+const Home = () => {
   const { t } = useTranslation();
   const { xp, foundBugs } = useGameProgress();
   const { unlockedAchievements } = useAchievements();
+
+  // Get optimized animation config for mobile
+  const animConfig = useMemo(() => getAnimationConfig(), []);
+
+  // Optimized container variants for mobile
+  const containerVariants = useMemo(() => ({
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: animConfig.staggerChildren
+      }
+    }
+  }), [animConfig.staggerChildren]);
+
+  const itemVariants = useMemo(() => ({
+    hidden: { opacity: 0, y: animConfig.enableComplex ? 20 : 0 },
+    visible: { opacity: 1, y: 0 }
+  }), [animConfig.enableComplex]);
 
   // Leaderboard & Registration Logic
   // Pass false to skip fetching the full leaderboard list here, saving bandwidth/CPU
@@ -40,6 +47,78 @@ export default function Home() {
   const [isEditing, setIsEditing] = useState(false);
   const [nameInput, setNameInput] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [savedAccounts, setSavedAccounts] = useState(() => {
+    const saved = getStorageItem('qa_saved_accounts', []);
+    return saved;
+  });
+  const [showAddAccount, setShowAddAccount] = useState(false);
+
+  // Switch to another account
+  const handleSwitchAccount = useCallback(async (account) => {
+    setShowProfileMenu(false);
+    setIsSubmitting(true);
+
+    // saveProfile will handle everything:
+    // - Check if user exists in DB
+    // - If exists: load progress from DB
+    // - If new: create new user in DB
+    // - Reload page to apply changes
+    const success = await saveProfile(account.name);
+
+    if (!success) {
+      setIsSubmitting(false);
+    }
+    // Note: if success, page will reload automatically in saveProfile
+  }, [saveProfile]);
+
+  // Add new account
+  const handleAddAccount = useCallback(() => {
+    setShowProfileMenu(false);
+    setShowAddAccount(true);
+    setNameInput('');
+  }, []);
+
+  // Save account to saved list
+  useEffect(() => {
+    if (userProfile && userProfile.name && userProfile.uid) {
+      const accounts = getStorageItem('qa_saved_accounts', []);
+
+      // Check if account already exists by UID OR by name (for backwards compatibility)
+      const existingByUid = accounts.findIndex(acc => acc.uid === userProfile.uid);
+      const existingByName = accounts.findIndex(acc => acc.name.toLowerCase() === userProfile.name.toLowerCase());
+
+      if (existingByUid !== -1) {
+        // Account exists with this UID - update it
+        const updated = accounts.map((acc, idx) =>
+          idx === existingByUid
+            ? { ...acc, name: userProfile.name, xp: xp || 0, lastUsed: new Date().toISOString() }
+            : acc
+        );
+        setStorageItem('qa_saved_accounts', updated);
+        setSavedAccounts(updated);
+      } else if (existingByName !== -1) {
+        // Account exists with this name but different UID - update UID
+        const updated = accounts.map((acc, idx) =>
+          idx === existingByName
+            ? { ...acc, uid: userProfile.uid, xp: xp || 0, lastUsed: new Date().toISOString() }
+            : acc
+        );
+        setStorageItem('qa_saved_accounts', updated);
+        setSavedAccounts(updated);
+      } else {
+        // New account - add it
+        const newAccounts = [...accounts, {
+          name: userProfile.name,
+          uid: userProfile.uid,
+          xp: xp || 0,
+          lastUsed: new Date().toISOString()
+        }];
+        setStorageItem('qa_saved_accounts', newAccounts);
+        setSavedAccounts(newAccounts);
+      }
+    }
+  }, [userProfile, xp]);
 
   useEffect(() => {
     if (!leaderboardLoading && !userProfile) {
@@ -56,42 +135,43 @@ export default function Home() {
     }
   };
 
-  const handleRegister = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!nameInput.trim()) return;
 
     setIsSubmitting(true);
 
-    let success;
-    if (isEditing && userProfile) {
-      success = await updateName(nameInput.trim());
+    if (isEditing) {
+      const success = await updateName(nameInput);
+      if (success) {
+        setIsEditing(false);
+        setShowRegistration(false);
+      }
     } else {
-      success = await saveProfile(nameInput.trim());
+      const success = await saveProfile(nameInput);
+      if (success) {
+        setShowRegistration(false);
+        setShowAddAccount(false);
+      }
     }
 
     setIsSubmitting(false);
-
-    if (success) {
-      setShowRegistration(false);
-      setIsEditing(false);
-
-      // Dispatch custom event to notify other components (like HomeLeaderboard)
-      // This avoids full page reload and maintains SPA benefits
-      window.dispatchEvent(new CustomEvent('profile-updated', {
-        detail: { name: nameInput.trim() }
-      }));
-    }
+    // Dispatch custom event to notify other components (like HomeLeaderboard)
+    // This avoids full page reload and maintains SPA benefits
+    window.dispatchEvent(new CustomEvent('profile-updated', {
+      detail: { name: nameInput.trim() }
+    }));
   };
 
-  // Level calculation: 1 level per 500 XP
-  const level = Math.floor(xp / 500) + 1;
-  const progress = (xp % 500) / 500 * 100;
-  const nextLevelXp = 500 - (xp % 500);
-  const unlockedCount = unlockedAchievements.length;
-  const isISTQBCertified = unlockedAchievements.includes('istqb_certified');
+  // Memoize expensive calculations
+  const level = useMemo(() => Math.floor(xp / 500) + 1, [xp]);
+  const progress = useMemo(() => (xp % 500) / 500 * 100, [xp]);
+  const nextLevelXp = useMemo(() => 500 - (xp % 500), [xp]);
+  const unlockedCount = useMemo(() => unlockedAchievements.length, [unlockedAchievements]);
+  const isISTQBCertified = useMemo(() => unlockedAchievements.includes('istqb_certified'), [unlockedAchievements]);
 
-  // LinkedIn Articles
-  const articles = [
+  // Memoize articles array
+  const articles = useMemo(() => [
     {
       id: 1,
       title: "Allure Report vs Extent Report",
@@ -116,13 +196,13 @@ export default function Home() {
       icon: Bot,
       gradient: "from-orange-500 to-red-500"
     }
-  ];
+  ], []);
 
   return (
     <PageTransition className="p-6 pb-32 min-h-screen bg-slate-50/50 dark:bg-slate-900 transition-colors duration-300">
       {/* Registration/Edit Modal */}
       <AnimatePresence>
-        {showRegistration && (
+        {(showRegistration || showAddAccount) && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -134,11 +214,12 @@ export default function Home() {
               animate={{ scale: 1, y: 0 }}
               className="bg-white dark:bg-slate-800 w-full max-w-sm p-6 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 relative"
             >
-              {/* Close button for editing mode */}
-              {isEditing && (
+              {/* Close button for editing mode or add account */}
+              {(isEditing || showAddAccount) && (
                 <button
                   onClick={() => {
                     setShowRegistration(false);
+                    setShowAddAccount(false);
                     setIsEditing(false);
                   }}
                   className="absolute top-4 right-4 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400 transition-colors"
@@ -152,12 +233,12 @@ export default function Home() {
                   <User size={32} />
                 </div>
                 <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2">
-                  {isEditing ? 'Profil Düzəlişi' : 'Tanış olaq!'}
+                  {isEditing ? 'Profil Düzəlişi' : showAddAccount ? 'Yeni Hesab' : 'Tanış olaq!'}
                 </h2>
                 <p className="text-slate-500 dark:text-slate-400 text-sm mb-2">
-                  {isEditing ? 'Məlumatlarınızı yeniləyin.' : 'Liderlər cədvəlində iştirak etmək üçün adınızı daxil edin.'}
+                  {isEditing ? 'Məlumatlarınızı yeniləyin.' : showAddAccount ? 'Yeni hesab əlavə edin və ya mövcud hesaba daxil olun.' : 'Liderlər cədvəlində iştirak etmək üçün adınızı daxil edin.'}
                 </p>
-                {!isEditing && (
+                {(!isEditing && !showAddAccount) && (
                   <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-xl border border-blue-100 dark:border-blue-800">
                     <p className="text-xs text-blue-600 dark:text-blue-300 font-medium">
                       ℹ️ Əgər əvvəllər daxil olmusunuzsa, sadəcə eyni adınızı yazın – sistem sizi tanıyacaq və proqresinizi bərpa edəcək.
@@ -166,7 +247,7 @@ export default function Home() {
                 )}
               </div>
 
-              <form onSubmit={handleRegister} autoComplete="off">
+              <form onSubmit={handleSubmit} autoComplete="off">
                 <input
                   type="search"
                   id="user_display_name_field"
@@ -187,7 +268,8 @@ export default function Home() {
                 >
                   {isSubmitting ? <Loader2 className="animate-spin" size={20} /> : (
                     <>
-                      {isEditing ? 'Yadda Saxla' : 'Davam et'} <ChevronRight size={20} />
+                      {isEditing ? 'Yadda Saxla' : showAddAccount ? 'Hesab Əlavə Et' : 'Davam et'}
+                      <ChevronRight size={20} />
                     </>
                   )}
                 </button>
@@ -231,13 +313,114 @@ export default function Home() {
               {userProfile ? (
                 <div className="flex items-center gap-2">
                   <span>Salam, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">{userProfile.name.split(' ')[0]}</span>!</span>
-                  <button
-                    onClick={handleEditClick}
-                    className="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all"
-                    aria-label="Adı dəyiş"
-                  >
-                    <Edit2 size={16} />
-                  </button>
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowProfileMenu(!showProfileMenu)}
+                      className="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all"
+                      aria-label="Profil menyu"
+                      id="profile-menu-button"
+                    >
+                      <ChevronDown size={16} className={`transition-transform ${showProfileMenu ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    {/* Profile Dropdown Menu - Rendered in body */}
+                    {showProfileMenu && createPortal(
+                      <>
+                        <div
+                          className="fixed inset-0 z-[9998]"
+                          onClick={() => setShowProfileMenu(false)}
+                        />
+                        <div
+                          className="fixed w-64 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden z-[9999]"
+                          style={{
+                            top: (() => {
+                              const button = document.getElementById('profile-menu-button');
+                              if (button) {
+                                const rect = button.getBoundingClientRect();
+                                return `${rect.bottom + 12}px`;
+                              }
+                              return '80px';
+                            })(),
+                            left: '50%',
+                            transform: 'translateX(-50%)'
+                          }}
+                        >
+                          <div className="p-3 border-b border-slate-100 dark:border-slate-700">
+                            <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Profil</div>
+                            <div className="text-sm font-bold text-slate-900 dark:text-white truncate">{userProfile.name}</div>
+                          </div>
+
+                          <div className="p-2">
+                            <button
+                              onClick={() => {
+                                setShowProfileMenu(false);
+                                handleEditClick();
+                              }}
+                              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-left"
+                            >
+                              <Edit2 size={16} className="text-indigo-600 dark:text-indigo-400" />
+                              <span className="text-sm font-medium text-slate-700 dark:text-slate-200">Adı dəyiş</span>
+                            </button>
+
+                            {/* Saved Accounts */}
+                            {savedAccounts.length > 1 && (
+                              <>
+                                <div className="px-3 py-2 mt-2">
+                                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">Hesablar</div>
+                                </div>
+                                <div className="max-h-40 overflow-y-auto">
+                                  {savedAccounts
+                                    .sort((a, b) => new Date(b.lastUsed) - new Date(a.lastUsed))
+                                    .map((account) => {
+                                      const isActive = account.uid === userProfile?.uid;
+                                      // Debug logging
+                                      if (process.env.NODE_ENV === 'development') {
+                                        console.log('Account:', account.name, 'Account UID:', account.uid, 'User UID:', userProfile?.uid, 'isActive:', isActive);
+                                      }
+                                      return (
+                                        <button
+                                          key={account.uid}
+                                          onClick={() => handleSwitchAccount(account)}
+                                          disabled={isActive}
+                                          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left ${isActive
+                                            ? 'bg-indigo-50 dark:bg-indigo-900/20 cursor-default'
+                                            : 'hover:bg-slate-50 dark:hover:bg-slate-700'
+                                            }`}
+                                        >
+                                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-white text-xs font-bold">
+                                            {account.name.charAt(0)}
+                                          </div>
+                                          <div className="flex-1 min-w-0">
+                                            <div className="text-sm font-medium text-slate-700 dark:text-slate-200 truncate">
+                                              {account.name}
+                                            </div>
+                                            <div className="text-xs text-slate-500 dark:text-slate-400">
+                                              {account.xp || 0} XP
+                                            </div>
+                                          </div>
+                                          {isActive && (
+                                            <Check size={16} className="text-indigo-600 dark:text-indigo-400" />
+                                          )}
+                                        </button>
+                                      );
+                                    })}
+                                </div>
+                              </>
+                            )}
+
+                            <button
+                              onClick={handleAddAccount}
+                              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-left mt-1"
+                            >
+                              <UserPlus size={16} className="text-green-600 dark:text-green-400" />
+                              <span className="text-sm font-medium text-slate-700 dark:text-slate-200">Yeni hesab əlavə et</span>
+                            </button>
+                          </div>
+                        </div>
+                      </>,
+                      document.body
+                    )}
+                  </div>
                 </div>
               ) : (
                 <>
@@ -625,4 +808,6 @@ export default function Home() {
       </motion.div>
     </PageTransition>
   );
-}
+};
+
+export default Home;

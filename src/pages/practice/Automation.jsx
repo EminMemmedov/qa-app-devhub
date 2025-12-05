@@ -17,12 +17,12 @@ export default function Automation() {
     const [userCodes, setUserCodes] = useState({}); // { levelId: code }
     const [code, setCode] = useState('');
     const [hasSeenAnswer, setHasSeenAnswer] = useState(false);
-    
+
     const [isRunning, setIsRunning] = useState(false);
     const [testStatus, setTestStatus] = useState('idle'); // idle, running, success, error
     const [logs, setLogs] = useState([]);
     const [browserState, setBrowserState] = useState('initial'); // initial, loading, typing, clicking, success, error
-    
+
     const [completedLevels, setCompletedLevels] = useState(() => {
         const saved = localStorage.getItem('qa_automation_completed');
         return saved ? JSON.parse(saved) : [];
@@ -209,7 +209,7 @@ public void testAlert() {
             setCode(currentLevel.initialCode);
         }
         setHasSeenAnswer(false); // Reset cheat flag
-        
+
         setLogs([]);
         setTestStatus('idle');
         setBrowserState('initial');
@@ -238,16 +238,16 @@ public void testAlert() {
 
         for (let i = 0; i < steps.length; i++) {
             const step = steps[i];
-            
+
             // Simulate delay
             await new Promise(r => setTimeout(r, step.duration));
 
             // If step fails (and code is invalid)
             if (!isValid && step.failMsg) {
-                setLogs(prev => [...prev, { 
-                    time: new Date().toLocaleTimeString(), 
-                    type: 'error', 
-                    msg: step.failMsg 
+                setLogs(prev => [...prev, {
+                    time: new Date().toLocaleTimeString(),
+                    type: 'error',
+                    msg: step.failMsg
                 }]);
                 setTestStatus('error');
                 setBrowserState('error');
@@ -257,7 +257,7 @@ public void testAlert() {
 
             // Log step success
             let logMsg = '';
-            switch(step.action) {
+            switch (step.action) {
                 case 'load': logMsg = `Navigating to ${currentLevel.simulation.url}`; break;
                 case 'find': logMsg = `Found element: ${step.target}`; break;
                 case 'click': logMsg = `Clicked element: ${step.target}`; setBrowserState('clicking'); break;
@@ -277,11 +277,11 @@ public void testAlert() {
             setLogs(prev => [...prev, { time: new Date().toLocaleTimeString(), type: 'success', msg: 'Test Passed Successfully!' }]);
             setTestStatus('success');
             setBrowserState('success');
-            
+
             if (!completedLevels.includes(level)) {
                 const newCompleted = [...completedLevels, level];
                 setCompletedLevels(newCompleted);
-                
+
                 const xpAmount = hasSeenAnswer ? 0 : 250;
                 if (xpAmount > 0) addXP(xpAmount);
 
@@ -306,7 +306,7 @@ public void testAlert() {
     };
 
     return (
-        <PageTransition className="min-h-screen bg-slate-900 text-slate-300 p-6 pt-20 pb-24">
+        <PageTransition className="min-h-screen bg-slate-900 text-slate-300 p-4 sm:p-6 pt-20 pb-24">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
@@ -315,16 +315,16 @@ public void testAlert() {
                             <ChevronLeft className="text-white" />
                         </Link>
                         <div>
-                            <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+                            <h1 className="text-2xl sm:text-4xl font-bold text-white flex items-center gap-3">
                                 <Code size={32} className="text-cyan-500" />
                                 {t('automation.title')}
                             </h1>
                             <p className="text-slate-400">{t('automation.description')}</p>
                         </div>
                     </div>
-                    <button 
+                    <button
                         onClick={() => {
-                            if(window.confirm(t('common.reset_confirm') || "Are you sure you want to reset progress?")) {
+                            if (window.confirm(t('common.reset_confirm') || "Are you sure you want to reset progress?")) {
                                 setCompletedLevels([]);
                                 setLevel(1);
                                 setUserCodes({});
@@ -378,7 +378,7 @@ public void testAlert() {
                                 <h2 className="text-lg font-bold text-white">{t('automation.task')}</h2>
                             </div>
                             <p className="text-slate-300 mb-4">{currentLevel.task}</p>
-                            
+
                             {/* Buttons */}
                             <div className="flex gap-2">
                                 <button
@@ -391,11 +391,10 @@ public void testAlert() {
                                 <button
                                     onClick={handleShowAnswer}
                                     disabled={hasSeenAnswer}
-                                    className={`flex-1 py-2 px-3 rounded-lg border text-sm font-bold flex items-center justify-center gap-2 transition-colors ${
-                                        hasSeenAnswer 
+                                    className={`flex-1 py-2 px-3 rounded-lg border text-sm font-bold flex items-center justify-center gap-2 transition-colors ${hasSeenAnswer
                                             ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 cursor-default'
                                             : 'bg-cyan-900/50 hover:bg-cyan-900 border-cyan-500/30 text-cyan-300'
-                                    }`}
+                                        }`}
                                 >
                                     <Eye size={14} />
                                     {hasSeenAnswer ? 'Göstərilib' : 'Cavab'}
@@ -412,14 +411,13 @@ public void testAlert() {
                         <div className="flex-1 bg-slate-900 rounded-2xl border border-slate-700 overflow-hidden flex flex-col min-h-[400px] shadow-2xl">
                             <div className="bg-slate-950 px-4 py-2 flex items-center justify-between border-b border-slate-800">
                                 <span className="text-xs font-mono text-slate-500">Test.java</span>
-                                <button 
+                                <button
                                     onClick={runTest}
                                     disabled={isRunning}
-                                    className={`px-4 py-1.5 rounded-lg font-bold text-sm flex items-center gap-2 transition-all ${
-                                        isRunning 
-                                            ? 'bg-slate-800 text-slate-500 cursor-wait' 
+                                    className={`px-4 py-1.5 rounded-lg font-bold text-sm flex items-center gap-2 transition-all ${isRunning
+                                            ? 'bg-slate-800 text-slate-500 cursor-wait'
                                             : 'bg-green-600 hover:bg-green-500 text-white shadow-lg shadow-green-500/20'
-                                    }`}
+                                        }`}
                                 >
                                     {isRunning ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} fill="currentColor" />}
                                     {t('automation.run')}
@@ -440,10 +438,9 @@ public void testAlert() {
                             </div>
                             {logs.length === 0 && <span className="text-slate-700 italic">Ready...</span>}
                             {logs.map((log, i) => (
-                                <div key={i} className={`mb-1 ${
-                                    log.type === 'error' ? 'text-red-400' : 
-                                    log.type === 'success' ? 'text-green-400' : 'text-slate-400'
-                                }`}>
+                                <div key={i} className={`mb-1 ${log.type === 'error' ? 'text-red-400' :
+                                        log.type === 'success' ? 'text-green-400' : 'text-slate-400'
+                                    }`}>
                                     <span className="text-slate-600 mr-2">[{log.time}]</span>
                                     {log.msg}
                                 </div>
@@ -483,7 +480,7 @@ public void testAlert() {
                             )}
 
                             {(browserState === 'success' || browserState === 'clicking' || browserState === 'typing') && (
-                                <motion.div 
+                                <motion.div
                                     initial={{ scale: 0.9, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
                                     className="w-full max-w-sm bg-white rounded-xl shadow-lg border border-slate-100 p-6 relative"
@@ -492,16 +489,15 @@ public void testAlert() {
                                     <div className="space-y-3">
                                         <div className="h-10 w-full bg-slate-50 border border-slate-200 rounded-lg relative overflow-hidden">
                                             {browserState === 'typing' && (
-                                                <motion.div 
+                                                <motion.div
                                                     initial={{ width: 0 }}
                                                     animate={{ width: '60%' }}
                                                     className="h-full bg-slate-200/50"
                                                 />
                                             )}
                                         </div>
-                                        <div className={`h-10 w-full rounded-lg flex items-center justify-center text-white font-bold transition-colors ${
-                                            browserState === 'success' ? 'bg-green-500' : 'bg-cyan-500'
-                                        }`}>
+                                        <div className={`h-10 w-full rounded-lg flex items-center justify-center text-white font-bold transition-colors ${browserState === 'success' ? 'bg-green-500' : 'bg-cyan-500'
+                                            }`}>
                                             {browserState === 'success' ? 'Success!' : 'Submit'}
                                         </div>
                                     </div>
@@ -511,8 +507,8 @@ public void testAlert() {
                                         initial={{ x: 100, y: 100, opacity: 0 }}
                                         animate={
                                             browserState === 'clicking' ? { x: 50, y: 80, opacity: 1, scale: 0.9 } :
-                                            browserState === 'typing' ? { x: 50, y: 40, opacity: 1 } : 
-                                            { opacity: 0 }
+                                                browserState === 'typing' ? { x: 50, y: 40, opacity: 1 } :
+                                                    { opacity: 0 }
                                         }
                                         transition={{ duration: 0.5 }}
                                         className="absolute top-0 left-0 pointer-events-none text-black drop-shadow-lg"
@@ -523,7 +519,7 @@ public void testAlert() {
                             )}
 
                             {browserState === 'error' && (
-                                <motion.div 
+                                <motion.div
                                     initial={{ scale: 0.9 }}
                                     animate={{ scale: 1, rotate: [0, -2, 2, 0] }}
                                     className="text-center"

@@ -36,3 +36,41 @@ html, body {
 .safe-area-bottom {
   padding-bottom: max(2rem, calc(env(safe-area-inset-bottom) + 1rem));
 }
+
+/* Mobile Performance Optimizations */
+@layer utilities {
+  /* Prevent double-tap zoom on mobile */
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+  
+  /* GPU acceleration for animations */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+  
+  /* Optimize scroll performance */
+  .scroll-smooth-mobile {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Reduce motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+  
+  /* Hide scrollbar but keep functionality */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

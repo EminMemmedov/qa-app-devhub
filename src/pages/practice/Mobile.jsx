@@ -20,7 +20,7 @@ export default function Mobile() {
     const [appState, setAppState] = useState('home'); // home, list, map, error
     const [showLogs, setShowLogs] = useState(false);
     const [logs, setLogs] = useState([]);
-    
+
     const [completedLevels, setCompletedLevels] = useState(() => {
         const saved = localStorage.getItem('qa_mobile_completed');
         return saved ? JSON.parse(saved) : [];
@@ -156,7 +156,7 @@ export default function Mobile() {
                         <ChevronLeft className="text-white" size={20} />
                     </Link>
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3 mb-2">
+                        <h1 className="text-2xl sm:text-4xl font-bold text-white flex items-center gap-3 mb-2">
                             <div className="p-2 bg-purple-500/20 rounded-lg shrink-0">
                                 <Smartphone size={24} className="text-purple-500" />
                             </div>
@@ -202,31 +202,31 @@ export default function Mobile() {
                                 <h3 className="text-xs font-bold text-slate-500 uppercase mb-2">{t('mobile.task')}</h3>
                                 <p className="text-lg text-slate-200 font-medium">{currentLevel.task}</p>
                             </div>
-                            
+
                             <h3 className="text-sm font-bold text-slate-500 mb-3 uppercase tracking-wider">{t('mobile.device_controls')}</h3>
                             <div className="grid grid-cols-2 gap-3">
-                                <button 
+                                <button
                                     onClick={toggleOrientation}
                                     className={`p-4 rounded-2xl border-2 flex flex-col items-center gap-2 transition-all ${orientation === 'landscape' ? 'bg-purple-600 border-purple-500 text-white' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`}
                                 >
                                     <RotateCw size={24} />
                                     <span className="text-xs font-bold">{t('mobile.rotate')}</span>
                                 </button>
-                                <button 
+                                <button
                                     onClick={() => setShowLogs(!showLogs)}
                                     className={`p-4 rounded-2xl border-2 flex flex-col items-center gap-2 transition-all ${showLogs ? 'bg-slate-200 border-white text-slate-900' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`}
                                 >
                                     <Terminal size={24} />
                                     <span className="text-xs font-bold">Logs</span>
                                 </button>
-                                <button 
+                                <button
                                     onClick={toggleNetwork}
                                     className={`p-4 rounded-2xl border-2 flex flex-col items-center gap-2 transition-all ${!network ? 'bg-red-600 border-red-500 text-white' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`}
                                 >
                                     {network ? <Wifi size={24} /> : <WifiOff size={24} />}
                                     <span className="text-xs font-bold">{t('mobile.network')}</span>
                                 </button>
-                                <button 
+                                <button
                                     onClick={toggleGps}
                                     className={`p-4 rounded-2xl border-2 flex flex-col items-center gap-2 transition-all ${!gps ? 'bg-red-600 border-red-500 text-white' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`}
                                 >
@@ -239,13 +239,13 @@ export default function Mobile() {
 
                     {/* Right: Device Simulator */}
                     <div className="lg:col-span-2 flex flex-col items-center justify-start order-1 lg:order-2 relative min-h-[600px]">
-                        
+
                         {/* Scale Wrapper for Mobile: Uses CSS transform to fit phone on small screens */}
                         <div className="origin-top transform scale-[0.55] sm:scale-[0.7] md:scale-[0.85] xl:scale-100 transition-all duration-500 ease-in-out">
-                            <motion.div 
+                            <motion.div
                                 layout
                                 initial={false}
-                                animate={{ 
+                                animate={{
                                     rotate: orientation === 'landscape' ? 90 : 0,
                                     width: 320, // Fixed logical width
                                     height: 640 // Fixed logical height
@@ -282,7 +282,7 @@ export default function Mobile() {
                                     <div className="flex-1 p-4 overflow-y-auto relative bg-slate-50">
                                         {appState === 'home' && (
                                             <div className="grid grid-cols-2 gap-4 mt-4">
-                                                <button 
+                                                <button
                                                     onClick={() => handleAppAction('refresh')}
                                                     className="aspect-square bg-white rounded-2xl flex flex-col items-center justify-center gap-3 hover:bg-slate-100 transition-colors shadow-sm border border-slate-100 active:scale-95"
                                                 >
@@ -291,7 +291,7 @@ export default function Mobile() {
                                                     </div>
                                                     <span className="font-bold text-sm text-slate-600">Feed</span>
                                                 </button>
-                                                <button 
+                                                <button
                                                     onClick={() => handleAppAction('map')}
                                                     className="aspect-square bg-white rounded-2xl flex flex-col items-center justify-center gap-3 hover:bg-slate-100 transition-colors shadow-sm border border-slate-100 active:scale-95"
                                                 >
@@ -326,7 +326,7 @@ export default function Mobile() {
 
                                         {appState === 'error' && (
                                             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center text-center p-6 z-20">
-                                                <motion.div 
+                                                <motion.div
                                                     initial={{ scale: 0.8, opacity: 0 }}
                                                     animate={{ scale: 1, opacity: 1 }}
                                                     className="bg-white rounded-2xl p-6 w-full shadow-2xl"
@@ -338,7 +338,7 @@ export default function Mobile() {
                                                     <p className="text-slate-500 text-sm mb-6 leading-relaxed">
                                                         {!network ? "Connection failed. Please check your internet settings." : !gps ? "Location permission is required to view the map." : "Unknown Error"}
                                                     </p>
-                                                    <button 
+                                                    <button
                                                         onClick={() => handleAppAction('home')}
                                                         className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-colors"
                                                     >
@@ -350,7 +350,7 @@ export default function Mobile() {
 
                                         {/* Bug Visual for Level 1 */}
                                         {orientation === 'landscape' && level === 1 && (
-                                            <motion.div 
+                                            <motion.div
                                                 initial={{ opacity: 0, y: 20 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 className="absolute bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg font-bold text-xs shadow-lg animate-pulse z-20 flex items-center gap-2"
@@ -377,7 +377,7 @@ export default function Mobile() {
                         {/* Logcat / Logs Drawer */}
                         <AnimatePresence>
                             {showLogs && (
-                                <motion.div 
+                                <motion.div
                                     initial={{ y: "100%" }}
                                     animate={{ y: 0 }}
                                     exit={{ y: "100%" }}
@@ -396,11 +396,10 @@ export default function Mobile() {
                                         {logs.map((log, i) => (
                                             <div key={i} className="flex gap-2">
                                                 <span className="text-slate-500 shrink-0">{log.time}</span>
-                                                <span className={`uppercase font-bold w-4 shrink-0 ${
-                                                    log.type === 'error' ? 'text-red-500' : 
-                                                    log.type === 'warn' ? 'text-yellow-500' : 
-                                                    log.type === 'debug' ? 'text-blue-500' : 'text-green-500'
-                                                }`}>{log.type[0]}</span>
+                                                <span className={`uppercase font-bold w-4 shrink-0 ${log.type === 'error' ? 'text-red-500' :
+                                                        log.type === 'warn' ? 'text-yellow-500' :
+                                                            log.type === 'debug' ? 'text-blue-500' : 'text-green-500'
+                                                    }`}>{log.type[0]}</span>
                                                 <span className={log.type === 'error' ? 'text-red-300' : 'text-slate-300'}>{log.message}</span>
                                             </div>
                                         ))}
@@ -411,7 +410,7 @@ export default function Mobile() {
                         </AnimatePresence>
                     </div>
                 </div>
-        </div>
+            </div>
         </PageTransition>
     );
 }

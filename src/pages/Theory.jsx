@@ -1,10 +1,11 @@
 import { theoryModules } from '../data/theory';
 import { BookOpen, ChevronRight, ArrowLeft, Sparkles, Target, Bug, FileCheck, CheckCircle, AlertTriangle, Info, Lightbulb, XCircle } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import PageTransition from '../components/PageTransition';
+import ScrollToTop from '../components/ScrollToTop';
 import confetti from 'canvas-confetti';
 import { getStorageItem, setStorageItem } from '../utils/storage';
 
@@ -214,6 +215,12 @@ export default function Theory() {
     const navigate = useNavigate();
     const { moduleId } = useParams();
     const selectedModule = theoryModules.find(m => m.id === moduleId);
+    const { scrollYProgress } = useScroll();
+    const scaleX = useSpring(scrollYProgress, {
+        stiffness: 100,
+        damping: 30,
+        restDelta: 0.001
+    });
 
     // Progress state
     const [completedModules, setCompletedModules] = useState(() => {
@@ -347,6 +354,12 @@ export default function Theory() {
                             <div className="w-12"></div> {/* Spacer for balance */}
                         </div>
 
+                        {/* Reading Progress Bar */}
+                        <motion.div
+                            className="fixed top-[73px] left-0 right-0 h-1 bg-indigo-600 origin-left z-50"
+                            style={{ scaleX }}
+                        />
+
                         <div className="flex-1 overflow-y-auto overscroll-contain transform-gpu will-change-scroll">
                             <div className="max-w-3xl mx-auto p-6 pb-32">
                                 <div className="mb-8 p-8 bg-indigo-600 sm:bg-gradient-to-br sm:from-indigo-500 sm:to-purple-600 rounded-3xl shadow-sm sm:shadow-xl relative overflow-hidden">
@@ -401,6 +414,7 @@ export default function Theory() {
                     </motion.div>
                 )}
             </AnimatePresence>
+            <ScrollToTop />
         </PageTransition>
     );
 }

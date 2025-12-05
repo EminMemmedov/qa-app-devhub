@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Certificate from '../components/Certificate'; // Import Certificate
 import { GraduationCap, Clock, BarChart2, BookOpen, ChevronRight, ArrowLeft, CheckCircle, XCircle, HelpCircle, Play, Target, ArrowRight, Calculator, BrainCircuit, Info, Flag, LayoutGrid, StopCircle, Eye, EyeOff, PauseCircle, PlayCircle, Linkedin } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
+import ScrollToTop from '../components/ScrollToTop';
 import { istqbChapters, istqbQuestions } from '../data/istqb';
 import { glossaryTerms } from '../data/glossary';
 import { getStorageItem, setStorageItem } from '../utils/storage';
@@ -17,7 +18,7 @@ export default function ISTQB() {
     const [mode, setMode] = useState('dashboard'); // dashboard, chapters, quiz, flashcards, analytics
     const [selectedChapter, setSelectedChapter] = useState(null);
     const [showInfoModal, setShowInfoModal] = useState(false);
-    
+
     // Exam State
     const [userExamAnswers, setUserExamAnswers] = useState({});
     const [timeLeft, setTimeLeft] = useState(3600); // 60 minutes
@@ -59,7 +60,7 @@ export default function ISTQB() {
         // Shuffle and select 40 questions
         const shuffled = [...istqbQuestions].sort(() => 0.5 - Math.random());
         const selected = shuffled.slice(0, 40);
-        
+
         setQuizQuestions(selected);
         setCurrentQuestionIndex(0);
         setUserExamAnswers({});
@@ -98,14 +99,14 @@ export default function ISTQB() {
         setEliminatedOptions(prev => {
             const currentEliminated = prev[questionId] || [];
             const isEliminated = currentEliminated.includes(optionIndex);
-            
+
             let newEliminated;
             if (isEliminated) {
                 newEliminated = currentEliminated.filter(i => i !== optionIndex);
             } else {
                 newEliminated = [...currentEliminated, optionIndex];
             }
-            
+
             return { ...prev, [questionId]: newEliminated };
         });
     };
@@ -128,13 +129,13 @@ export default function ISTQB() {
         });
         setScore(calculatedScore);
         setShowResults(true);
-        
+
         // Check for achievement
         const percentage = Math.round((calculatedScore / 40) * 100);
         if (percentage >= 65) {
             unlockAchievement('istqb_certified');
         }
-        
+
         // Save to history? Maybe separate exam history?
         // For now, let's not mix exam attempts with learning history to avoid skewing analytics
     };
@@ -181,7 +182,7 @@ export default function ISTQB() {
                     <p className="text-slate-500 dark:text-slate-400 mb-8">
                         Keçid balı: 65% (26 sual)
                     </p>
-                    
+
                     <div className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 mb-2">
                         {score} / 40
                     </div>
@@ -211,8 +212,8 @@ export default function ISTQB() {
                                             <span>{stat.percent}%</span>
                                         </div>
                                         <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
-                                            <div 
-                                                className={`h-full rounded-full ${stat.percent >= 65 ? 'bg-green-500' : 'bg-red-500'}`} 
+                                            <div
+                                                className={`h-full rounded-full ${stat.percent >= 65 ? 'bg-green-500' : 'bg-red-500'}`}
                                                 style={{ width: `${stat.percent}%` }}
                                             ></div>
                                         </div>
@@ -238,13 +239,13 @@ export default function ISTQB() {
                     )}
 
                     <div className="flex gap-4 justify-center mb-8">
-                        <button 
+                        <button
                             onClick={startExam}
                             className="px-8 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                         >
                             Yenidən Cəhd Et
                         </button>
-                        <button 
+                        <button
                             onClick={() => setMode('dashboard')}
                             className="px-8 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition-colors"
                         >
@@ -289,7 +290,7 @@ export default function ISTQB() {
             <div className="max-w-2xl mx-auto h-full flex flex-col relative">
                 {/* Progress Bar */}
                 <div className="absolute top-0 left-0 right-0 h-1 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden mb-2">
-                    <div 
+                    <div
                         className="h-full bg-blue-500 transition-all duration-300"
                         style={{ width: `${((Object.keys(userExamAnswers).length) / 40) * 100}%` }}
                     ></div>
@@ -301,7 +302,7 @@ export default function ISTQB() {
                         <PauseCircle size={64} className="text-blue-500 mb-4 animate-pulse" />
                         <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2">İmtahan Dayandırılıb</h2>
                         <p className="text-slate-500 dark:text-slate-400 mb-8">Vaxt dayandırıldı. Davam etmək üçün aşağıdakı düyməni sıxın.</p>
-                        <button 
+                        <button
                             onClick={() => setIsPaused(false)}
                             className="flex items-center gap-2 px-8 py-4 bg-blue-600 text-white font-bold rounded-2xl shadow-xl shadow-blue-500/30 hover:bg-blue-700 transition-transform hover:scale-105"
                         >
@@ -314,14 +315,14 @@ export default function ISTQB() {
                 {/* Exam Header */}
                 <div className="flex items-center justify-between mb-6 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 mt-4">
                     <div className="flex items-center gap-2">
-                        <button 
+                        <button
                             onClick={stopExam}
                             className="p-2 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 transition-colors"
                             title="Çıxış"
                         >
                             <StopCircle size={20} />
                         </button>
-                        <button 
+                        <button
                             onClick={() => setIsPaused(true)}
                             className="p-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 transition-colors"
                             title="Pauza"
@@ -338,11 +339,10 @@ export default function ISTQB() {
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => toggleFlag(question.id)}
-                            className={`p-2 rounded-lg transition-colors ${
-                                isFlagged 
-                                    ? 'bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400' 
+                            className={`p-2 rounded-lg transition-colors ${isFlagged
+                                    ? 'bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400'
                                     : 'bg-slate-50 text-slate-400 dark:bg-slate-700 dark:text-slate-500 hover:bg-slate-100'
-                            }`}
+                                }`}
                         >
                             <Flag size={20} fill={isFlagged ? "currentColor" : "none"} />
                         </button>
@@ -355,7 +355,7 @@ export default function ISTQB() {
                 {/* Question Grid Modal */}
                 <AnimatePresence>
                     {showGrid && (
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 20 }}
@@ -372,7 +372,7 @@ export default function ISTQB() {
                                     const isAns = userExamAnswers[q.id] !== undefined;
                                     const isFlg = flaggedQuestions.has(q.id);
                                     const isCurr = idx === currentQuestionIndex;
-                                    
+
                                     return (
                                         <button
                                             key={q.id}
@@ -380,12 +380,11 @@ export default function ISTQB() {
                                                 setCurrentQuestionIndex(idx);
                                                 setShowGrid(false);
                                             }}
-                                            className={`p-3 rounded-xl font-bold text-sm flex flex-col items-center justify-center gap-1 border-2 transition-all ${
-                                                isCurr ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-600' :
-                                                isFlg ? 'border-orange-400 bg-orange-50 dark:bg-orange-900/20 text-orange-600' :
-                                                isAns ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-600' :
-                                                'border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-400'
-                                            }`}
+                                            className={`p-3 rounded-xl font-bold text-sm flex flex-col items-center justify-center gap-1 border-2 transition-all ${isCurr ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-600' :
+                                                    isFlg ? 'border-orange-400 bg-orange-50 dark:bg-orange-900/20 text-orange-600' :
+                                                        isAns ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-600' :
+                                                            'border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-400'
+                                                }`}
                                         >
                                             {idx + 1}
                                             {isFlg && <Flag size={10} fill="currentColor" />}
@@ -418,13 +417,12 @@ export default function ISTQB() {
                                     <button
                                         onClick={() => !isEliminated && handleExamAnswer(index)}
                                         disabled={isEliminated}
-                                        className={`flex-1 p-4 rounded-xl text-left font-medium transition-all border-2 relative ${
-                                            isEliminated 
-                                                ? 'opacity-40 border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 cursor-not-allowed grayscale' 
-                                                : isSelected 
-                                                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 shadow-md transform scale-[1.01]' 
+                                        className={`flex-1 p-4 rounded-xl text-left font-medium transition-all border-2 relative ${isEliminated
+                                                ? 'opacity-40 border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 cursor-not-allowed grayscale'
+                                                : isSelected
+                                                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 shadow-md transform scale-[1.01]'
                                                     : 'border-slate-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
-                                        }`}
+                                            }`}
                                     >
                                         {isEliminated && (
                                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -432,22 +430,20 @@ export default function ISTQB() {
                                             </div>
                                         )}
                                         <div className="flex items-center gap-3">
-                                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                                                isSelected ? 'border-blue-500 bg-blue-500' : 'border-slate-300 dark:border-slate-600'
-                                            }`}>
+                                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? 'border-blue-500 bg-blue-500' : 'border-slate-300 dark:border-slate-600'
+                                                }`}>
                                                 {isSelected && <div className="w-2 h-2 bg-white rounded-full" />}
                                             </div>
                                             {option}
                                         </div>
                                     </button>
-                                    
-                                    <button 
+
+                                    <button
                                         onClick={(e) => toggleEliminateOption(question.id, index, e)}
-                                        className={`p-3 rounded-xl border-2 transition-colors ${
-                                            isEliminated 
-                                                ? 'bg-red-50 border-red-100 text-red-500 dark:bg-red-900/20 dark:border-red-900/30' 
+                                        className={`p-3 rounded-xl border-2 transition-colors ${isEliminated
+                                                ? 'bg-red-50 border-red-100 text-red-500 dark:bg-red-900/20 dark:border-red-900/30'
                                                 : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'
-                                        }`}
+                                            }`}
                                         title={isEliminated ? "Bərpa et" : "Variantı çıxdaş et"}
                                     >
                                         {isEliminated ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -468,7 +464,7 @@ export default function ISTQB() {
                         <ArrowLeft size={20} />
                     </button>
 
-                    <button 
+                    <button
                         onClick={() => setShowGrid(!showGrid)}
                         className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 transition-colors"
                     >
@@ -499,7 +495,7 @@ export default function ISTQB() {
     // Load Analytics
     const loadAnalytics = () => {
         const history = getStorageItem('istqb_history', []);
-        
+
         // Get Set of ALL correctly answered question IDs (unique)
         const solvedQuestionIds = new Set(
             history.filter(h => h.isCorrect).map(h => h.questionId)
@@ -518,7 +514,7 @@ export default function ISTQB() {
 
             // Count how many of THESE questions are in the solved set
             const solvedCount = levelQuestions.filter(q => solvedQuestionIds.has(q.id)).length;
-            
+
             const percent = totalAvailable > 0 ? Math.round((solvedCount / totalAvailable) * 100) : 0;
 
             // Detailed Topic Analysis
@@ -534,11 +530,11 @@ export default function ISTQB() {
             // Determine status and feedback
             let status = 'Başlanğıc';
             let feedback = 'Hələ yolun başındasan.';
-            
+
             if (percent >= 30 && percent < 70) {
                 status = 'Orta';
-                feedback = level.id === 'K3' 
-                    ? 'Yaxşı irəliləyiş var, amma hesablamalarda diqqətli ol.' 
+                feedback = level.id === 'K3'
+                    ? 'Yaxşı irəliləyiş var, amma hesablamalarda diqqətli ol.'
                     : 'Analiz qabiliyyətin yaxşıdır, amma daha çox təcrübə lazımdır.';
             } else if (percent >= 70) {
                 status = 'Ekspert';
@@ -546,16 +542,16 @@ export default function ISTQB() {
                     ? 'Texniki tapşırıqları mükəmməl bilirsən! İndi K4-ə keç.'
                     : 'Mükəmməl analitik düşüncə! Sən artıq Senior səviyyəsinə yaxınsan.';
             } else {
-                 feedback = level.id === 'K3' 
-                    ? 'Texnikaları (BVA, EP) öyrənməyə davam et.' 
+                feedback = level.id === 'K3'
+                    ? 'Texnikaları (BVA, EP) öyrənməyə davam et.'
                     : 'Analitik suallar çətin ola bilər. Riskləri və strategiyanı təkrarla.';
             }
 
-            return { 
-                ...level, 
-                type: 'practice', 
-                total: totalAvailable, 
-                correct: solvedCount, 
+            return {
+                ...level,
+                type: 'practice',
+                total: totalAvailable,
+                correct: solvedCount,
                 percent,
                 status,
                 feedback,
@@ -568,17 +564,17 @@ export default function ISTQB() {
             // Find all questions belonging to this chapter
             const chapterQuestions = istqbQuestions.filter(q => q.chapterId === chapter.id);
             const totalAvailable = chapterQuestions.length;
-            
+
             // Count solved
             const solvedCount = chapterQuestions.filter(q => solvedQuestionIds.has(q.id)).length;
             const percent = totalAvailable > 0 ? Math.round((solvedCount / totalAvailable) * 100) : 0;
-            
-            return { 
-                ...chapter, 
-                type: 'chapter', 
-                total: totalAvailable, 
-                correct: solvedCount, 
-                percent 
+
+            return {
+                ...chapter,
+                type: 'chapter',
+                total: totalAvailable,
+                correct: solvedCount,
+                percent
             };
         });
 
@@ -589,7 +585,7 @@ export default function ISTQB() {
     // Start Practice Quiz based on Level (K3 or K4)
     const startPractice = (level) => {
         const practicalQuestions = istqbQuestions.filter(q => q.level === level);
-        
+
         if (practicalQuestions.length === 0) {
             alert(`${level} səviyyəsi üçün hələ suallar əlavə edilməyib.`);
             return;
@@ -601,7 +597,7 @@ export default function ISTQB() {
         setShowResults(false);
         setSelectedAnswer(null);
         setSelectedChapter(level); // Using level as ID for tracking
-        setMode('quiz'); 
+        setMode('quiz');
     };
 
     // Start Quiz for a specific chapter
@@ -623,9 +619,9 @@ export default function ISTQB() {
     const handleAnswer = (index) => {
         if (selectedAnswer !== null) return;
         setSelectedAnswer(index);
-        
+
         const isCorrect = index === quizQuestions[currentQuestionIndex].correctAnswer;
-        
+
         // Save progress
         const history = getStorageItem('istqb_history', []);
         history.push({
@@ -688,7 +684,7 @@ export default function ISTQB() {
                                 </div>
                                 <p className="text-sm text-slate-500 dark:text-slate-400">
                                     Terminləri, tərifləri və faktları olduğu kimi xatırlamaq.
-                                    <br/><span className="italic text-xs opacity-75">Məsələn: "Baq nədir?"</span>
+                                    <br /><span className="italic text-xs sm:text-sm opacity-75">Məsələn: "Baq nədir?"</span>
                                 </p>
                             </div>
 
@@ -699,7 +695,7 @@ export default function ISTQB() {
                                 </div>
                                 <p className="text-sm text-slate-500 dark:text-slate-400">
                                     Konsepsiyaları izah etmək, müqayisə etmək və fərqləndirmək.
-                                    <br/><span className="italic text-xs opacity-75">Məsələn: "Qara qutu və Ağ qutu testlərinin fərqi nədir?"</span>
+                                    <br /><span className="italic text-xs sm:text-sm opacity-75">Məsələn: "Qara qutu və Ağ qutu testlərinin fərqi nədir?"</span>
                                 </p>
                             </div>
 
@@ -710,7 +706,7 @@ export default function ISTQB() {
                                 </div>
                                 <p className="text-sm text-slate-500 dark:text-slate-400">
                                     Bilikləri konkret situasiyada və ya məsələdə istifadə etmək.
-                                    <br/><span className="italic text-xs opacity-75">Məsələn: "Sərhəd Dəyərləri (BVA) istifadə edərək test dəyərlərini tapın."</span>
+                                    <br /><span className="italic text-xs sm:text-sm opacity-75">Məsələn: "Sərhəd Dəyərləri (BVA) istifadə edərək test dəyərlərini tapın."</span>
                                 </p>
                             </div>
 
@@ -721,11 +717,11 @@ export default function ISTQB() {
                                 </div>
                                 <p className="text-sm text-slate-500 dark:text-slate-400">
                                     Mürəkkəb problemi hissələrə bölmək, strukturu və səbəb-nəticə əlaqələrini anlamaq.
-                                    <br/><span className="italic text-xs opacity-75">Məsələn: "Bu situasiyada niyə bu risk daha vacibdir?"</span>
+                                    <br /><span className="italic text-xs sm:text-sm opacity-75">Məsələn: "Bu situasiyada niyə bu risk daha vacibdir?"</span>
                                 </p>
                             </div>
                         </div>
-                        
+
                         <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700">
                             <p className="text-xs text-center text-slate-400">
                                 ISTQB imtahanında uğur qazanmaq üçün bütün səviyyələri bilmək vacibdir.
@@ -741,7 +737,7 @@ export default function ISTQB() {
     const renderPracticeSelection = () => (
         <div className="space-y-4">
             <div className="flex items-center gap-4 mb-6">
-                <button 
+                <button
                     onClick={() => setMode('dashboard')}
                     className="p-2 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                 >
@@ -751,7 +747,7 @@ export default function ISTQB() {
             </div>
 
             <div className="grid gap-4">
-                 <motion.div
+                <motion.div
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => startPractice('K3')}
@@ -762,8 +758,8 @@ export default function ISTQB() {
                     </div>
                     <div className="flex-1">
                         <div className="flex justify-between items-center">
-                             <h3 className="font-bold text-slate-900 dark:text-white">Texniki Məsələlər</h3>
-                             <span className="text-xs font-bold px-2 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-lg">K3</span>
+                            <h3 className="font-bold text-slate-900 dark:text-white">Texniki Məsələlər</h3>
+                            <span className="text-xs font-bold px-2 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-lg">K3</span>
                         </div>
                         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">BVA, EP, State Transition hesablamaları</p>
                     </div>
@@ -782,7 +778,7 @@ export default function ISTQB() {
                     <div className="flex-1">
                         <div className="flex justify-between items-center">
                             <h3 className="font-bold text-slate-900 dark:text-white">Analitik Məsələlər</h3>
-                             <span className="text-xs font-bold px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-lg">K4</span>
+                            <span className="text-xs font-bold px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-lg">K4</span>
                         </div>
                         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Test strategiyası, risk analizi</p>
                     </div>
@@ -811,7 +807,7 @@ export default function ISTQB() {
                     </div>
                     <h2 className="text-2xl font-black mb-2">Sınaq İmtahanı</h2>
                     <p className="text-indigo-100 mb-6">Real imtahan simulyasiyası: 40 sual, 60 dəqiqə.</p>
-                    
+
                     <div className="flex items-center gap-2 text-sm font-bold text-white/80">
                         <Play size={16} fill="currentColor" />
                         Başla
@@ -880,7 +876,7 @@ export default function ISTQB() {
     const renderChapters = () => (
         <div className="space-y-4">
             <div className="flex items-center gap-4 mb-6">
-                <button 
+                <button
                     onClick={() => setMode('dashboard')}
                     className="p-2 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                 >
@@ -917,7 +913,7 @@ export default function ISTQB() {
     const renderAnalytics = () => (
         <div className="space-y-6">
             <div className="flex items-center gap-4 mb-6">
-                <button 
+                <button
                     onClick={() => setMode('dashboard')}
                     className="p-2 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                 >
@@ -948,11 +944,10 @@ export default function ISTQB() {
                                         <span className="text-sm font-bold text-slate-700 dark:text-slate-300 block">
                                             {item.title}
                                         </span>
-                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                                            item.status === 'Ekspert' ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' :
-                                            item.status === 'Orta' ? 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                                            'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400'
-                                        }`}>
+                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${item.status === 'Ekspert' ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' :
+                                                item.status === 'Orta' ? 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                                                    'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400'
+                                            }`}>
                                             {item.status}
                                         </span>
                                     </div>
@@ -977,8 +972,8 @@ export default function ISTQB() {
                                                 <span className="text-slate-600 dark:text-slate-300 truncate w-2/3">{topic.topic}</span>
                                                 <div className="flex items-center gap-2 w-1/3 justify-end">
                                                     <div className="w-12 bg-slate-200 dark:bg-slate-700 rounded-full h-1.5">
-                                                        <div 
-                                                            className={`h-1.5 rounded-full ${topic.percent === 100 ? 'bg-green-500' : topic.percent > 0 ? item.color.replace('bg-', 'bg-') : 'bg-slate-300'}`} 
+                                                        <div
+                                                            className={`h-1.5 rounded-full ${topic.percent === 100 ? 'bg-green-500' : topic.percent > 0 ? item.color.replace('bg-', 'bg-') : 'bg-slate-300'}`}
                                                             style={{ width: `${topic.percent}%` }}
                                                         ></div>
                                                     </div>
@@ -1036,7 +1031,7 @@ export default function ISTQB() {
 
         // Icon mapping based on category
         const getCategoryIcon = (category) => {
-            switch(category) {
+            switch (category) {
                 case 'basics': return BookOpen;
                 case 'documentation': return FileText;
                 case 'types': return ListChecks;
@@ -1059,7 +1054,7 @@ export default function ISTQB() {
         return (
             <div className="h-[calc(100vh-200px)] flex flex-col">
                 <div className="flex items-center gap-4 mb-6">
-                    <button 
+                    <button
                         onClick={() => setMode('dashboard')}
                         className="p-2 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                     >
@@ -1077,7 +1072,7 @@ export default function ISTQB() {
                         style={{ transformStyle: 'preserve-3d' }}
                     >
                         {/* Front */}
-                        <div 
+                        <div
                             className="absolute inset-0 bg-white dark:bg-slate-800 rounded-3xl shadow-xl border-2 border-slate-100 dark:border-slate-700 p-8 flex flex-col items-center justify-center text-center"
                             style={{ backfaceVisibility: 'hidden' }}
                         >
@@ -1089,11 +1084,11 @@ export default function ISTQB() {
                         </div>
 
                         {/* Back */}
-                        <div 
-                            className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-700 rounded-3xl shadow-xl p-8 flex flex-col items-center justify-center text-center" 
-                            style={{ 
+                        <div
+                            className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-700 rounded-3xl shadow-xl p-8 flex flex-col items-center justify-center text-center"
+                            style={{
                                 backfaceVisibility: 'hidden',
-                                transform: 'rotateY(180deg)' 
+                                transform: 'rotateY(180deg)'
                             }}
                         >
                             <h3 className="text-xl font-bold text-white mb-4">{term.term}</h3>
@@ -1135,7 +1130,7 @@ export default function ISTQB() {
                     </div>
                     <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-2">Nəticə</h2>
                     <p className="text-slate-500 dark:text-slate-400 mb-8">Fəsil {selectedChapter}: {chapter?.title}</p>
-                    
+
                     <div className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-emerald-600 mb-2">
                         {percentage}%
                     </div>
@@ -1144,13 +1139,13 @@ export default function ISTQB() {
                     </p>
 
                     <div className="flex gap-4 justify-center">
-                        <button 
+                        <button
                             onClick={() => startChapterQuiz(selectedChapter)}
                             className="px-8 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                         >
                             Yenidən
                         </button>
-                        <button 
+                        <button
                             onClick={resetQuiz}
                             className="px-8 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition-colors"
                         >
@@ -1164,7 +1159,7 @@ export default function ISTQB() {
         return (
             <div className="max-w-2xl mx-auto">
                 <div className="flex items-center justify-between mb-8">
-                    <button 
+                    <button
                         onClick={resetQuiz}
                         className="p-2 -ml-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
                     >
@@ -1181,12 +1176,12 @@ export default function ISTQB() {
                     </span>
                     {question.topic && (
                         <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                             • {question.topic}
+                            • {question.topic}
                         </span>
                     )}
                 </div>
 
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-8 leading-relaxed">
+                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-8 leading-relaxed">
                     {question.question}
                 </h2>
 
@@ -1195,7 +1190,7 @@ export default function ISTQB() {
                         const isSelected = selectedAnswer === index;
                         const isCorrect = index === question.correctAnswer;
                         let buttonClass = "w-full p-4 rounded-xl text-left font-medium transition-all border-2 ";
-                        
+
                         if (selectedAnswer !== null) {
                             if (isCorrect) buttonClass += "border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400";
                             else if (isSelected) buttonClass += "border-red-500 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400";
@@ -1222,7 +1217,7 @@ export default function ISTQB() {
                 </div>
 
                 {selectedAnswer !== null && (
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl border border-blue-100 dark:border-blue-800 mb-6"
@@ -1241,11 +1236,10 @@ export default function ISTQB() {
                     <button
                         onClick={nextQuestion}
                         disabled={selectedAnswer === null}
-                        className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${
-                            selectedAnswer !== null
+                        className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${selectedAnswer !== null
                                 ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-lg hover:scale-105'
                                 : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed'
-                        }`}
+                            }`}
                     >
                         {currentQuestionIndex === quizQuestions.length - 1 ? 'Bitir' : 'Növbəti'}
                         <ChevronRight size={20} />
@@ -1270,7 +1264,7 @@ export default function ISTQB() {
                                     <p className="text-slate-500 dark:text-slate-400 font-medium text-sm">Sertifikasiyaya hazırlıq</p>
                                 </div>
                             </div>
-                            <button 
+                            <button
                                 onClick={() => setShowInfoModal(true)}
                                 className="p-3 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                             >
@@ -1299,6 +1293,7 @@ export default function ISTQB() {
                     </motion.div>
                 </AnimatePresence>
             </div>
+            <ScrollToTop />
         </PageTransition>
     );
 }
