@@ -95,7 +95,7 @@ export const INITIAL_RESUME_STATE = {
         linkedin: '',
         github: '',
         title: 'JUNIOR QA ENGINEER', // New field
-        summary: 'Avtomatlaşdırılmış və manual testləmə sahəsində təcrübəyə malik motivasiyalı QA Mühəndis. QA Academy tələbəsi.',
+        summary: 'Avtomatlaşdırılmış və manual testləmə sahəsində təcrübəyə malik motivasiyalı QA Mühəndis. DevHub Academy tələbəsi.',
         experience: [], // New field for custom experience
         customSkills: '' // New field for manual skills entry
     },

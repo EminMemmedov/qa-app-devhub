@@ -28,7 +28,7 @@ const Database = lazy(() => import('./pages/practice/Database'));
 const Glossary = lazy(() => import(/* webpackPrefetch: true */ './pages/Glossary'));
 const ISTQB = lazy(() => import(/* webpackPrefetch: true */ './pages/ISTQB'));
 const Exam = lazy(() => import(/* webpackPrefetch: true */ './pages/practice/Exam'));
-const ResumeBuilder = lazy(() => import('./pages/ResumeBuilder'));
+import ResumeBuilder from './pages/ResumeBuilder';
 // Import skeleton components
 import { SkeletonHome } from './components/Skeleton';
 
