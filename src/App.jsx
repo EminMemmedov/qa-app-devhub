@@ -28,7 +28,7 @@ const Database = lazy(() => import('./pages/practice/Database'));
 const Glossary = lazy(() => import(/* webpackPrefetch: true */ './pages/Glossary'));
 const ISTQB = lazy(() => import(/* webpackPrefetch: true */ './pages/ISTQB'));
 const Exam = lazy(() => import(/* webpackPrefetch: true */ './pages/practice/Exam'));
-
+const ResumeBuilder = lazy(() => import('./pages/ResumeBuilder'));
 // Import skeleton components
 import { SkeletonHome } from './components/Skeleton';
 
@@ -86,6 +86,8 @@ function App() {
               <Route path="glossary" element={<Glossary />} />
               <Route path="istqb" element={<ISTQB />} />
               <Route path="leaderboard" element={<Leaderboard />} />
+              <Route path="leaderboard" element={<Leaderboard />} />
+              <Route path="resume-builder" element={<ResumeBuilder />} />
             </Route>
           </Routes>
         </Suspense>
