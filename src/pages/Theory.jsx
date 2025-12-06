@@ -1,5 +1,5 @@
 import { theoryModules } from '../data/theory';
-import { BookOpen, ChevronRight, ArrowLeft, Sparkles, Target, Bug, FileCheck, CheckCircle, AlertTriangle, Info, Lightbulb, XCircle } from 'lucide-react';
+import { BookOpen, ChevronRight, ArrowLeft, Sparkles, Target, Bug, FileCheck, CheckCircle, AlertTriangle, Info, Lightbulb, XCircle, Globe, Smartphone, Bot, Clock, BarChart3 } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +13,10 @@ const moduleIcons = {
     'qa-basics': Bug,
     'test-types': FileCheck,
     'bug-reporting': Target,
-    'test-planning': Sparkles
+    'test-planning': Sparkles,
+    'api-testing': Globe,
+    'mobile-testing': Smartphone,
+    'automation-basics': Bot
 };
 
 const moduleImages = {
@@ -26,30 +29,51 @@ const moduleImages = {
 import { memo, useMemo } from 'react';
 
 const SimpleMarkdown = memo(({ content }) => {
-    // Memoize the split operation to avoid recalculating on every render
-    const blocks = useMemo(() => content.split(/(?=^### )/gm), [content]);
+    // Split by code blocks first to handle them separately
+    const distinctParts = useMemo(() => content.split(/(\`\`\`[\s\S]*?\`\`\`)/g), [content]);
 
     return (
         <div className="prose prose-slate dark:prose-invert prose-lg max-w-none">
-            {blocks.map((block, blockIndex) => {
-                if (!block.trim()) return null;
+            {distinctParts.map((part, partIndex) => {
+                // Render Code Block
+                if (part.startsWith('```')) {
+                    const codeContent = part.replace(/^```\w*\n?|```$/g, '');
+                    return (
+                        <div key={partIndex} className="my-6 rounded-2xl overflow-hidden bg-slate-900 border border-slate-700 shadow-lg">
+                            <div className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 border-b border-slate-700">
+                                <div className="flex gap-1.5">
+                                    <div className="w-3 h-3 rounded-full bg-red-500/50" />
+                                    <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
+                                    <div className="w-3 h-3 rounded-full bg-green-500/50" />
+                                </div>
+                            </div>
+                            <pre className="p-5 overflow-x-auto text-sm sm:text-base font-mono leading-relaxed text-blue-100/90 custom-scrollbar">
+                                <code>{codeContent}</code>
+                            </pre>
+                        </div>
+                    );
+                }
 
-                const lines = block.split('\n');
+                // Render Regular Markdown (Headers, Lists, Bold, Paragraphs)
+                // Split by headers for sectioning if needed, but here simple line splitting works for basic md
+                const lines = part.split('\n');
                 return (
-                    <div key={blockIndex} className="content-visibility-auto contain-strict mb-8">
+                    <div key={partIndex}>
                         {lines.map((line, i) => {
+                            if (!line.trim()) return null;
+
                             // Headers
                             if (line.trim().startsWith('###')) {
                                 return (
-                                    <h3 key={i} className="text-2xl font-black mt-4 mb-6 text-slate-800 dark:text-white flex items-center gap-3 sticky top-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-4 -mx-4 px-4 z-10 border-b border-slate-100 dark:border-slate-800/50 transition-colors">
+                                    <h3 key={i} className="text-2xl font-black mt-8 mb-6 text-slate-800 dark:text-white flex items-center gap-3">
                                         <span className="w-1.5 h-8 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full flex-shrink-0"></span>
                                         {line.replace('###', '').trim()}
                                     </h3>
                                 );
                             }
 
-                            // Bold text blocks (Alerts)
-                            if (line.trim().startsWith('**') && line.trim().endsWith('**')) {
+                            // Bold text blocks (Alerts / Info)
+                            if (line.trim().startsWith('**') && line.trim().endsWith('**') && line.length > 50) {
                                 return (
                                     <div key={i} className="bg-indigo-50 dark:bg-indigo-900/20 border-l-4 border-indigo-500 p-5 rounded-r-2xl my-6 shadow-sm">
                                         <strong className="text-indigo-900 dark:text-indigo-200 font-bold flex items-start gap-3 leading-relaxed">
@@ -63,27 +87,21 @@ const SimpleMarkdown = memo(({ content }) => {
                             // List items
                             if (line.trim().startsWith('-')) {
                                 return (
-                                    <li key={i} className="ml-4 list-none pl-0 mb-4 relative flex items-start gap-3 group">
-                                        <div className="mt-2.5 w-1.5 h-1.5 rounded-full bg-indigo-400 dark:bg-indigo-500 flex-shrink-0 group-hover:scale-125 transition-transform"></div>
-                                        <span className="text-slate-700 dark:text-slate-300 leading-loose text-lg">{line.replace('-', '').trim()}</span>
-                                    </li>
+                                    <div key={i} className="flex items-start gap-3 mb-3 ml-2 group">
+                                        <div className="mt-2.5 w-1.5 h-1.5 rounded-full bg-indigo-500/50 flex-shrink-0 group-hover:bg-indigo-500 group-hover:scale-125 transition-all"></div>
+                                        <span className="text-slate-700 dark:text-slate-300 leading-relaxed text-lg font-medium">{line.replace('-', '').trim()}</span>
+                                    </div>
                                 );
                             }
 
-                            // Code blocks (simplified)
-                            if (line.trim().startsWith('```')) {
-                                return null;
-                            }
-
-                            // Empty lines
-                            if (line.trim() === '') {
-                                return null;
-                            }
-
-                            // Regular paragraphs
+                            // Regular paragraphs (with bold support inside)
                             return (
-                                <p key={i} className="text-slate-600 dark:text-slate-300 leading-loose mb-6 text-lg">
-                                    {line}
+                                <p key={i} className="text-slate-600 dark:text-slate-300 leading-relaxed mb-4 text-lg">
+                                    {line.split(/(\*\*.*?\*\*)/).map((chunk, idx) =>
+                                        chunk.startsWith('**') && chunk.endsWith('**')
+                                            ? <strong key={idx} className="font-bold text-slate-900 dark:text-slate-100">{chunk.slice(2, -2)}</strong>
+                                            : chunk
+                                    )}
                                 </p>
                             );
                         })}
@@ -316,6 +334,23 @@ export default function Theory() {
                                                 {t(`theory.${titleKey}`, module.title)}
                                                 {isCompleted && <span className="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-full font-bold">Tamamlandı</span>}
                                             </h3>
+                                            <div className="flex flex-wrap gap-3 mb-2">
+                                                {module.readTime && (
+                                                    <span className="inline-flex items-center gap-1 text-xs font-bold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-700/50 px-2 py-1 rounded-lg">
+                                                        <Clock size={12} />
+                                                        {module.readTime}
+                                                    </span>
+                                                )}
+                                                {module.difficulty && (
+                                                    <span className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-lg ${module.difficulty === 'Asan' ? 'text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-900/20' :
+                                                            module.difficulty === 'Orta' ? 'text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-900/20' :
+                                                                'text-red-600 bg-red-50 dark:text-red-400 dark:bg-red-900/20'
+                                                        }`}>
+                                                        <BarChart3 size={12} />
+                                                        {module.difficulty}
+                                                    </span>
+                                                )}
+                                            </div>
                                             <p className="text-slate-500 dark:text-slate-400 text-sm leading-snug">
                                                 {module.description}
                                             </p>

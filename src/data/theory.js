@@ -1,87 +1,95 @@
 export const theoryModules = [
   {
     id: 'qa-basics',
-    title: 'QA Əsasları',
-    description: 'Testləşdirmənin əsas prinsipləri və QA mühəndisinin rolu',
+    title: 'QA Dünyasına Giriş',
+    description: 'Testləşdirmənin fəlsəfəsi, QA vs Tester fərqi və karyera yolu',
     color: 'bg-gradient-to-br from-blue-500 to-cyan-500',
-    content: `### QA Nədir?
+    readTime: '15 dəq',
+    difficulty: 'Asan',
+    content: `### QA Nədir? Sadə İzah
+Təsəvvür edin ki, bir **Restoran** işlədirsiniz.
+- **Developer:** Aşpazdır. Yeməyi bişirir.
+- **QA:** Baş Aşpazdır (Head Chef). Yemək müştəriyə getməmişdən əvvəl dadına baxır, tərkibini yoxlayır və "Bu yemək servisə hazırdır" deyir.
 
-**Quality Assurance (QA)** - məhsulun keyfiyyətini təmin etmək üçün həyata keçirilən proseslər toplusudur. QA mühəndisi proqramda səhvləri tapır və onların düzəldilməsini təmin edir.
+Əgər QA olmasa, duzlu yemək müştəriyə gedər və restoranın (şirkətin) reputasiyası ölər.
 
-### Niyə Test Etməliyik?
+### Mindset: Sındırmaq yox, Qorumaq!
+Çoxları elə bilir ki, QA-nın işi proqramı "sındırmaqdır".
+**Yanlış!** QA-nın işi proqramın zəif nöqtələrini tapıb, onları gücləndirməkdir.
+Siz "baq tapan" deyilsiniz, siz **"keyfiyyət qoruyucususunuz"**.
 
-- **İstifadəçi təcrübəsini yaxşılaşdırır** - Səhvsiz proqram istifadəçiləri məmnun edir
-- **Maliyyə itkilərinin qarşısını alır** - Erkən tapılan səhv ucuz başa gələr
-- **Brend reputasiyasını qoruyur** - Keyfiyyətli məhsul şirkətin nüfuzunu artırır
-- **Təhlükəsizliyi təmin edir** - Kritik səhvlərin qarşısını alır
+### SDLC (Software Development Life Cycle) 🔄
+Proqramın "Doğulub - Böyüyüb - Yaşaması" dövrüdür.
 
-### Testləşdirmənin 7 Prinsipi
+1.  **Requirement Analysis (Tələblər):** Müştəri nə istəyir? (Məs: "Mənə uçan maşın düzəldin")
+2.  **Design (Dizayn):** Necə görünəcək? Memarlar plan cızır.
+3.  **Development (Kodlama)::** Developerlər kodu yazır.
+4.  **Testing (Testləşdirmə):** **SİZ BURADASINIZ!** Səhvləri tapırıq.
+5.  **Deployment (Release):** Proqram canlıya (müştəriyə) verilir.
+6.  **Maintenance (Dəstək):** Çıxan xırda problemlər düzəldilir.
 
-**1. Testləşdirmə səhvlərin varlığını göstərir**
-Testlər səhvləri tapa bilər, amma heç bir səhv olmadığını sübut edə bilməz.
+**Model Növləri:**
+- **Waterfall:** Şəlalə kimi. Bir mərhələ bitmədən digərinə keçmək olmaz. Geri qayıtmaq çətindir.
+- **Agile:** Çevik. Hər 2 həftədən bir (Sprint) kiçik hissələr təhvil verilir. Dəyişikliyə açıqdır. (Müasir şirkətlərin 90%-i bunu işlədir).
 
-**Praktik nümunə:** Registration səhifəsində email validasiyasını test edirsən. "test@test" qəbul olunursa, bu səhvdir. Amma bütün email formatlarını test etmək mümkün deyil.
+### STLC (Software Testing Life Cycle) 🧪
+Testin öz həyat dövrü var:
 
-**2. Tam testləmə mümkün deyil**
-Bütün mümkün kombinasiyaları test etmək qeyri-mümkündür.
+1.  **Requirement Analysis:** Tələbi oxu, başa düş. Sualın varsa indi ver!
+2.  **Test Planning:** "Necə test edəcəyik?", "Kim edəcək?", "Nə vaxt?". Strategiya qururuq.
+3.  **Test Case Development:** Ssenariləri (Test Keysləri) yazırıq.
+4.  **Environment Setup:** Test mühitini (Server, Brauzerlər) hazırlayırıq.
+5.  **Execution:** Testləri icra edirik (Run!). Baq tapırıq.
+6.  **Test Closure:** Hesabat (Report) hazırlayıb testi bitiririk.
 
-**Praktik nümunə:** Payment səhifəsində kart nömrəsi 16 rəqəmdir. 10^16 kombinasiya var! Hamısını test etmək mümkün deyil. Risk analizi əsasında ən mühüm halları test edirik.
+### QA vs QC vs Testing 🤔
+Bunlar fərqli şeylərdir!
 
-**3. Erkən testləmə**
-Nə qədər tez başlasa, o qədər ucuz başa gələr.
+- **Testing:** Kodu yoxlamaq (Prosesin ən sonu). *Məs: Düyməni basdım, işləmədi.*
+- **QC (Quality Control):** Məhsula fokuslanır. Baqı tapmaq və düzəltmək. *Testing QC-nin bir hissəsidir.*
+- **QA (Quality Assurance):** Prosesə fokuslanır. Baqın **yaranmaması** üçün qaydalar qoyur.
+    *   *Analogy:* QC - Xəstəni müalicə etməkdir. QA - Xəstələnməmək üçün idman etmək və düzgün qidalanmaqdır.
 
-**Praktik nümunə:** Dizayn mərhələsində düymə rənginin çox açıq olduğunu görsən, 5 dəqiqədə düzəlir. Amma production-da tapsan, bütün testləri yenidən keçməli olacaqsan.
+### Tester vs QA Engineer
+Çox vaxt bu sözləri səhv salırlar. Gəlin fərqə baxaq:
 
-**4. Səhvlərin klasterləşməsi**
-Səhvlərin 80%-i kodun 20%-ində olur (Pareto prinsipi).
+| Xüsusiyyət | Tester | QA Engineer |
+|------------|--------|-------------|
+| **Fokus** | Səhv tapmaq | Səhvin qarşısını almaq |
+| **Zaman** | Proqram hazır olanda | Layihə başlayandan |
+| **Sualı** | "Bu işləyirmi?" | "Biz düzgün şeyi, düzgün şəkildə edirikmi?" |
+| **Analogy** | Yanğınsöndürən | Yanğın Təhlükəsizliyi Müfəttişi |
 
-**Praktik nümunə:** Banking modulunda transfer funksiyasında 10 səhv tapsan, həmin funksiyaya daha çox diqqət yetir - daha çox səhv ola bilər.
+**Pro Tip:** Interview-da "Tester" əvəzinə "QA Engineer" kimi düşüncə tərzinizi göstərsəniz, şansınız 2 qat artar.
 
-**5. Pestisid paradoksu**
-Eyni testləri təkrar etsən, yeni səhvlər tapmayacaqsan.
+### Testləşdirmənin 7 Qızıl Qaydasından Seçmələr
 
-**Praktik nümunə:** Hər dəfə "test@test.com" ilə qeydiyyatdan keçirsən. Yeni bir dəfə "test@test" (nöqtəsiz) yoxla - yeni səhv tapa bilərsən.
+1.  **Erkən Testləmə (Early Testing):**
+    Səhvi planlamada tapsan = 1 AZN xərc.
+    Kod yazanda tapsan = 10 AZN xərc.
+    Production-da müştəri tapsa = 1000 AZN + Reputasiya itkisi.
+    *Nəticə: Nə qədər tez, o qədər ucuz.*
 
-**6. Testləmə kontekstdən asılıdır**
-Bank proqramı ilə oyun fərqli test edilir.
+2.  **Pestisid Paradoksu (Pesticide Paradox):**
+    Eyni dərmanı həşəratlara vursan, immunitet qazanarlar.
+    Eyni testləri təkrar etsən, yeni baq tapa bilməyəcəksən.
+    *Həll: Testlərini mütəmadi olaraq yenilə və fərqli bucaqlardan bax.*
 
-**Praktik nümunə:** E-commerce-də 0.01 saniyə gecikmə normaldır, amma Banking-də pul transferində bu kritikdir.
+3.  **Səhvsizlik İllüziyası (Absence of Errors Fallacy):**
+    Maşının təkərləri əladır, mühərriki superdir, amma maşın **uçmur**.
+    Müştəri isə "uçan maşın" istəyirdi.
+    Proqrama texniki cəhətdən səhvsiz ola bilər, amma müştərinin işinə yaramırsa, layihə uğursuzdur.
 
-**7. Səhvsizlik illüziyası**
-Proqram səhvsiz işləyir, amma istifadəçi tələblərini ödəmir.
+### 🎤 Məşhur İntervyu Sualları
 
-**Praktik nümunə:** Registration formu mükəmməl işləyir, amma istifadəçi "Şifrəni unutdum?" düyməsi axtarır - o yoxdur.
+**Sual 1: QA və QC fərqi nədir?**
+*Cavab:* QA prosesyönümlüdür (Process oriented), səhvin yaranmamasını hədəfləyir (Prevention). QC məhsulyönümlüdür (Product oriented), yaranmış səhvi tapmağı hədəfləyir (Detection).
 
-### QA Mühəndisinin Vəzifələri
+**Sual 2: Niyə 100% test etmək mümkün deyil?**
+*Cavab:* Sonsuz sayda kombinasiya (inputlar, mühitlər, versiyalar) var. Vaxt və büdcə məhduddur. Biz riski azaltmaq üçün "Risk-Based Testing" edirik.
 
-- Test planlarının hazırlanması
-- Test keyslərin yazılması
-- Manual və avtomatik testlərin aparılması
-- Baq reportlarının yaradılması
-- Developerlərlə əməkdaşlıq
-- Məhsulun keyfiyyətinə nəzarət
-
-### Praktikada Necə İstifadə Edəcəksən?
-
-**Registration modulunda:**
-- Email validasiyasını yoxla (prinsip 2)
-- Şifrə uzunluğunu test et (prinsip 4)
-- Müxtəlif brauzerlərdə yoxla (prinsip 6)
-
-**Payment modulunda:**
-- Kart nömrəsi formatını yoxla (prinsip 1)
-- CVV uzunluğunu test et (prinsip 3)
-- Luhn alqoritmini yoxla (prinsip 5)
-
-**Banking modulunda:**
-- Transfer məbləğini yoxla (prinsip 7)
-- Balans yenilənməsini test et (prinsip 4)
-- Təsdiq dialoqunu yoxla (prinsip 6)
-
-**E-commerce modulunda:**
-- Məhsul sayını test et (prinsip 2)
-- Kupon kodunu yoxla (prinsip 5)
-- Endirim hesablamasını yoxla (prinsip 1)`,
+**Sual 3: Agile nədir?**
+*Cavab:* Layihənin kiçik hissələrə (sprintlərə) bölünərək tez-tez təhvil verilməsi metodologiyasıdır. Dəyişikliklərə çevik reaksiya verir.`,
     quiz: [
       {
         question: "QA-nın əsas məqsədi nədir?",
@@ -120,139 +128,112 @@ Proqram səhvsiz işləyir, amma istifadəçi tələblərini ödəmir.
     title: 'Test Növləri',
     description: 'Funksional, qeyri-funksional və digər test növləri',
     color: 'bg-gradient-to-br from-green-500 to-emerald-500',
-    content: `### Test Piramidası
+    readTime: '15 dəq',
+    difficulty: 'Orta',
+    content: `### Test Piramidası: Avtomobil Analogiyası 🚗
+Test növlərini başa düşmək üçün **Avtomobil İstehsalını** düşünək.
 
 \`\`\`
         /\\
-       /E2E\\        ← Az sayda, yavaş, bahalı
+       /E2E\\        ← Sürüş Testi (Çölə çıxırıq)
       /------\\
-     /  API   \\      ← Orta sayda, sürətli
+     /  API   \\      ← Mühərrik və Qutusu əlaqəsi
     /----------\\
-   / Unit Tests \\   ← Çox sayda, çox sürətli, ucuz
+   / Unit Tests \\   ← Boltlar və Hissələr
   /--------------\\
 \`\`\`
 
-### Funksional Testlər
+### Kutu (Box) Metodologiyaları 📦
 
-Proqramın **NƏ ETDİYİNİ** yoxlayır.
+Testing-ə yanaşma tərzləridir:
 
-**1. Unit Testing (Vahid Test)**
-Kodun ən kiçik hissəsini (funksiya, metod) test edir.
+1.  **Black Box (Qara Qutu):**
+    - Kodun içinə baxmırıq. Kodu görmürük.
+    - Yalnız Input (giriş) və Output (çıxış) yoxlayırıq.
+    - *Kim edir?* Əsasən Manual QA-lər.
+    - *Nümunə:* Televizor pultunda düyməni basıram, kanal dəyişir. İçində nə baş verdiyini bilmirəm və maraqlı deyil.
 
-**Praktik nümunə:**
-\`\`\`javascript
-function validateEmail(email) {
-  return email.includes('@') && email.includes('.');
-}
-// Test: validateEmail('test@test.com') → true ✓
-// Test: validateEmail('test') → false ✓
-\`\`\`
+2.  **White Box (Ağ Qutu):**
+    - Kodun içinə baxırıq. Məntiqi, strukturu yoxlayırıq.
+    - *Kim edir?* Developerlər.
+    - *Nümunə:* Televizor ustası pultun içinə baxır, lehimləri yoxlayır.
 
-**2. Integration Testing (İnteqrasiya Test)**
-Modulların bir-biri ilə əlaqəsini yoxlayır.
+3.  **Grey Box (Boz Qutu):**
+    - Kodun bəzi hissəsini bilirik (məs: Database strukturu, API).
+    - Həm funksionallığı, həm strukturu yoxlayırıq.
+    - *Kim edir?* Automation QA, API Tester.
 
-**Praktik nümunə:** Registration səhifəsində forma göndəriləndə API-yə sorğu gedirmi? Cavab düzgün işlənirmi?
+### Static vs Dynamic Testing
 
-**3. System Testing (Sistem Test)**
-Bütün sistemin bir yerdə işləməsini yoxlayır.
+**Static Testing (Statik):**
+- Proqramı işə salmadan yoxlamaq.
+- Sənədləri oxumaq (Review), kodu gözdən keçirmək (Walkthrough).
+- *Məqsəd:* Səhvi ən erkən mərhələdə tapmaq.
 
-**Praktik nümunə:** İstifadəçi qeydiyyatdan keçir → Login olur → Məhsul alır → Ödəniş edir. Bütün proses işləyirmi?
+**Dynamic Testing (Dinamik):**
+- Proqramı işə salıb (Run edib) yoxlamaq.
+- Düymələrə basmaq, formaları doldurmaq.
+- *Məqsəd:* İşlək məhsulda davranışı görmək.
 
-**4. Acceptance Testing (Qəbul Test)**
-Müştərinin tələblərinə uyğunluğu yoxlayır.
+### Funksional Testlər (Nə edir?)
 
-**Praktik nümunə:** Müştəri deyir "Qeydiyyat 30 saniyədən az çəkməlidir". Yoxlayırsan - 45 saniyə çəkir. Qəbul edilmir.
+**1. Unit Testing (Vahid Test) - "Boltlar yerindədirmi?"**
+Ən kiçik hissəni yoxlayırıq.
+*Avtomobil:* Təkərin havası yerindədirmi? Şamlar (spark plugs) işləyirmi?
+*Kod:* Email funksiyası "@" işarəsini yoxlayırmı? (Developer edir).
 
-### Qeyri-funksional Testlər
+**2. Integration Testing - "Mühərrik təkərlərlə danışırmı?"**
+İki hissənin birləşməsini yoxlayırıq.
+*Avtomobil:* Sükanı döndərəndə təkərlər dönürmü?
+*Kod:* Qeydiyyat düyməsini basanda API-yə sorğu gedirmi?
 
-Proqramın **NECƏ İŞLƏDİYİNİ** yoxlayır.
+**3. System Testing - "Maşın sürülürmü?"**
+Bütöv sistemi yoxlayırıq.
+*Avtomobil:* Maşını işə salıb, sürüb, park edirik.
+*Kod:* İstifadəçi tam flow-nu (Login -> Məhsul seçim -> Ödəniş) keçə bilirmi?
 
-**1. Performance Testing (Performans Test)**
-Sürət və yükü yoxlayır.
+**4. Acceptance Testing (UAT) - "Müştəri bəyəndimi?"**
+Müştəri özü yoxlayır.
+*Avtomobil:* Müştəri oturur, sürür və "Bəli, mən bunu istəmişdim" deyir.
 
-**Praktik nümunələr:**
-- **Load Testing:** 1000 istifadəçi eyni anda qeydiyyatdan keçir
-- **Stress Testing:** Sistem nə vaxt çökür? 10,000 istifadəçi?
-- **Spike Testing:** Qəfil 5000 istifadəçi gəlir (Black Friday)
+### Qeyri-funksional Testlər (Necə işləyir?)
 
-**Banking modulunda:** Transfer 3 saniyədən çox çəkməməlidir.
+Avtomobil hərəkət edir (Funksional OK), bəs necə hərəkət edir?
 
-**2. Security Testing (Təhlükəsizlik Test)**
-Zəiflikləri axtarır.
+**1. Performance Testing (Sürət):**
+- Maşın 100 km/sürətə neçə saniyəyə yığır?
+- Yoxuşda sönürmü? (Load Testing)
+- Eyni anda 5 adam otursa sürəti azalırmı? (Stress Testing)
 
-**Praktik nümunələr:**
-- **SQL Injection:** Input-a \`' OR '1'='1\` yaz, işləyirmi?
-- **XSS:** \`<script>alert('hack')</script>\` yaz, icra olurmu?
-- **CSRF:** Başqa saytdan sorğu göndərmək mümkündürmü?
+**2. Security Testing (Təhlükəsizlik):**
+- Maşının qapısını başqa açarla açmaq olarmı?
+- Şüşəni qırıb içəri girmək asandırmı?
 
-**Registration modulunda:** Şifrə hash-lənərək saxlanılırsa təhlükəsizdir.
+**3. Usability Testing (Rahatlıq):**
+- Oturacaqlar rahatdırmı?
+- Kondisionerin düyməsi əlin çatacağı yerdədirmi?
+- *Kod:* Düymə görünürmü? Yazılar oxunaqlıdırmı?
 
-**3. Usability Testing (İstifadə Rahatlığı Test)**
-İstifadəçi təcrübəsini yoxlayır.
+### Exploratory Testing (Kəşfiyyat Testi) 🗺️
+Ssenarisiz test etməkdir.
+Test keyslərə baxmırsan. Proqramı bir istifadəçi kimi "kəşf" edirsən.
+Bu sadəcə "qurdalamaq" deyil! Təcrübəli QA-in intuisiyasıdır.
+**Time-Boxing:** Özünə 30 dəqiqə vaxt qoyursan və yalnız "Search" modulunu "dağıdırsan".
 
-**Praktik nümunələr:**
-- Düymələr kifayət qədər böyükdürmü? (44x44px minimum)
-- Rənglər oxunaqlıdırmı? (kontrast nisbəti 4.5:1)
-- Səhv mesajları aydındırmı?
+### "Smoke Test" Nədir? 🔥
+Elektronikada bir cihazı toka taxanda tüstü (smoke) çıxırsa, deməli yanır, dərin testə ehtiyac yoxdur.
+QA-də: "Login işləyirmi?". Əgər əsas funksiya işləmirsə, xırda detalları yoxlamağın mənası yoxdur. Build-i developerə qaytar!
 
-**E-commerce modulunda:** "Səbətə əlavə et" düyməsi asan tapılırsa, yaxşı UX-dir.
+### 🎤 Məşhur İntervyu Sualları
 
-**4. Compatibility Testing (Uyğunluq Test)**
-Müxtəlif platformalarda işləməsini yoxlayır.
+**Sual 1: Black Box vs White Box fərqi?**
+*Cavab:* Black Box-da kodu görmürük, yalnız nəticəyə baxırıq (QA edir). White Box-da kodun strukturunu bilirik və yoxlayırıq (Dev edir).
 
-**Praktik nümunələr:**
-- **Brauzer:** Chrome, Safari, Firefox, Edge
-- **OS:** Windows, macOS, Linux, iOS, Android
-- **Ekran:** Desktop, Tablet, Mobile
+**Sual 2: Regression Testing nədir?**
+*Cavab:* Proqramda dəyişiklik edildikdən sonra (yeni funksiya və ya baq fix), köhnə funksiyaların pozulmadığını yoxlamaqdır.
 
-**Payment modulunda:** Safari-də kart nömrəsi düzgün formatlanırsa, uyğundur.
-
-### Digər Mühüm Test Növləri
-
-**Regression Testing (Reqressiya Test)**
-Yeni dəyişiklik köhnə funksiyaları pozmayıb?
-
-**Praktik nümunə:** Banking-ə yeni "Kredit" funksiyası əlavə etdin. Transfer hələ də işləyirmi?
-
-**Smoke Testing (Tüstü Test)**
-Əsas funksiyalar işləyirmi? (Sürətli yoxlama)
-
-**Praktik nümunə:** 
-- Login işləyir? ✓
-- Qeydiyyat işləyir? ✓
-- Ödəniş işləyir? ✓
-Hamısı işləyirsə, daha dərin testə keç.
-
-**Sanity Testing (Sağlamlıq Test)**
-Düzəliş işləyirmi?
-
-**Praktik nümunə:** Developer email validasiyasını düzəltdi. Yalnız onu yoxla, bütün sistemi yox.
-
-### Praktikada Necə İstifadə Edəcəksən?
-
-**Registration:**
-- Funksional: Email formatı düzgündürmü?
-- Performance: 1000 qeydiyyat eyni anda işləyir?
-- Security: SQL injection mümkündürmü?
-- Usability: Forma aydındırmı?
-
-**Payment:**
-- Funksional: Kart nömrəsi validasiyası işləyir?
-- Performance: Ödəniş 5 saniyədən az?
-- Security: CVV şifrələnir?
-- Compatibility: Bütün brauzerlə işləyir?
-
-**Banking:**
-- Funksional: Transfer düzgün işləyir?
-- Performance: 10,000 transfer eyni anda?
-- Security: CSRF mümkündürmü?
-- Usability: Təsdiq dialoqu aydındırmı?
-
-**E-commerce:**
-- Funksional: Səbət düzgün hesablayır?
-- Performance: 1000 məhsul yükləmə sürəti?
-- Security: XSS mümkündürmü?
-- Usability: Checkout prosesi asandırmı?`,
+**Sual 3: Smoke vs Sanity fərqi?**
+*Cavab:* Smoke - ən kritik funksiyaların ümumi yoxlanışıdır (sistem yanır ya yox?). Sanity - konkret bir düzəlişin və ya modulun dərin yoxlanışıdır (bu hissə düzəldimi?).`,
     quiz: [
       {
         question: "Unit Test nəyi yoxlayır?",
@@ -291,202 +272,82 @@ Düzəliş işləyirmi?
     title: 'Baq Reportu Yazmaq',
     description: 'Effektiv baq reportu necə yazılır?',
     color: 'bg-gradient-to-br from-red-500 to-pink-500',
-    content: `### Yaxşı Baq Reportunun Xüsusiyyətləri
+    readTime: '12 dəq',
+    difficulty: 'Orta',
+    content: `### Baq Reportu: Detektivin Qeyd Dəftərçəsi 🕵️‍♂️
+Baq reportu sadəcə "Xəta var" demək deyil. Bu, **Cinayət İşinin Dosyesidir**.
+Developer isə bu dosye əsasında cinayətkarı (baqı) tapıb zərərsizləşdirməlidir.
 
-**1. Aydın Başlıq**
-Baq nə haqqındadır? Bir cümlə ilə izah et.
+Əgər dosye yarımçıq olsa, cinayətkar azadlıqda gəzəcək!
 
-❌ Pis: "Düymə işləmir"
-✅ Yaxşı: "Registration səhifəsində 'Göndər' düyməsi klikləndikdə heç nə baş vermir"
+### Baq Triage (Çeşidləmə) ⚖️
+Hər tapılan baq dərhal düzəldilmir. **Triage Meeting** keçirilir və qərar verilir:
+1.  **To be fixed:** Kritikdir, düzəldək.
+2.  **Deferred (Təxirə sal):** Vacib deyil, sonra baxarıq.
+3.  **Rejected:** Bu baq deyil (feature-dir) və ya təkrarlanmır.
+4.  **Duplicate:** Artıq kimsə bunu report edib.
 
-**2. Təkrarlana Bilən Addımlar**
-Başqası baqı təkrar edə bilməlidir.
+### Jira Workflow (Həyat Dövrü) 🔄
+Müasir şirkətlərdə (Agile) baqın yolu belədir:
 
-**Nümunə:**
-\`\`\`
-Addımlar:
-1. Registration səhifəsinə get
-2. Email: "test@test" daxil et (nöqtə yoxdur)
-3. Şifrə: "123" daxil et (5 simvoldan az)
-4. "Göndər" düyməsinə klik et
+1.  **To Do / Backlog:** Baq report edildi, növbədədir.
+2.  **In Progress:** Developer işə başladı.
+3.  **In Review / Dev Core:** Developer bitirdi, kod review olunur.
+4.  **Ready for QA:** QA mühitinə yükləndi. Sənin növbəndir! ✅
+5.  **In QA / Testing:** Sən test edirsən.
+6.  **Done / Verified:** Baq düzəlib, bağlandı. 🎉
+7.  **Reopened:** Düzəlməyib, geri qaytarırsan. ↩️
 
-Gözlənilən nəticə: Validasiya xətası göstərilməlidir
-Faktiki nəticə: Forma göndərilir, səhv mesajı yoxdur
-\`\`\`
+### Qızıl Qayda: "Necə təkrarlayım?"
+Developerlərin ən çox dediyi cümlə: **"Mənim kompüterimdə işləyir!" (Works on my machine)**.
+Bunun qarşısını almaq üçün addımları elə yazmalısan ki, hətta nənən də oxuyub o səhvi təkrarlaya bilsin.
 
-**3. Mühit Məlumatı**
-Baq harada baş verir?
+### Yaxşı Report vs Pis Report 📝
 
-- Brauzer: Chrome 120.0
-- OS: macOS 14.0
-- Ekran: 1920x1080
-- Mobil: iPhone 15 Pro, iOS 17.2
+**Pis Report:**
+> "Qeydiyyat işləmir. Düyməni basıram xəta verir."
 
-**4. Prioritet və Severity**
+*Developer:* Hansı düymə? Nə xətası? Hansı brauzer? Mən yoxladım işləyir. -> **Status: Rejected / Cannot Reproduce**
 
-**Severity (Ciddilik):**
-- **Critical:** Proqram çökür, məlumat itirilir
-- **Major:** Əsas funksiya işləmir
-- **Minor:** Kiçik problem, workaround var
-- **Trivial:** Kosmetik səhv
+**Yaxşı Report (Detektiv yanaşması):**
+> **Title:** Registration səhifəsində "Submit" edərkən 500 erroru (Email sahəsi boş olduqda)
+> **Severity:** Major
+> **Environment:** Chrome 110, Windows 11
+>
+> **Steps to reproduce:**
+> 1. Registration səhifəsinə get.
+> 2. Email sahəsini boş qoy.
+> 3. Şifrə sahəsinə "12345" yaz.
+> 4. "Submit" düyməsinə kliklə.
+>
+> **Actual Result:** Səhifə ağarır və ekranda "500 Internal Server Error" yazılır.
+> **Expected Result:** "Email sahəsi tələb olunur" xətası çıxmalıdır (qırmızı rəngdə).
+> **Evidence:** [Screen_Recording.mp4], [Console_Log.txt]
 
-**Priority (Prioritet):**
-- **High:** Dərhal düzəldilməlidir
-- **Medium:** Növbəti releasedə
-- **Low:** Vaxt olduqda
+*Developer:* Aha, başa düşdüm! Backend validasiyası yoxdur. 5 dəqiqəyə düzəldirəm. -> **Status: Fixed** ✅
 
-**Nümunələr:**
+### Severity vs Priority (Çox qarışdırılır!) ⚠️
 
-| Baq | Severity | Priority |
-|-----|----------|----------|
-| Ödəniş sistemi işləmir | Critical | High |
-| Email validasiyası yoxdur | Major | High |
-| Düymə rəngi yanlışdır | Minor | Low |
-| Mətn səhvi var | Trivial | Low |
+- **Severity (Ciddilik):** Baqın sistemə vurduğu ziyan. (Texniki tərəf)
+- **Priority (Vaciblik):** Nə qədər tez düzəlməlidir? (Biznes tərəf)
 
-### Baq Həyat Dövrü
+**Priority Matrix:**
 
-\`\`\`
-New → Assigned → Open → Fixed → Retest → Verified → Closed
-                                    ↓
-                                Reopened (düzəliş işləmirsə)
-\`\`\`
+| | High Urgency | Low Urgency |
+|---|---|---|
+| **High Impact** | Fix Immediately! (Server çöküb) | Fix Next Release (Kritik, amma istifadəçi azdır) |
+| **Low Impact** | Fix if time permits (Logo səhvdir) | Won't Fix (Kosmetik kiçik səhv) |
 
-**Statuslar:**
+### 🎤 Məşhur İntervyu Sualları
 
-1. **New** - QA yeni baq tapıb
-2. **Assigned** - Developer-ə təyin edilib
-3. **Open** - Developer üzərində işləyir
-4. **Fixed** - Developer düzəldib
-5. **Retest** - QA təkrar yoxlayır
-6. **Verified** - Düzəliş təsdiqlənib
-7. **Closed** - Baq bağlanıb
-8. **Reopened** - Düzəliş işləmir, yenidən açılıb
+**Sual 1: Baq reportun ən vacib komponenti nədir?**
+*Cavab:* "Steps to Reproduce" (Təkrarlama addımları). Əgər developer baqı təkrar edə bilmirsə, düzəldə bilməz.
 
-### Praktik Nümunələr
+**Sual 2: Developer baqı qəbul etmirsə (Rejected) nə edirsən?**
+*Cavab:* Mübahisə etmirəm. Təkrar yoxlayıram (Retest), sübut (video/log) əlavə edirəm və Tələblər sənədinə (Requirements) istinad edirəm.
 
-**Nümunə 1: Registration**
-
-**Başlıq:** Email validasiyası yanlış email formatını qəbul edir
-
-**Addımlar:**
-1. Registration səhifəsinə get
-2. Email: "test@test" daxil et (domain extension yoxdur)
-3. "Göndər" klikə
-
-**Gözlənilən:** "Düzgün email daxil edin" xətası
-**Faktiki:** Forma qəbul edilir
-
-**Severity:** Major
-**Priority:** High
-**Mühit:** Chrome 120, macOS 14
-
----
-
-**Nümunə 2: Payment**
-
-**Başlıq:** CVV 4 rəqəm qəbul edir (maksimum 3 olmalıdır)
-
-**Addımlar:**
-1. Payment səhifəsinə get
-2. CVV: "1234" daxil et
-3. "Ödə" klikə
-
-**Gözlənilən:** "CVV 3 rəqəm olmalıdır" xətası
-**Faktiki:** Ödəniş uğurlu
-
-**Severity:** Major
-**Priority:** High
-**Mühit:** Safari 17, iOS 17
-
----
-
-**Nümunə 3: Banking**
-
-**Başlıq:** Transfer təsdiq dialoqusuz icra olunur
-
-**Addımlar:**
-1. Banking səhifəsinə get
-2. Məbləğ: 1000 AZN
-3. Alıcı: seç
-4. "Köçür" klikə
-
-**Gözlənilən:** Təsdiq dialoqu göstərilməlidir
-**Faktiki:** Transfer dərhal icra olunur
-
-**Severity:** Critical
-**Priority:** High
-**Mühit:** Firefox 121, Windows 11
-
----
-
-**Nümunə 4: E-commerce**
-
-**Başlıq:** Kupon kodu "FREE100" 100% endirim verir
-
-**Addımlar:**
-1. E-commerce səhifəsinə get
-2. Kupon: "FREE100" daxil et
-3. "Tətbiq et" klikə
-
-**Gözlənilən:** Maksimum 50% endirim
-**Faktiki:** 100% endirim (pulsuz)
-
-**Severity:** Critical
-**Priority:** High
-**Mühit:** Chrome 120, Android 14
-
-### Baq Reportu Şablonu
-
-\`\`\`
-Başlıq: [Qısa və aydın təsvir]
-
-Addımlar:
-1. [Birinci addım]
-2. [İkinci addım]
-3. [Üçüncü addım]
-
-Gözlənilən Nəticə:
-[Nə olmalıdır?]
-
-Faktiki Nəticə:
-[Nə olur?]
-
-Severity: [Critical/Major/Minor/Trivial]
-Priority: [High/Medium/Low]
-
-Mühit:
-- Brauzer: [Chrome/Safari/Firefox]
-- OS: [Windows/macOS/iOS/Android]
-- Versiya: [120.0]
-
-Əlavə Məlumat:
-- Screenshot: [əlavə et]
-- Video: [əlavə et]
-- Console log: [əlavə et]
-\`\`\`
-
-### Praktikada Necə İstifadə Edəcəksən?
-
-**Registration modulunda:**
-- Email validasiyası səhvi → Major, High
-- Şifrə görünür (type="text") → Critical, High
-- Düymə rəngi yanlış → Minor, Low
-
-**Payment modulunda:**
-- Kart nömrəsi 17 rəqəm qəbul edir → Major, High
-- CVV görünür → Critical, High
-- Loading state yoxdur → Minor, Medium
-
-**Banking modulunda:**
-- Balans yenilənmir → Critical, High
-- Təsdiq dialoqu yoxdur → Critical, High
-- Tarix formatı yanlış → Minor, Low
-
-**E-commerce modulunda:**
-- Məhsul sayı mənfi ola bilir → Major, High
-- Endirim yanlış hesablanır → Critical, High
-- Şəkil yüklənmir → Minor, Medium`,
+**Sual 3: High Severity, Low Priority nümunəsi ver.**
+*Cavab:* Saytın "Haqqımızda" səhifəsində düymə işləmir (Funksiya yoxdur - High Severity), amma o səhifəyə heç kim girmir (Low Priority).`,
     quiz: [
       {
         question: "Baq reportunun ən vacib hissəsi nədir?",
@@ -525,251 +386,81 @@ Mühit:
     title: 'Test Planlaşdırması',
     description: 'Test strategiyası və test keyslərin yazılması',
     color: 'bg-gradient-to-br from-purple-500 to-indigo-500',
-    content: `### Test Planı Nədir?
+    readTime: '18 dəq',
+    difficulty: 'Çətin',
+    content: `### Test Planı: Səyahət Planı ✈️
+Test Planı yazmağı **Tətilə getməyə (Səyahətə)** bənzədə bilərik.
+Əgər plansız getsəniz, oteldə yer tapmaya bilərsiniz, pulunuz bitər və ya təyyarəni qaçırarsınız.
+QA-də də eynidir: Plansız test olmaz!
 
-Test planı - testləşdirmə prosesinin yol xəritəsidir. Nə test edəcəyini, necə test edəcəyini və nə vaxt test edəcəyini müəyyənləşdirir.
+### Test Planının Komponentləri (Səyahət Dili ilə)
 
-### Test Planının Strukturu
+**1. Test Scope (Əhatə Dairəsi): "Hara gedirik?"**
+- **In-Scope (Gediləcək yerlər):** Paris, Luvr muzeyi. (*Login, Registration*)
+- **Out-of-Scope (Gedilməyəcək):** Parisin kənar kəndləri. (*Admin Panel - hələ hazır deyil*)
 
-**1. Test Obyekti**
-Nə test edəcəksən?
+**2. Test Strategy (Strategiya): "Necə gedirik?"**
+- Təyyarə ilə? Qatarla? (*Manual yoxsa Avtomatlaşdırma?*)
+- Hansı alətləri götürürük? (*Postman, Selenium*)
 
-**Nümunə:** "QA Student App - Registration Modulu"
+**3. Resources (Resurslar): "Kimlə gedirik?"**
+- 2 nəfər, büdcəmiz 1000$. (*2 QA Engineer, 3 gün vaxt*)
+- Telefonumuz dözümlüdür? (*Test serverlərimiz hazırdırmı?*)
 
-**2. Test Scope (Əhatə Dairəsi)**
-Nə test ediləcək və nə test edilməyəcək?
+**4. Schedule (Cədvəl): "Nə vaxt gedirik?"**
+- Gün 1: Uçuş. (*Test mühitinin hazırlanması*)
+- Gün 2-3: Gəzinti. (*Testlərin icrası*)
+- Gün 4: Qayıdış. (*Report və Release*)
 
-**Test ediləcək:**
-- Email validasiyası
-- Şifrə uzunluğu
-- Telefon formatı
-- Doğum tarixi
+### Entry & Exit Criteria (Giriş və Çıxış Meyarları) 🚦
+Nə vaxt başlayırıq və nə vaxt bitiririk?
 
-**Test edilməyəcək:**
-- Backend API (ayrıca test edilir)
-- Database (ayrıca test edilir)
+- **Entry Criteria (Giriş):**
+    - Tələblər sənədi hazırdır?
+    - Test mühiti (Staging) işləyir?
+    - Smoke test keçdi?
 
-**3. Test Strategiyası**
-Necə test edəcəksən?
+- **Exit Criteria (Çıxış):**
+    - Bütün Critical və Major baqlar düzəlib?
+    - Test keyslərin 95%-i "Pass" olub?
+    - Büdcə və vaxt bitib?
 
-- Manual Testing: 80%
-- Automated Testing: 20%
-- Regression Testing: Hər releasedə
-- Performance Testing: Həftədə 1 dəfə
+### RTM (Requirement Traceability Matrix) 🔗
+Tələblərlə Testlərin xəritəsidir.
+Məqsəd: Heç bir tələbin testdən kənar qalmadığına əmin olmaq.
 
-**4. Test Mühiti**
-Harada test edəcəksən?
+*Nümunə:*
+| Req ID | Req Description | Test Case ID | Status |
+|---|---|---|---|
+| R-01 | Login funksiyası | TC-01, TC-02 | Pass |
+| R-02 | Şifrə bərpası | TC-05 | Fail |
 
-- Brauzer: Chrome, Safari, Firefox
-- OS: Windows 11, macOS 14, iOS 17, Android 14
-- Ekran: Desktop (1920x1080), Mobile (375x667)
+### Risk Hazard Analysis ⚠️
+Risk = Probability (Ehtimal) x Impact (Təsir).
 
-**5. Test Schedule (Cədvəl)**
-Nə vaxt test edəcəksən?
+- **High Risk:** Payment Gateway (Sistem çökə bilər + Pul itkisi). -> *Dərin test et!*
+- **Low Risk:** "About Us" səhifəsində hərf səhvi. -> *Sürətli bax.*
 
-- Test planı: 1 gün
-- Test keyslərin yazılması: 2 gün
-- Test icrası: 3 gün
-- Baq reportları: 1 gün
-- Regression: 1 gün
+### Test Case Strukturu (Sadələşdirilmiş)
+*Nümunə:* "Eyfel qülləsinin qarşısında şəkil çəkdir."
 
-**6. Resurslar**
-Kimlərlə test edəcəksən?
+| ID | Title | Steps | Expected Result |
+|----|-------|-------|-----------------|
+| TC01 | Uğurlu Login | 1. Login səhifəsinə get<br>2. Düzgün user/pass yaz<br>3. 'Login' bas | "Home" səhifəsi açılır ✅ |
+| TC02 | Yanlış Şifrə | 1. Şifrəni səhv yaz<br>2. 'Login' bas | "Şifrə yanlışdır" xətası çıxır ❌ |
 
-- QA Lead: 1 nəfər
-- QA Engineer: 2 nəfər
-- Test Automation: 1 nəfər
+**Pro Tip:** Test keysləri o qədər aydın yaz ki, yeni işə girən Junior QA belə onu heç kimdən soruşmadan icra edə bilsin.
 
-### Test Keys Nədir?
+### 🎤 Məşhur İntervyu Sualları
 
-Test keys - konkret test ssenariləridir. Hər bir test keys bir funksiyanı yoxlayır.
+**Sual 1: Test Plan nə vaxt yazılır?**
+*Cavab:* Tələb analizi (Requirement Analysis) bitdikdən dərhal sonra. Proqram kodu yazılmağa başlamamışdan əvvəl.
 
-### Test Keys Strukturu
+**Sual 2: Exit Criteria nədir?**
+*Cavab:* Testi dayandırmaq üçün lazım olan şərtlərdir. Məsələn, "Critical baq qalmayıb" və "90% testlər pass olub".
 
-\`\`\`
-Test Keys ID: TC_REG_001
-Test Keys Adı: Email validasiyası - düzgün format
-Modul: Registration
-Prioritet: High
-
-Ön-şərtlər:
-- Registration səhifəsi açıqdır
-
-Addımlar:
-1. Email input-a "test@example.com" daxil et
-2. "Göndər" düyməsinə klik et
-
-Gözlənilən Nəticə:
-- Email qəbul edilir
-- Növbəti səhifəyə keçid
-
-Faktiki Nəticə:
-[Test zamanı doldurulacaq]
-
-Status: [Pass/Fail]
-\`\`\`
-
-### Praktik Nümunələr
-
-**Registration Modulu üçün Test Keysləri:**
-
-**TC_REG_001: Email validasiyası - düzgün format**
-- Input: "test@example.com"
-- Gözlənilən: Qəbul edilir ✓
-
-**TC_REG_002: Email validasiyası - yanlış format**
-- Input: "test@test"
-- Gözlənilən: "Düzgün email daxil edin" xətası ✓
-
-**TC_REG_003: Şifrə uzunluğu - minimum**
-- Input: "12345" (5 simvol)
-- Gözlənilən: Qəbul edilir ✓
-
-**TC_REG_004: Şifrə uzunluğu - maksimum**
-- Input: "123456" (6 simvol)
-- Gözlənilən: "Maksimum 5 simvol" xətası ✓
-
-**TC_REG_005: Telefon formatı - hərflər**
-- Input: "abc123"
-- Gözlənilən: "Yalnız rəqəmlər" xətası ✓
-
----
-
-**Payment Modulu üçün Test Keysləri:**
-
-**TC_PAY_001: Kart nömrəsi - düzgün format**
-- Input: "4111111111111111" (16 rəqəm)
-- Gözlənilən: Qəbul edilir ✓
-
-**TC_PAY_002: Kart nömrəsi - qısa**
-- Input: "411111" (6 rəqəm)
-- Gözlənilən: "16 rəqəm olmalıdır" xətası ✓
-
-**TC_PAY_003: CVV uzunluğu - 3 rəqəm**
-- Input: "123"
-- Gözlənilən: Qəbul edilir ✓
-
-**TC_PAY_004: CVV uzunluğu - 4 rəqəm**
-- Input: "1234"
-- Gözlənilən: "Maksimum 3 rəqəm" xətası ✓
-
----
-
-**Banking Modulu üçün Test Keysləri:**
-
-**TC_BANK_001: Transfer məbləği - müsbət**
-- Input: 100 AZN
-- Gözlənilən: Transfer uğurlu ✓
-
-**TC_BANK_002: Transfer məbləği - mənfi**
-- Input: -100 AZN
-- Gözlənilən: "Mənfi məbləğ ola bilməz" xətası ✓
-
-**TC_BANK_003: Transfer məbləği - balansdan çox**
-- Input: 10000 AZN (balans: 500 AZN)
-- Gözlənilən: "Kifayət qədər balans yoxdur" xətası ✓
-
-**TC_BANK_004: Təsdiq dialoqu**
-- Addım: "Köçür" klikə
-- Gözlənilən: Təsdiq dialoqu göstərilir ✓
-
----
-
-**E-commerce Modulu üçün Test Keysləri:**
-
-**TC_ECOM_001: Məhsul sayı - müsbət**
-- Input: 5
-- Gözlənilən: Səbətə əlavə edilir ✓
-
-**TC_ECOM_002: Məhsul sayı - mənfi**
-- Input: -1
-- Gözlənilən: "Mənfi say ola bilməz" xətası ✓
-
-**TC_ECOM_003: Məhsul sayı - stokdan çox**
-- Input: 100 (stok: 50)
-- Gözlənilən: "Stokda yalnız 50 var" xətası ✓
-
-**TC_ECOM_004: Kupon kodu - düzgün**
-- Input: "SAVE20"
-- Gözlənilən: 20% endirim tətbiq edilir ✓
-
-### Test Keys Şablonu
-
-\`\`\`
-Test Keys ID: TC_[MODUL]_[NÖMRƏ]
-Test Keys Adı: [Qısa təsvir]
-Modul: [Registration/Payment/Banking/E-commerce]
-Prioritet: [High/Medium/Low]
-Tip: [Positive/Negative/Boundary]
-
-Ön-şərtlər:
-- [Nə hazır olmalıdır?]
-
-Addımlar:
-1. [Birinci addım]
-2. [İkinci addım]
-3. [Üçüncü addım]
-
-Test Data:
-- Input: [Daxil ediləcək məlumat]
-
-Gözlənilən Nəticə:
-- [Nə olmalıdır?]
-
-Faktiki Nəticə:
-- [Nə oldu?]
-
-Status: [Pass/Fail/Blocked]
-Qeydlər: [Əlavə məlumat]
-\`\`\`
-
-### Test Keys Növləri
-
-**1. Positive Test Keys**
-Düzgün məlumatla test edir.
-
-**Nümunə:** Email: "test@test.com" → Qəbul edilir ✓
-
-**2. Negative Test Keys**
-Yanlış məlumatla test edir.
-
-**Nümunə:** Email: "test" → Xəta göstərilir ✓
-
-**3. Boundary Test Keys**
-Sərhəd dəyərlərini test edir.
-
-**Nümunə:** 
-- Şifrə: "1234" (4 simvol) → Xəta (minimum 5)
-- Şifrə: "12345" (5 simvol) → Qəbul ✓
-- Şifrə: "123456" (6 simvol) → Xəta (maksimum 5)
-
-### Praktikada Necə İstifadə Edəcəksən?
-
-**1. Test Planı Hazırla**
-- Scope müəyyənləşdir
-- Strategiya seç
-- Cədvəl təyin et
-
-**2. Test Keysləri Yaz**
-- Hər funksiya üçün minimum 3 test keys:
-  - 1 Positive
-  - 1 Negative
-  - 1 Boundary
-
-**3. Test Keysləri İcra Et**
-- Addımları izlə
-- Nəticələri qeyd et
-- Screenshot çək
-
-**4. Baq Report Yaz**
-- Fail olan test keysləri üçün
-- Aydın təsvir ver
-- Severity/Priority təyin et
-
-**5. Regression Test Et**
-- Düzəlişdən sonra
-- Bütün test keysləri yenidən
-- Yeni baq tapılmadığından əmin ol`,
+**Sual 3: Əgər test üçün vaxt çatmırsa nə edirsən?**
+*Cavab:* Prioritizasiya edirəm (Risk-Based Testing). Ən vacib, kritik funksiyaları (High Priority) test edirəm, kosmetik işləri (Low Priority) saxlayıram.`,
     quiz: [
       {
         question: "Test Planı nədir?",
@@ -798,6 +489,273 @@ Sərhəd dəyərlərini test edir.
           "Sərhəd dəyərlərini (min/max)",
           "Sürəti",
           "Təhlükəsizliyi"
+        ],
+        correct: 1
+      }
+    ]
+  },
+  {
+    id: 'api-testing',
+    title: 'API Testləmə',
+    description: 'REST API, metodlar, status kodlar və Postman',
+    color: 'bg-gradient-to-br from-orange-500 to-amber-500',
+    readTime: '20 dəq',
+    difficulty: 'Çətin',
+    content: `### API Nədir?
+**API (Application Programming Interface)** - proqramların bir-biri ilə danışması üçün bir vasitədir.
+
+**Restoran Analologiyası:**
+- **Siz (Müştəri):** Frontend (React app)
+- **Offisiant (API):** Sizin sifarişinizi mətbəxə aparır və yeməyi gətirir.
+- **Mətbəx (Server/Database):** Sifarişi hazırlayır.
+
+### API Memarlıq Növləri 🏛️
+1.  **REST (Representational State Transfer):** Ən populyar. Standart HTTP metodlarını istifadə edir. Yüngül və sürətlidir.
+2.  **SOAP (Simple Object Access Protocol):** Qədim, XML əsaslı, çox təhlükəsiz amma ağırdır. (Banklarda çox istifadə olunur).
+3.  **GraphQL:** Facebook tərəfindən yaradılıb. Yalnız istədiyin datanı gətirir (Məs: User-in adını istəyirsən, bütün məlumatı yox).
+
+### HTTP Headers & Payload 📦
+Bir məktub göndərərkən zərf (Headers) və məktubun özü (Payload) olur.
+
+- **Headers (Zərf):** Meta məlumatlar.
+    - \`Content-Type: application/json\` (Mən sənə JSON göndərirəm)
+    - \`Authorization: Bearer xyz123\` (Mənim giriş icazəm var)
+    - \`User-Agent: Chrome\` (Mən Chrome brauzeriyəm)
+
+- **Payload / Body (Məktub):** Əsas məlumat.
+    - \`{ "username": "emin", "password": "123" }\`
+
+### Authentication Types (Giriş Növləri) 🔐
+
+1.  **Basic Auth:** Username və Password hər sorğuda göndərilir (Təhlükəlidir).
+2.  **Bearer Token (JWT):** Login olanda server sənə "Token" (bilet) verir. Sonrakı sorğularda o bileti göstərirsən.
+3.  **OAuth 2.0:** "Google ilə daxil ol". Şifrəni paylaşmadan başqa sayta icazə verirsən.
+
+### Status Kodları - Qısa Yaddaş Vərəqi 📝
+
+- **200:** OK (Hər şey super)
+- **201:** Created (Yarandı)
+- **400:** Bad Request (Sorğunu düzəlt)
+- **401:** Unauthorized (Login olmamısan)
+- **403:** Forbidden (İcazən yoxdur)
+- **404:** Not Found (Tapılmadı)
+- **500:** Server Error (Server partladı)
+
+### Praktikada Test Ssenarisi
+
+**Ssenari:** Qeydiyyat (Register)
+1. **Positive:** Düzgün email/pass -> \`201 Created\` + ID qayıdır.
+2. **Negative:** Email boş göndər -> \`400 Bad Request\` + "Email required" mesajı.
+3. **Security:** Token olmadan profilə girməyə çalış -> \`401 Unauthorized\`.
+
+### 🎤 Məşhur İntervyu Sualları
+
+**Sual 1: REST və SOAP fərqi?**
+*Cavab:* REST daha yüngüldür, JSON istifadə edir və HTTP metodlarına əsaslanır. SOAP XML istifadə edir, daha ağırdır amma təhlükəsizlik standartları (WS-Security) yüksəkdir.
+
+**Sual 2: 401 və 403 fərqi?**
+*Cavab:* 401 - "Sən kimsən?" (Login olmamısan). 403 - "Səni tanıdım, amma bura girməyə haqqın yoxdur" (Admin deyilsən).
+
+**Sual 3: API testini nə ilə edirsən?**
+*Cavab:* Manual test üçün **Postman** (və ya Insomnia). Avtomatlaşdırma üçün **Rest Assured** (Java) və ya **Supertest** (JS).`,
+    quiz: [
+      {
+        question: "Yeni məlumat yaratmaq üçün hansı metod istifadə olunur?",
+        options: ["GET", "PUT", "POST", "DELETE"],
+        correct: 2
+      },
+      {
+        question: "404 status kodu nə deməkdir?",
+        options: ["Uğurlu", "Server xətası", "Tapılmadı", "İcazə yoxdur"],
+        correct: 2
+      },
+      {
+        question: "API nəyin qısaltmasıdır?",
+        options: [
+          "Application Personal Interface",
+          "Automated Programming Interface",
+          "Application Programming Interface",
+          "Advanced Program Interaction"
+        ],
+        correct: 2
+      }
+    ]
+  },
+  {
+    id: 'mobile-testing',
+    title: 'Mobil Testləmə',
+    description: 'Android vs iOS, emulyatorlar və real cihazlar',
+    color: 'bg-gradient-to-br from-teal-500 to-green-500',
+    readTime: '12 dəq',
+    difficulty: 'Orta',
+    content: `### Mobil Tətbiq Növləri
+1. **Native Apps (Yerli):**
+   - Xüsusi olaraq iOS (Swift) və ya Android (Kotlin) üçün yazılır.
+   - Sürətli, kamera və GPS-ə tam çıxış var.
+   - *Test:* Hər iki OS üçün ayrıca testetməlisən.
+   
+2. **Web Apps (PWA):**
+   - Brauzerdə (Chrome/Safari) işləyən saytlardır.
+   - *Test:* Brauzer uyğunluğu vacibdir.
+   
+3. **Hybrid Apps:**
+   - Bir kod yazılır, hər yerdə işləyir (React Native, Flutter).
+   - "Wrapper" içində işləyən veb sayt kimidir.
+
+### Test Edilməli Xüsusi Məqamlar 📱
+
+**1. Hardware & Sensors:**
+- **GPS:** Xəritə yerini düz göstərir?
+- **Camera:** Şəkil çəkib yükləmək olur?
+- **Biometrics:** FaceID/TouchID işləyirmi?
+- **Battery:** Tətbiq batareyanı "yeyirmi"? (Battery Drain Test)
+
+**2. Network Conditions (Şəbəkə):**
+- **Sürətli:** WiFi 5G.
+- **Zəif:** 3G/2G (Metroda, lift-də test etmək vacibdir!).
+- **Keçid:** WiFi-dan 4G-yə keçəndə tətbiq donurmu?
+
+**3. Interruptions (Kəsilmələr):**
+- Oyun oynayanda zəng gəlsə?
+- SMS gəlsə?
+- Batareya "Low Battery" xəbərdarlığı versə?
+- Tətbiq arxa fona (Background) atılıb geri qayıtsa?
+
+**4. Gestures (Jestlər):**
+- Swipe (Sürüşdürmə), Pinch (Böyütmə), Zoom, Shake.
+- Düymələr barmaq üçün kifayət qədər böyükdürmü? (Minimum 44px).
+
+### Cloud Testing Farms ☁️
+Hər testçinin evində 50 dənə telefon ola bilməz.
+Buna görə **BrowserStack** və ya **SauceLabs** istifadə edirik.
+Bu saytlar sənə "virtual" real cihazlar verir.
+*Məsələn:* BrowserStack-də "iPhone 15 Pro, iOS 17" seçirsən və brauzerdə idarə edirsən.
+
+### Android vs iOS Fərqləri
+- **Dizayn:** Android-də Material Design, iOS-da Human Interface Guidelines.
+- **Naviqasiya:** Android-də fiziki "Geri" düyməsi var, iOS-da yoxdur.
+- **Fragmentation:** Android-də minlərlə model var (Samsung, Xiaomi, Pixel...), iOS-da azdır.
+
+### 🎤 Məşhur İntervyu Sualları
+
+**Sual 1: Native və Hybrid tətbiq fərqi?**
+*Cavab:* Native sürətlidir və OS-in bütün imkanlarından istifadə edir. Hybrid daha ucuz başa gəlir, bir kodla hər yerdə işləyir amma performansı aşağı ola bilər.
+
+**Sual 2: Emulator və Real Cihaz fərqi?**
+*Cavab:* Emulator sürətlidir və ilkin test üçün yaxşıdır. Amma batareya, kamera, sensorlar və real şəbəkə şəraiti üçün mütləq Real Cihaz lazımdır.
+
+**Sual 3: Bir tətbiq batareyanı çox yeyirsə, bunu necə test edirsən?**
+*Cavab:* Tətbiqi işlədib batareya faizini izləyirəm, CPU istifadəsini monitorinq edirəm (Android Studio Profiler və ya Xcode Instruments ilə).`,
+    quiz: [
+      {
+        question: "Tətbiq işləyərkən zəng gəlməsini yoxlamaq hansı test növüdür?",
+        options: ["Network Testing", "Interruption Testing", "Installation Testing", "Security Testing"],
+        correct: 1
+      },
+      {
+        question: "Hansı cihaz daha etibarlı test nəticəsi verir?",
+        options: ["Emulator", "Simulator", "Real Cihaz", "Hamısı eynidir"],
+        correct: 2
+      },
+      {
+        question: "Android və iOS arasında əsas test fərqi nədir?",
+        options: [
+          "Rənglər",
+          "Ekran ölçülərinin müxtəlifliyi (Fragmentation)",
+          "İnternet sürəti",
+          "Hər ikisi eynidir"
+        ],
+        correct: 1
+      }
+    ]
+  },
+  {
+    id: 'automation-basics',
+    title: 'Avtomatlaşdırma Əsasları',
+    description: 'Nə vaxt avtomatlaşdırmalı? Alətlər və Selektorlar',
+    color: 'bg-gradient-to-br from-violet-500 to-fuchsia-500',
+    readTime: '20 dəq',
+    difficulty: 'Ekspert',
+    content: `### Avtomatlaşdırma Nədir?
+Proqram təminatını test etmək üçün xüsusi kodlar yazmaqdır. İnsan müdaxiləsi olmadan testlər işləyir.
+
+### Test Automation Pyramid vs Pizza 🍕
+
+**Doğru Üsul (Piramida):**
+1.  **Unit Tests (70%):** Çoxlu sayda, sürətli. (Təməl)
+2.  **Integration / API (20%):** Orta səviyyə.
+3.  **UI / E2E (10%):** Az sayda. (Zirvə)
+
+**Səhv Üsul (Pizza / Ice Cream Cone):**
+- Çoxlu UI testləri yazmaq.
+- Az Unit testlər.
+- *Nəticə:* Testlər çox yavaş işləyir, tez-tez qırılır (flaky) və maintain etmək cəhənnəm olur.
+
+### Nə vaxt Avtomatlaşdırmalıyıq? (ROI - Return on Investment)
+
+Hər şeyi avtomatlaşdırmaq axmaqlıqdır. Avtomatlaşdırma bahalıdır (kod yazmaq vaxt aparır).
+
+✅ **YES (Avtomatlaşdır):**
+- **Regression:** Hər release-də eyni login-i yoxlamaqdan bezmisən? Avtomatlaşdır.
+- **Data Driven:** 1000 müxtəlif istifadəçi ilə login olmalısan? Skript yaz.
+- **Complex Calculation:** Əl ilə hesablamaq çətindir.
+
+❌ **NO (Manual et):**
+- **Exploratory:** Kəşfiyyat. İntuisiya lazımdır.
+- **Usability:** "Bu rəng gözə xoş gəlirmi?" (Robot bilməz).
+- **One-time:** Cəmi bir dəfə yoxlanacaq funksiya.
+- **Unstable:** Hələ dizayn dəyişir.
+
+### CI/CD (Continuous Integration / Deployment) 🚀
+Avtomatlaşdırmanın əsas məqsədi sürətdir.
+Biz testləri öz kompüterimizdə yox, **CI Serverdə** (Jenkins, GitHub Actions, GitLab CI) işlədirik.
+
+1.  Developer kodu GitHub-a push edir.
+2.  Jenkins avtomatik "oyanır".
+3.  Layihəni build edir.
+4.  Sənin yazdığın avto-testləri işlədir.
+5.  Əgər testlər keçsə (Green) -> Deploy edir.
+6.  Əgər testlər qırılsa (Red) -> Developerə email gedir: "Kodu pozdun, düzəlt!".
+
+### POM (Page Object Model) - Qızıl Standart 🏆
+Kodun təkrarını azaldır.
+
+- **Problem:** Təsəvvür et 50 testdə "Username" inputunu tapmaq üçün ID istifadə etmisən. Developer ID-ni dəyişdi. 50 yerdə dəyişməlisən! 😱
+- **Həll (POM):** "LoginPage" adlı class yaradırsan. ID-ni orada saxlayırsan. Bütün testlər oradan götürür. ID dəyişsə, tək 1 yerdə dəyişirsən. 😎
+
+### 🎤 Məşhur İntervyu Sualları
+
+**Sual 1: Selenium və Playwright fərqi?**
+*Cavab:* Selenium köhnədir, WebDriver protokolundan istifadə edir (yavaşdır). Playwright müasirdir, birbaşa brauzer engini ilə danışır (sürətlidir) və "Auto-wait" funksiyası var (elementi gözləyir).
+
+**Sual 2: Flaky Test nədir?**
+*Cavab:* "Qeyri-stabil" test. Gah keçir, gah keçmir (kod dəyişməsə belə). Səbəbi adətən şəbəkə gecikmələri və ya pis yazılmış Wait-lərdir.
+
+**Sual 3: Nəyi avtomatlaşdırmaq olmaz?**
+*Cavab:* Captcha, 2FA (SMS kod), Fiziki qarşılıqlı əlaqə (kartı terminala taxmaq), Vizual estetika (Rəng uyğunluğu).`,
+    quiz: [
+      {
+        question: "Nə vaxt avtomatlaşdırma etmək MƏSLƏHƏT DEYİL?",
+        options: [
+          "Təkrarlanan testlər üçün",
+          "Test yalnız bir dəfə icra olunacaqsa",
+          "Böyük layihələrdə",
+          "Regression testləri üçün"
+        ],
+        correct: 1
+      },
+      {
+        question: "Elementi tapmaq üçün ən sürətli lokator hansıdır?",
+        options: ["XPath", "CSS Selector", "ID", "Class Name"],
+        correct: 2
+      },
+      {
+        question: "Page Object Model (POM) nəyə kömək edir?",
+        options: [
+          "Testin sürətini artırır",
+          "Kodun təkrarının qarşısını alır və saxlanmasını asanlaşdırır",
+          "Baqları avtomatik tapır",
+          "Dizaynı yoxlayır"
         ],
         correct: 1
       }
