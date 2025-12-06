@@ -606,6 +606,41 @@ const Home = () => {
           </motion.div>
         </Link>
 
+        {/* Resume Builder Card */}
+        <Link to="/resume-builder">
+          <motion.div
+            variants={itemVariants}
+            whileHover={{ scale: 1.02, y: -4 }}
+            whileTap={{ scale: 0.98 }}
+            className="relative overflow-hidden bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-orange-400/30 cursor-pointer group mb-8"
+          >
+            {/* Decorative Elements */}
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-500"></div>
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full blur-xl -ml-8 -mb-8 group-hover:scale-150 transition-transform duration-500"></div>
+
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-white/20 rounded-2xl">
+                    <FileText size={32} className="text-orange-100" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-black">{t('home.resumeCard.title', 'CV Konstruktor')}</h2>
+                    <p className="text-orange-100 text-sm">{t('home.resumeCard.subtitle', 'Peşəkar CV yaradın, ATS uyğunluğu yoxlayın')}</p>
+                  </div>
+                </div>
+                <ArrowRight size={28} className="text-white/60 group-hover:translate-x-2 transition-transform" />
+              </div>
+
+              <div className="flex items-center gap-2 mt-4 text-orange-100 text-sm font-medium">
+                <span className="bg-white/20 px-3 py-1 rounded-full">{t('home.resumeCard.ats', 'ATS Analizi')}</span>
+                <span className="bg-white/20 px-3 py-1 rounded-full">{t('home.resumeCard.templates', 'Şablonlar')}</span>
+                <span className="bg-white/20 px-3 py-1 rounded-full">{t('home.resumeCard.pdf', 'PDF İxrac')}</span>
+              </div>
+            </div>
+          </motion.div>
+        </Link>
+
         {/* Learning Progress Card */}
         <div className="mb-8">
           <LearningProgress />
